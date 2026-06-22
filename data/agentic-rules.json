@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "_note": "SoDamAgentic 폴백 안전 규칙(데이터). 비개발자도 목록을 늘릴 수 있게 코드와 분리. guard.mjs가 런타임에 정규식으로 컴파일한다. 패턴은 대소문자 무시(i)로 적용된다.",
+
+  "nudge": {
+    "enabled": true,
+    "_note": "계획 없이 코드 시도 시 '계획부터 볼까요?' 1회 ask(차단 아님). false로 끄기."
+  },
+  "plan_skip": {
+    "enabled": true,
+    "_note": "사소·저위험 작업은 계획을 생략(계획 피로 방지). 판단은 F2 스킬이 한다."
+  },
+
+  "key_exposure_deny": [
+    "sk-ant-[A-Za-z0-9_\\-]{12,}",
+    "sk-[A-Za-z0-9]{20,}",
+    "\\b(curl|wget|scp|Invoke-WebRequest|Invoke-RestMethod)\\b[^|;&]*\\.env\\b",
+    "ANTHROPIC_BASE_URL\\s*=",
+    "\\becho\\b[^|;&]*\\$\\{?[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)",
+    "echo\\b[^|;&]*%[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)%",
+    "process\\.env\\.[A-Za-z0-9_]*(KEY|TOKEN|SECRET|PASSWORD)[\\s\\S]*console\\.(log|error|info|warn)"
+  ],
+  "key_exposure_ask": [
+    "\\b(cat|type|more|less|Get-Content)\\b[^|;&]*\\.env(\\b|$)"
+  ],
+
+  "extra_denied": [],
+  "extra_protected_paths": []
+}

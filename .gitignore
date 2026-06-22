@@ -1,0 +1,28 @@
+# SoDamAgentic — Git 추적 제외 (보안: 비밀값·사용자 데이터 보호)
+
+# 의존성 설치 폴더
+node_modules/
+
+# 비밀값·인증서 (절대 커밋 금지)
+.env
+.env.*
+*.key
+*.pem
+*.p12
+.claude/settings.local.json
+
+# 영구 데이터·백업 (사용자 파일·잠재 민감정보)
+.sodamagentic/
+
+# 테스트 임시 산출물
+_selftest.mjs
+*.tmp
+
+# OS·에디터 부산물
+.DS_Store
+Thumbs.db
+*.log
+
+# 기획 문서·로컬 메모 (사용자 지정 — 공개 저장소에 절대 push 금지)
+/.PRD/
+/.이 문서는 반드시 깃허브 저장소에 푸시 하지 않기.md
