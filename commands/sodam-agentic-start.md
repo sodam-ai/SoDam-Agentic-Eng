@@ -1,6 +1,6 @@
 ---
-name: start
-description: SoDamAgentic 온보딩. 사용자가 /start(또는 /소담:시작)로 처음 시작할 때, "AI에게 제대로 일 시키는 4단계(계획→실행→검토→안전)"를 쉬운 한국어로 안내하고 안전 상태를 점검한다.
+name: sodam-agentic-start
+description: SoDamAgentic 온보딩. 사용자가 /sodam-agentic-start 로 처음 시작할 때, "AI에게 제대로 일 시키는 4단계(계획→실행→검토→안전)"를 쉬운 한국어로 안내하고 안전 상태를 점검한다.
 ---
 
 # 소담 시작 — AI에게 제대로 일 시키기
