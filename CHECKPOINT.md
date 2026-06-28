@@ -35,6 +35,7 @@
 
 ✅ **init-mvp 커밋 + 푸시** — 완료 (2026-06-28). 원격 `sodam-ai/SoDam-Agentic-Eng:init-mvp` 최신.
 ✅ **guard.mjs 심층 분석** — 완료 (2026-06-28). 22 PASS 재확인, AppData 오차단 없음 확인.
+✅ **6형제 시너지 P0 완료** — (2026-06-29). `docs/family-synergy.md`(공통 헌법) 생성. PRD §05_FAMILY_RISKS C1·C6 훅 충돌 방지 규약 4개 명문화. `agentic-rules.json` family 섹션 추가(런타임 영향 없음). README·AGENTS.md 형제 협업 규약 반영.
 
 ## 3. 검증 커맨드
 ```

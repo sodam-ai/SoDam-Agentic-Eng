@@ -76,5 +76,20 @@
 | 계획 없이 코드부터 짬 | 초기 버전 한계 — 보강 예정 |
 | `Node가 없다`고 나옴 | Node.js 18+ 설치 후 재시도 |
 
+## 소담 패밀리 (함께 쓰면 더 강력)
+
+SoDamAgentic은 6개 플러그인 패밀리의 진입점입니다. 함께 설치하면 더 안전하고 완전합니다.
+
+| 플러그인 | 역할 | 설치 순서 |
+|---|---|---|
+| 🛡 SoDamHarness | 안전·백업·되돌리기 | 1번째 (필수) |
+| 🔁 SoDamLoop | 자율 반복 엔진 | 2번째 |
+| 🧠 SoDamContext | 설명서 건강검진 | 3번째 |
+| 🚀 **SoDamAgentic** | **진입점·계획·검토 (지금 이것)** | 4번째 |
+| ✏️ SoDamPrompt | 프롬프트 입문 웹앱 | 5번째 |
+| 🔍 SoDamReverse | 코드·앱 분석 보고서 | 6번째 |
+
+> 자세한 협업 규약: [docs/family-synergy.md](./docs/family-synergy.md)
+
 ## 라이선스
 Apache-2.0 © SoDam AI Studio

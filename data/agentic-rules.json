@@ -31,5 +31,20 @@
   ],
 
   "extra_denied": [],
-  "extra_protected_paths": []
+  "extra_protected_paths": [],
+
+  "family": {
+    "_note": "6형제 시너지 메타데이터. guard.mjs는 이 키를 무시(런타임 영향 없음). 역할 경계·설치 순서 참조용.",
+    "siblings": [
+      { "name": "SoDamHarness", "role": "안전·백업·되돌리기",   "repo": "sodam-ai/SoDam-Harness-Eng" },
+      { "name": "SoDamLoop",    "role": "자율 반복 엔진",       "repo": "sodam-ai/SoDam-Loop-Eng" },
+      { "name": "SoDamContext", "role": "설명서 건강검진",       "repo": "sodam-ai/SoDam-Context-Eng" },
+      { "name": "SoDamAgentic", "role": "진입점·계획·검토",     "repo": "sodam-ai/SoDam-Agentic-Eng" },
+      { "name": "SoDamPrompt",  "role": "프롬프트 입문 웹앱",   "repo": "sodam-ai/SoDam-Prompt-Eng" },
+      { "name": "SoDamReverse", "role": "코드·앱 분석 보고서", "repo": "sodam-ai/SoDam-Reverse-Eng" }
+    ],
+    "installation_order": ["SoDamHarness", "SoDamLoop", "SoDamContext", "SoDamAgentic", "SoDamPrompt", "SoDamReverse"],
+    "hook_conflict_rule": "새 PreToolUse 훅 파일 추가 금지. 규칙은 Harness extra_denied/extra_protected_paths에 주입. bypassPermissions 권유 금지.",
+    "synergy_doc": "docs/family-synergy.md"
+  }
 }
