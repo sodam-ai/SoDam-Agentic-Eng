@@ -15,6 +15,8 @@
 - **`codex/install.mjs`**: 생성·실행 검증 완료 (2개 스킬 설치, 2026-06-28). `.agents/` → `.gitignore` 추가.
 - **CLAUDE.md**: 루트 생성 완료 (포인터 패턴, AGENTS.md 링크).
 - **LICENSE**: Apache-2.0 전문 + `Copyright 2026 SoDam AI Studio` 생성 완료.
+- **README.md / README.en.md**: Codex 설치 섹션 추가 (`node codex/install.mjs` + F4 한계 안내, 2026-06-28).
+- **init-mvp 원격 푸시 완료** (2026-06-28): 커밋 `14ac29f`(AGENTS·CLAUDE·LICENSE·codex) + `e7f6b17`(README Codex섹션) → `sodam-ai/SoDam-Agentic-Eng:init-mvp` 반영.
 
 ## 2. 다음 작업 (우선순위 — 강력 추천 순)
 1. ⬜ **F2/F3 자동발동 + F4 차단 라이브 검증** — 테스트 창(`D:\Dev-Test_Made`)에서 "메모장 만들어줘".
@@ -22,7 +24,7 @@
    - 안 뜨면 → 스킬 `description` 강화(pushy 트리거). **이게 최대 미검증 = 1순위.**
    - ↳ F4 세션 내 확인(2026-06-28): `Remove-Item -Recurse -Force` → guard.mjs 차단 정상 작동.
    - ↳ N2 동시 확인 필요: `/plugin marketplace` UI 한글 렌더링 깨짐 여부.
-2. ⬜ **init-mvp 커밋 + 푸시** — 신규/변경: `AGENTS.md`·`codex/`·`.gitignore`·`CHECKPOINT.md`·`CLAUDE.md`·`LICENSE`.
+2. ✅ **init-mvp 커밋 + 푸시** — 완료 (2026-06-28). 원격 `sodam-ai/SoDam-Agentic-Eng:init-mvp` 최신.
 3. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
 4. ⬜ 비개발자 베타 · 법무 확인 (F2/F3/F4 라이브 검증 완료 후).
 
