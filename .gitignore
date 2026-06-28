@@ -14,6 +14,15 @@ node_modules/
 # 영구 데이터·백업 (사용자 파일·잠재 민감정보)
 .sodamagentic/
 
+# Codex 설치 스크립트 출력 (사용자 프로젝트에 설치됨, 플러그인 repo엔 불필요)
+.agents/
+
+# Claude Code 외부 도구 자동 생성 파일 (플러그인 메타 아님)
+.omc/
+.plugin-config/
+.complexity-log.md
+.todos-report.md
+
 # 테스트 임시 산출물
 _selftest.mjs
 *.tmp
