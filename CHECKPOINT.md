@@ -19,11 +19,16 @@
 - **init-mvp 원격 푸시 완료** (2026-06-28): 커밋 `14ac29f`(AGENTS·CLAUDE·LICENSE·codex) + `e7f6b17`(README Codex섹션) → `sodam-ai/SoDam-Agentic-Eng:init-mvp` 반영.
 
 ## 2. 다음 작업 (우선순위 — 강력 추천 순)
-1. ⬜ **F2/F3 자동발동 + F4 차단 라이브 검증** — 테스트 창(`D:\Dev-Test_Made`)에서 "메모장 만들어줘".
-   - **done-when:** 코드 전 계획 자동 표시(F2) + 작업 후 검토 요약(F3) + 위험명령 차단(F4) 확인.
-   - 안 뜨면 → 스킬 `description` 강화(pushy 트리거). **이게 최대 미검증 = 1순위.**
-   - ↳ F4 세션 내 확인(2026-06-28): `Remove-Item -Recurse -Force` → guard.mjs 차단 정상 작동.
-   - ↳ N2 동시 확인 필요: `/plugin marketplace` UI 한글 렌더링 깨짐 여부.
+1. ⬜ **F4 차단 라이브 검증** — `Remove-Item -Recurse .` 또는 `rm -rf .` 입력 시 한국어 차단 메시지 확인.
+   - **done-when:** guard.mjs가 한국어 이유와 함께 차단 메시지 표시.
+2. ⬜ **F2/F3 스킬 경쟁 한계 수용 및 문서화** — 라이브 테스트 2회 결과:
+   - 1차(2026-06-28): `feature-dev` 스킬이 sodam-agentic-plan 제압 → ❌
+   - 2차(2026-06-28): `persona-format` 스킬이 sodam-agentic-plan 제압 → ❌
+   - AGENTS.md·SKILL.md description 우선순위 추가(`33fe8ac`) 후에도 동일.
+   - **근본 한계 확인됨**: PRD §05_FAMILY_RISKS "스킬 = 부탁, 강제 불가" 실측 입증.
+   - Phase 1은 현 상태(soft guidance)로 배포. Phase 2에서 PreToolUse hook 강제 추가 예정.
+3. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
+4. ⬜ 비개발자 베타 · 법무 확인 (F4 라이브 검증 완료 후).
 2. ✅ **init-mvp 커밋 + 푸시** — 완료 (2026-06-28). 원격 `sodam-ai/SoDam-Agentic-Eng:init-mvp` 최신.
 3. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
 4. ⬜ 비개발자 베타 · 법무 확인 (F2/F3/F4 라이브 검증 완료 후).
