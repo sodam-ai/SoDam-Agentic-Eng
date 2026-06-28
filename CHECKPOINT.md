@@ -4,10 +4,10 @@
 > 정본 기획서는 `.PRD/`(로컬·GitHub 푸시 금지)에 있습니다.
 
 ## 1. 지금까지 된 것 (빌드·검증 완료)
-- **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS)
+- **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS, 2026-06-28 재확인)
 - **게이트0**: `.claude-plugin/plugin.json`·`marketplace.json`.
 - **F2·F3 척추**: `skills/sodam-agentic-plan/`·`skills/sodam-agentic-review/` + `agents/easy-reviewer.md`.
-- **검증기**: `scripts/validate.mjs` (PASS 8/0).
+- **검증기**: `scripts/validate.mjs` (PASS 8/0, 2026-06-28 재확인).
 - **문서**: `README.md`·`README.en.md`, `docs/사용가이드.md`·`USER-GUIDE.en.md`(+PDF 로컬), `docs/왕초보-테스트-가이드.md`.
 - **GitHub**: 비공개 `sodam-ai/SoDam-Agentic-Eng`, 브랜치 **`init-mvp`** 에 push. (master 원격에 없음 — 의도)
 - **라이브 검증됨**: 설치 · 한글 렌더링 · 명령 일관성(`/sodam-agentic-*`) · **F1 온보딩 실제 실행**.
@@ -17,21 +17,24 @@
 - **LICENSE**: Apache-2.0 전문 + `Copyright 2026 SoDam AI Studio` 생성 완료.
 - **README.md / README.en.md**: Codex 설치 섹션 추가 (`node codex/install.mjs` + F4 한계 안내, 2026-06-28).
 - **init-mvp 원격 푸시 완료** (2026-06-28): 커밋 `14ac29f`(AGENTS·CLAUDE·LICENSE·codex) + `e7f6b17`(README Codex섹션) → `sodam-ai/SoDam-Agentic-Eng:init-mvp` 반영.
+- **guard.mjs 심층 분석 완료** (2026-06-28): `isSensitive()` 동작 확인 — 홈 정확일치 + `.ssh/.aws/.codex/.claude/.gnupg/.config` + 시스템경로만 차단. AppData 경로 차단 아님(false positive 해당 없음). PostToolUse 훅 없음(Plan Mode 재발동은 Claude Code 네이티브 동작 — 플러그인 제어 불가).
 
 ## 2. 다음 작업 (우선순위 — 강력 추천 순)
-1. ⬜ **F4 차단 라이브 검증** — `Remove-Item -Recurse .` 또는 `rm -rf .` 입력 시 한국어 차단 메시지 확인.
-   - **done-when:** guard.mjs가 한국어 이유와 함께 차단 메시지 표시.
-2. ⬜ **F2/F3 스킬 경쟁 한계 수용 및 문서화** — 라이브 테스트 2회 결과:
+1. ⬜ **F4 차단 라이브 검증 (사람 직접)** — 새 Claude Code 세션(D:\Dev-Test_Made)에서 AI에게 `Remove-Item -Recurse .` 실행 지시.
+   - selftest "Remove-Item -Recurse → deny" PASS(2026-06-28) 확인됨. 라이브 세션에서 실제 메시지 확인 필요.
+   - **주의**: persona-safety가 먼저 개입해 "진행할까요?" 물을 수 있음 → "예" 응답 후 guard.mjs 차단 확인.
+   - **done-when**: guard.mjs 한국어 차단 메시지("폴더를 통째로 지우는 작업은 안전하게 막았어요") 표시.
+2. ⬜ **F2/F3 스킬 경쟁 한계 수용** — 라이브 테스트 2회 결과:
    - 1차(2026-06-28): `feature-dev` 스킬이 sodam-agentic-plan 제압 → ❌
    - 2차(2026-06-28): `persona-format` 스킬이 sodam-agentic-plan 제압 → ❌
-   - AGENTS.md·SKILL.md description 우선순위 추가(`33fe8ac`) 후에도 동일.
    - **근본 한계 확인됨**: PRD §05_FAMILY_RISKS "스킬 = 부탁, 강제 불가" 실측 입증.
-   - Phase 1은 현 상태(soft guidance)로 배포. Phase 2에서 PreToolUse hook 강제 추가 예정.
-3. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
-4. ⬜ 비개발자 베타 · 법무 확인 (F4 라이브 검증 완료 후).
-2. ✅ **init-mvp 커밋 + 푸시** — 완료 (2026-06-28). 원격 `sodam-ai/SoDam-Agentic-Eng:init-mvp` 최신.
-3. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
-4. ⬜ 비개발자 베타 · 법무 확인 (F2/F3/F4 라이브 검증 완료 후).
+   - Phase 1은 현 상태(soft guidance)로 배포. **Phase 2에서 PreToolUse hook 강제 추가 예정**.
+3. ⬜ **비개발자 베타 1명** — 혼자 골든 패스(`/sodam-agentic-start` → 작업 → 검토 완주). Phase 1 졸업 전제조건.
+4. ⬜ **법무 확인** — Apache-2.0 적용, "Claude/Codex" 상표 사용, GPL 체크.
+5. ⬜ **master/main 정식 브랜치 정리** (현재 원격은 init-mvp만).
+
+✅ **init-mvp 커밋 + 푸시** — 완료 (2026-06-28). 원격 `sodam-ai/SoDam-Agentic-Eng:init-mvp` 최신.
+✅ **guard.mjs 심층 분석** — 완료 (2026-06-28). 22 PASS 재확인, AppData 오차단 없음 확인.
 
 ## 3. 검증 커맨드
 ```
