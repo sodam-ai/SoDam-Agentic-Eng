@@ -34,6 +34,20 @@
    ```
 3. 확인: `/sodam-agentic` 까지 입력 → 명령 3개가 뜨면 성공.
 
+## 설치 (Codex) — Codex 사용자
+
+1. 이 저장소를 클론합니다:
+   ```
+   git clone https://github.com/sodam-ai/SoDam-Agentic-Eng
+   ```
+2. **내 프로젝트 폴더**에서 설치 스크립트를 실행합니다 (클론한 경로로 바꾸세요):
+   ```
+   node C:\경로\SoDam-Agentic-Eng\codex\install.mjs
+   ```
+3. 완료: 스킬이 내 프로젝트의 `.agents/skills/`에 복사됩니다.
+
+> ⚠️ Codex에서는 **안전 훅(F4)이 작동하지 않습니다.** 계획(F2)·검토(F3) 스킬만 사용 가능합니다.
+
 ## 사용법 (왕초보 단계)
 1. `/sodam-agentic-start` → 온보딩 안내를 읽습니다.
 2. "○○ 만들어줘"라고 부탁 → **계획이 먼저** 뜨면 "네/진행" 으로 승인.

@@ -34,6 +34,20 @@
    ```
 3. Verify: type `/sodam-agentic` — three commands should appear.
 
+## Install (Codex)
+
+1. Clone this repository:
+   ```
+   git clone https://github.com/sodam-ai/SoDam-Agentic-Eng
+   ```
+2. From **your project folder**, run the install script (update the path to where you cloned):
+   ```
+   node C:\path\to\SoDam-Agentic-Eng\codex\install.mjs
+   ```
+3. Done: skills are copied to your project's `.agents/skills/`.
+
+> ⚠️ **Safety hooks (F4) do not work in Codex.** Only the Plan (F2) and Review (F3) skills are available.
+
 ## Usage (beginner steps)
 1. `/sodam-agentic-start` → read the onboarding.
 2. Ask "make ○○" → if a **plan appears first**, approve with "yes/proceed".
