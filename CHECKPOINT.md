@@ -39,6 +39,7 @@
 ✅ **시너지 P1 완료** — (2026-06-29). `docs/api-contracts/harness-backup-api.md`(Harness backup API 공유 계약서) 생성. `scripts/family-health.mjs`(6형제 헬스체크) 생성·실행 검증 (`node scripts/family-health.mjs` → 정상 출력). validate.mjs PASS 8/0 유지.
 ✅ **PRD 전수 구현 완료** — (2026-06-29). `skills/sodam-agentic-start/SKILL.md`(F1 Codex 공유 스킬), `CHANGELOG.md`, `NOTICE` 신규 생성. `codex/install.mjs` F1 스킬 안내 추가. `validate.mjs` PASS 9/0 확인.
 ✅ **F4 치명 버그 수정** — (2026-06-29). `isAgenticActive()` 게이트 항상 false → guard 전체 무력화 버그. 함수·상수·게이트 제거. selftest **22 PASS / 0 FAIL**. `2b57a36` push 완료.
+✅ **PRE-1 isAgenticActive() 재구현** — (2026-06-29). BUNDLE_COEXISTENCE.md §2 슬롯 3 명세 준수. `~/.sodamagentic/session-*.json` 상태 확인으로 비에이전틱 세션 패시스루 구현. `SODAM_AGENTIC_DATA` env 오버라이드 지원. `_selftest.mjs`에 에이전틱 활성 시뮬레이션(agenticTmp) 추가. selftest **22 PASS / 0 FAIL** 재확인.
 
 ## 3. 검증 커맨드
 ```

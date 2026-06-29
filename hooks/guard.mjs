@@ -23,11 +23,28 @@
 // deny-first: 되돌릴 수 없는 건 deny, 되돌릴 수 있는 건 ask, 나머지는 조용히 통과(과잉 확인창 방지).
 // 정직한 한계: 위험 패턴은 "초안"이며 모든 위험을 100% 잡지 못한다(01_PRD §8.8).
 
-import { readFileSync, existsSync, lstatSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, lstatSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isHarnessAlive } from "./delegate.mjs";
+
+// ── 에이전틱 세션 활성 감지 (BUNDLE_COEXISTENCE.md §2 슬롯 3) ──────────────
+// isAgenticActive()=false → {} 패시스루 (비에이전틱 세션 방해 없음)
+// SODAM_AGENTIC_DATA env로 세션 디렉토리 오버라이드 가능
+const _agenticDataRoot = process.env.SODAM_AGENTIC_DATA || path.join(homedir(), ".sodamagentic");
+function isAgenticActive() {
+  try {
+    if (!existsSync(_agenticDataRoot)) return false;
+    return readdirSync(_agenticDataRoot)
+      .filter(f => f.startsWith("session-") && f.endsWith(".json"))
+      .some(f => {
+        try {
+          return JSON.parse(readFileSync(path.join(_agenticDataRoot, f), "utf8")).status === "running";
+        } catch { return false; }
+      });
+  } catch { return false; }
+}
 
 const WIN = process.platform === "win32";
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -246,6 +263,9 @@ function isSettingsFile(p) {
 
 // ── 메인 ──
 function main() {
+  // 1) 비에이전틱 세션 → 즉시 패시스루 (일반 Claude Code 작업 방해 없음)
+  if (!isAgenticActive()) { passThrough(); return; }
+
   const raw = readStdin();
   let input;
   try { input = JSON.parse(raw); } catch { passThrough(); return; }

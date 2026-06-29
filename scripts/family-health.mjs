@@ -25,8 +25,8 @@ const FAMILY = [
     sharedOutput: join(home, '.sodamharness'),
     apiContractPath: 'scripts/backup.mjs',
     prdDone: true,
-    codeDone: false,
-    note: 'Phase 1 미착수 — backup.mjs 구현 최우선',
+    codeDone: true,
+    note: 'Phase 1 완료 ✅ — selftest 75 PASS (2026-06-29). Context 처방 예외 추가됨',
   },
   {
     name: 'SoDamLoop',
@@ -49,13 +49,13 @@ const FAMILY = [
     projectPath: 'D:/AI_Dev_Work/2026y/26y_06m_25d_SoDam-Context-Eng',
     criticalFiles: [
       '.claude-plugin/plugin.json',
-      'lib/checkup.mjs',
+      'lib/checkup-cli.mjs',
       'lib/treat.mjs',
     ],
     apiContractPath: null,
     prdDone: true,
-    codeDone: false,
-    note: 'Harness backup API 완료 후 언블로킹',
+    codeDone: true,
+    note: 'Harness guard.mjs 블로커 해제 완료 (2026-06-29) — C3 처방 e2e 검증 대기',
   },
   {
     name: 'SoDamAgentic',
