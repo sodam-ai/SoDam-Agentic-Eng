@@ -77,15 +77,16 @@ const FAMILY = [
   {
     name: 'SoDamPrompt',
     emoji: '✏️',
-    role: '프롬프트 입문 웹앱',
+    role: '무코드 SKILL 라이브러리',
     projectPath: 'D:/AI_Dev_Work/2026y/26y_06m_28d_SoDam-Prompt-Eng',
     criticalFiles: [
-      'package.json',
+      'README.md',
+      'LICENSE',
     ],
     apiContractPath: null,
-    prdDone: false,
+    prdDone: true,
     codeDone: false,
-    note: '독립 스택(Next.js), 라이선스 확정 후 Phase 1 착수 가능',
+    note: 'SKILL.md 10개 완료(P1), 저장소 정리(P2)·GitHub push(P3)·사람 검수(P4) 대기',
   },
   {
     name: 'SoDamReverse',
@@ -102,8 +103,8 @@ const FAMILY = [
     ],
     apiContractPath: null,
     prdDone: true,
-    codeDone: false, // 5개 파일 누락
-    note: 'SETUP_BLOCKED_FILES.md 5개 파일 수동 생성 후 완료 → /re-selftest',
+    codeDone: true, // M2·M3 완료(6/6 PASS), M4 시너지 완료(2026-06-29)
+    note: 'Phase 1 MVP 완료 ✅ — M4(Harness+Context 시너지) 완료, M5 라이브 검증 대기',
   },
 ];
 
@@ -204,8 +205,9 @@ console.log(`📄 패밀리 시너지 헌법: ${existsSync(synergyDoc) ? '✅ �
 
 console.log('\n' + '─'.repeat(60));
 console.log('💡 다음 세션 안내:');
-console.log('   1. SoDam-Reverse-Eng 폴더에서 새 Claude Code 세션 열기');
-console.log('      → 5개 파일 자동 생성 가능 (가드 적용 없음)');
-console.log('   2. SoDam-Harness-Eng 폴더에서 새 세션 열기');
+console.log('   1. SoDam-Harness-Eng 폴더에서 새 세션 열기 [최우선 — Context·Loop 블로킹 해제]');
 console.log('      → backup.mjs → guard.mjs → hooks.json 순서로 구현');
+console.log('   2. SoDam-Reverse-Eng: M5 라이브 검증 (사람 직접)');
+console.log('      → 새 세션에서 /re-start samples/safe-login.js → 보고서 확인');
+console.log('   3. SoDam-Prompt-Eng: P2(저장소 정리)·P3(GitHub push)·P4(사람 검수)');
 console.log('─'.repeat(60) + '\n');
