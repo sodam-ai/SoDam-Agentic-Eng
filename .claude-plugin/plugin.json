@@ -6,5 +6,9 @@
     "name": "SoDam AI Studio"
   },
   "license": "Apache-2.0",
-  "keywords": ["agentic-engineering", "korean", "beginner", "onboarding", "safety"]
+  "keywords": ["agentic-engineering", "korean", "beginner", "onboarding", "safety"],
+  "hooks": "hooks/hooks.json",
+  "skills": "skills",
+  "agents": "agents",
+  "commands": "commands"
 }

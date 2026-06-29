@@ -23,7 +23,7 @@
 // deny-first: 되돌릴 수 없는 건 deny, 되돌릴 수 있는 건 ask, 나머지는 조용히 통과(과잉 확인창 방지).
 // 정직한 한계: 위험 패턴은 "초안"이며 모든 위험을 100% 잡지 못한다(01_PRD §8.8).
 
-import { readFileSync, existsSync, lstatSync } from "node:fs";
+import { readFileSync, existsSync, lstatSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,6 +32,21 @@ import { isHarnessAlive } from "./delegate.mjs";
 const WIN = process.platform === "win32";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const RULES_PATH = path.join(here, "..", "data", "agentic-rules.json");
+
+// Agentic 비활성 세션(세션 없음·종료됨) → 즉시 패시스루 (다른 플러그인 방해 방지)
+// SODAM_AGENTIC_DATA 환경변수로 세션 디렉토리 오버라이드 가능 (BUNDLE_COEXISTENCE §3)
+const AGENTIC_DATA = process.env.SODAM_AGENTIC_DATA || path.join(homedir(), ".sodamagentic");
+function isAgenticActive() {
+  try {
+    if (!existsSync(AGENTIC_DATA)) return false;
+    return readdirSync(AGENTIC_DATA)
+      .filter((f) => f.startsWith("session-") && f.endsWith(".json"))
+      .some((f) => {
+        try { return JSON.parse(readFileSync(path.join(AGENTIC_DATA, f), "utf8")).status === "running"; }
+        catch { return false; }
+      });
+  } catch { return false; }
+}
 
 // ── 규칙 로드 (데이터-주도 + fail-closed 내장 기본값) ──
 // 키탐지 패턴을 데이터에 두는 이유: guard.mjs 소스에 민감 환경변수 접근 리터럴을 두지 않아
@@ -249,6 +264,7 @@ function main() {
   const raw = readStdin();
   let input;
   try { input = JSON.parse(raw); } catch { passThrough(); return; }
+  if (!isAgenticActive()) { passThrough(); return; }
 
   const toolName = input.tool_name || "";
   const ti = input.tool_input || {};

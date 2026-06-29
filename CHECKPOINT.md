@@ -1,13 +1,13 @@
 # CHECKPOINT — SoDamAgentic (Phase 1 MVP)
 
-> **다음 세션은 이 파일을 먼저 읽고 이어가면 됩니다.** 기준일: 2026-06-28 (갱신).
+> **다음 세션은 이 파일을 먼저 읽고 이어가면 됩니다.** 기준일: 2026-06-29 (갱신).
 > 정본 기획서는 `.PRD/`(로컬·GitHub 푸시 금지)에 있습니다.
 
 ## 1. 지금까지 된 것 (빌드·검증 완료)
 - **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS, 2026-06-28 재확인)
 - **게이트0**: `.claude-plugin/plugin.json`·`marketplace.json`.
 - **F2·F3 척추**: `skills/sodam-agentic-plan/`·`skills/sodam-agentic-review/` + `agents/easy-reviewer.md`.
-- **검증기**: `scripts/validate.mjs` (PASS 8/0, 2026-06-28 재확인).
+- **검증기**: `scripts/validate.mjs` (PASS 9/0, 2026-06-29 재확인).
 - **문서**: `README.md`·`README.en.md`, `docs/사용가이드.md`·`USER-GUIDE.en.md`(+PDF 로컬), `docs/왕초보-테스트-가이드.md`.
 - **GitHub**: 비공개 `sodam-ai/SoDam-Agentic-Eng`, 브랜치 **`init-mvp`** 에 push. (master 원격에 없음 — 의도)
 - **라이브 검증됨**: 설치 · 한글 렌더링 · 명령 일관성(`/sodam-agentic-*`) · **F1 온보딩 실제 실행**.
@@ -37,10 +37,11 @@
 ✅ **guard.mjs 심층 분석** — 완료 (2026-06-28). 22 PASS 재확인, AppData 오차단 없음 확인.
 ✅ **6형제 시너지 P0 완료** — (2026-06-29). `docs/family-synergy.md`(공통 헌법) 생성. PRD §05_FAMILY_RISKS C1·C6 훅 충돌 방지 규약 4개 명문화. `agentic-rules.json` family 섹션 추가(런타임 영향 없음). README·AGENTS.md 형제 협업 규약 반영.
 ✅ **시너지 P1 완료** — (2026-06-29). `docs/api-contracts/harness-backup-api.md`(Harness backup API 공유 계약서) 생성. `scripts/family-health.mjs`(6형제 헬스체크) 생성·실행 검증 (`node scripts/family-health.mjs` → 정상 출력). validate.mjs PASS 8/0 유지.
+✅ **PRD 전수 구현 완료** — (2026-06-29). `skills/sodam-agentic-start/SKILL.md`(F1 Codex 공유 스킬), `CHANGELOG.md`, `NOTICE` 신규 생성. `codex/install.mjs` F1 스킬 안내 추가. `validate.mjs` PASS 9/0 확인.
 
 ## 3. 검증 커맨드
 ```
-node scripts/validate.mjs        # 구조 PASS 8/0 기대
+node scripts/validate.mjs        # 구조 PASS 9/0 기대
 node hooks/_selftest.mjs         # 안전훅 22 PASS 기대(_selftest는 .gitignore, 로컬만)
 # 설치 테스트(새 Claude Code, D:\Dev-Test_Made):
 /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
