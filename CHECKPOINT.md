@@ -38,6 +38,7 @@
 ✅ **6형제 시너지 P0 완료** — (2026-06-29). `docs/family-synergy.md`(공통 헌법) 생성. PRD §05_FAMILY_RISKS C1·C6 훅 충돌 방지 규약 4개 명문화. `agentic-rules.json` family 섹션 추가(런타임 영향 없음). README·AGENTS.md 형제 협업 규약 반영.
 ✅ **시너지 P1 완료** — (2026-06-29). `docs/api-contracts/harness-backup-api.md`(Harness backup API 공유 계약서) 생성. `scripts/family-health.mjs`(6형제 헬스체크) 생성·실행 검증 (`node scripts/family-health.mjs` → 정상 출력). validate.mjs PASS 8/0 유지.
 ✅ **PRD 전수 구현 완료** — (2026-06-29). `skills/sodam-agentic-start/SKILL.md`(F1 Codex 공유 스킬), `CHANGELOG.md`, `NOTICE` 신규 생성. `codex/install.mjs` F1 스킬 안내 추가. `validate.mjs` PASS 9/0 확인.
+✅ **F4 치명 버그 수정** — (2026-06-29). `isAgenticActive()` 게이트 항상 false → guard 전체 무력화 버그. 함수·상수·게이트 제거. selftest **22 PASS / 0 FAIL**. `2b57a36` push 완료.
 
 ## 3. 검증 커맨드
 ```
