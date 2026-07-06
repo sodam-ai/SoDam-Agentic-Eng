@@ -69,14 +69,16 @@
 
 ### 규약 D: Harness 감지 위임 패턴
 
-Harness가 살아있으면 위험 명령·민감 경로 검사를 Harness에 위임 (중복 확인창 방지).
+Harness가 살아있으면 **겹치는** 위험 명령·민감 경로 검사를 Harness에 위임 (중복 확인창 방지).
 각 형제는 `delegate.mjs` 또는 동일 패턴으로 `isHarnessAlive()` 체크 후 폴백.
+**단, 되돌릴 수 없는 치명 명령은 위임하지 않고 항상 자체 deny 한다**(ⓓ 방어심층 — `isHarnessAlive()`는 파일 존재만 확인하므로 껍데기·깨진 Harness에 위임하면 무방비가 되는 fail-open을 막는다).
 
 ```js
 // SoDamAgentic guard.mjs 구현 예 (다른 형제도 동일 패턴)
 const harness = isHarnessAlive();
-if (!harness && isSensitive(path)) decide("deny", "..."); // Harness 없을 때만
-if (harness) passThrough();                               // Harness 있으면 위임
+if (!harness && isSensitive(path)) decide("deny", "..."); // 민감경로: Harness 없을 때만
+if (level === "catastrophic") { decide("deny", "..."); return; } // ⓓ 치명: Harness 무관 항상 deny
+if (harness) passThrough();                               // 그 외 겹치는 안전: Harness 있으면 위임
 ```
 
 ---

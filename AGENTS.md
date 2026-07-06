@@ -50,7 +50,7 @@ SoDamAgentic은 6형제 패밀리의 진입점이다. 다른 형제와 협업 �
 - **역할 침범 금지**: 안전·백업은 Harness, 반복은 Loop, 설명서 관리는 Context. Agentic이 중복 구현하지 않는다.
 - **훅 중복 등록 금지**: 새 PreToolUse 훅 파일을 추가하지 않는다. 추가 차단 규칙은 Harness `agentic-rules.json`의 `extra_denied`에 주입한다.
 - **bypassPermissions 금지**: 어떤 형제가 활성화되어 있어도 이 모드를 권유하지 않는다.
-- **Harness 위임 우선**: Harness가 살아있으면 위험 명령·경로 검사를 Harness에 위임(중복 확인창 방지).
+- **Harness 위임 우선**: Harness가 살아있으면 **겹치는** 위험 명령·경로 검사를 Harness에 위임(중복 확인창 방지). **단, 되돌릴 수 없는 치명 명령은 위임하지 않고 항상 자체 deny**(ⓓ 방어심층 — 껍데기·깨진 Harness 대비 fail-closed).
 - **참조 문서**: `docs/family-synergy.md` (6형제 공통 헌법)
 
 ## Codex 설치
