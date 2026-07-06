@@ -3,6 +3,12 @@
 > **다음 세션은 이 파일을 먼저 읽고 이어가면 됩니다.** 기준일: 2026-06-29 (갱신).
 > 정본 기획서는 `.PRD/`(로컬·GitHub 푸시 금지)에 있습니다.
 
+## 0. 2026-07-07 갱신 (매니페스트 수정 + R2 발견)
+- ✅ **매니페스트 검증버그 수정** — CC 2.1.201 스키마 변경 대응: `plugin.json` 경로 필드 **`./` 접두사 필수**(bare 경로 `Invalid input`), **`agents`는 디렉터리 불가·개별 `.md` 파일**(`["./agents/easy-reviewer.md"]` — skills/commands는 디렉터리 OK). `marketplace.json` top-level `description` 추가. 검증: `claude plugin validate --strict ✔`(0/0) + `validate.mjs 9/0` + `_selftest 22 PASS`. → `init-mvp` 커밋·푸시.
+- ✅ **형제 Harness도 동일 수정 완료**(타 세션, 커밋 `25a49fe`, `feat/phase1-mvp` 푸시). Harness는 `agents` 필드 없어 그 함정 없음.
+- ⚠️ **R2 — F4 폴백 활성화 빈틈(미해결·조사 필요)**: `hooks/guard.mjs:267` `if(!isAgenticActive()) passThrough()` → 활성 에이전틱 세션(`~/.sodamagentic/session-*.json` status:"running") 없으면 **완전 휴면**. 그런데 **세션을 켜는 코드가 Agentic repo에 없음**(온보딩 스킬=마크다운 안내뿐, `_selftest`만 시뮬). PRE-1 coexistence 게이트(BUNDLE_COEXISTENCE §2 슬롯3)의 부작용 가능성 → **Harness 부재 시 F4 최소폴백이 실제로 안 뜰 소지**(01 §5 "Harness 없이도 폴백 작동" 성공기준과 충돌 가능). **라이브 F4 차단 검증 전 반드시**: 세션 활성화 주체(온보딩? Loop? 미구현?) 규명. 안 그러면 "차단 안 됨"을 버그로 오판.
+
+
 ## 1. 지금까지 된 것 (빌드·검증 완료)
 - **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS, 2026-06-28 재확인)
 - **게이트0**: `.claude-plugin/plugin.json`·`marketplace.json`.
