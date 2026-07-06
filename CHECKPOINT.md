@@ -9,6 +9,9 @@
 - ⚠️ **R2 — F4 폴백 활성화 빈틈(미해결·조사 필요)**: `hooks/guard.mjs:267` `if(!isAgenticActive()) passThrough()` → 활성 에이전틱 세션(`~/.sodamagentic/session-*.json` status:"running") 없으면 **완전 휴면**. 그런데 **세션을 켜는 코드가 Agentic repo에 없음**(온보딩 스킬=마크다운 안내뿐, `_selftest`만 시뮬). PRE-1 coexistence 게이트(BUNDLE_COEXISTENCE §2 슬롯3)의 부작용 가능성 → **Harness 부재 시 F4 최소폴백이 실제로 안 뜰 소지**(01 §5 "Harness 없이도 폴백 작동" 성공기준과 충돌 가능). **라이브 F4 차단 검증 전 반드시**: 세션 활성화 주체(온보딩? Loop? 미구현?) 규명. 안 그러면 "차단 안 됨"을 버그로 오판.
 
 
+- ✅ **R2 해소 (2026-07-07)** — F4 폴백을 무력화하던 `isAgenticActive()` 세션 게이트 **제거**(01_PRD §8 규칙1 "Harness 없을 때만 최소 폴백" 준수). guard는 설치 시 **항상 평가**, 공존(이중 차단 방지)은 `isHarnessAlive()` 위임이 담당. `_selftest.mjs` 세션 시뮬 의존 제거 → **세션 없이도 22 PASS/0 FAIL**(=실사용에서 F4가 실제로 deny/ask 발동, 이전엔 시뮬해야만 통과=휴면). validate 9/0.
+  - **잔여(후속·라이브):** ① Harness 동시 설치 시 settings.json·키 이중확인 가능성(경미 UX, 안전구멍 아님 — 실측 후 위임 확대 검토) ② **라이브 F4 차단 실증**(§2.1, 사람) ③ Loop repo `BUNDLE_COEXISTENCE.md §2 슬롯3` 문구 갱신(교차 repo — Agentic guard는 항상활성·위임기반으로).
+
 ## 1. 지금까지 된 것 (빌드·검증 완료)
 - **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS, 2026-06-28 재확인)
 - **게이트0**: `.claude-plugin/plugin.json`·`marketplace.json`.

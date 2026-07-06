@@ -29,22 +29,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isHarnessAlive } from "./delegate.mjs";
 
-// ── 에이전틱 세션 활성 감지 (BUNDLE_COEXISTENCE.md §2 슬롯 3) ──────────────
-// isAgenticActive()=false → {} 패시스루 (비에이전틱 세션 방해 없음)
-// SODAM_AGENTIC_DATA env로 세션 디렉토리 오버라이드 가능
-const _agenticDataRoot = process.env.SODAM_AGENTIC_DATA || path.join(homedir(), ".sodamagentic");
-function isAgenticActive() {
-  try {
-    if (!existsSync(_agenticDataRoot)) return false;
-    return readdirSync(_agenticDataRoot)
-      .filter(f => f.startsWith("session-") && f.endsWith(".json"))
-      .some(f => {
-        try {
-          return JSON.parse(readFileSync(path.join(_agenticDataRoot, f), "utf8")).status === "running";
-        } catch { return false; }
-      });
-  } catch { return false; }
-}
+// ── 안전 폴백은 "항상 켜짐"(설치되면 늘 보호) ──────────────────────────────
+// 근거: 01_PRD §8 규칙1 "일반 안전은 Harness 소유, Harness 없을 때만 각자 최소 폴백".
+//   폴백은 안전망이므로 워크플로 세션에 의존해 켜고 끄면 안 된다.
+//   이전 isAgenticActive() 세션 게이트는 프로덕션에서 `~/.sodamagentic/session-*.json`을
+//   만드는 코드가 없어(온보딩=마크다운·selftest만 시뮬) F4를 항상 휴면시키는 결함이었다
+//   → 제거(CHECKPOINT R2, 2026-07-07 해소). 공존(이중 차단 방지)은 아래 isHarnessAlive() 위임이 담당.
 
 const WIN = process.platform === "win32";
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -263,9 +253,7 @@ function isSettingsFile(p) {
 
 // ── 메인 ──
 function main() {
-  // 1) 비에이전틱 세션 → 즉시 패시스루 (일반 Claude Code 작업 방해 없음)
-  if (!isAgenticActive()) { passThrough(); return; }
-
+  // 안전 폴백은 항상 평가한다(세션 게이트 없음 — R2). 위험하지 않은 작업은 끝에서 조용히 통과.
   const raw = readStdin();
   let input;
   try { input = JSON.parse(raw); } catch { passThrough(); return; }
