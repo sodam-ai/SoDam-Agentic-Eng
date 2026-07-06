@@ -12,6 +12,9 @@
 - ✅ **R2 해소 (2026-07-07)** — F4 폴백을 무력화하던 `isAgenticActive()` 세션 게이트 **제거**(01_PRD §8 규칙1 "Harness 없을 때만 최소 폴백" 준수). guard는 설치 시 **항상 평가**, 공존(이중 차단 방지)은 `isHarnessAlive()` 위임이 담당. `_selftest.mjs` 세션 시뮬 의존 제거 → **세션 없이도 22 PASS/0 FAIL**(=실사용에서 F4가 실제로 deny/ask 발동, 이전엔 시뮬해야만 통과=휴면). validate 9/0.
   - **잔여(후속·라이브):** ① Harness 동시 설치 시 settings.json·키 이중확인 가능성(경미 UX, 안전구멍 아님 — 실측 후 위임 확대 검토) ② **라이브 F4 차단 실증**(§2.1, 사람) ③ ✅완료(2026-07-07): guard 수정 커밋 `0afc872`(init-mvp 푸시) + Loop `BUNDLE_COEXISTENCE.md §2·§3` 정합 커밋 `0001780`(feat/sodam-loop-phase1a 푸시).
 
+- ✅ **안전 코드 적대적 재감사 (2026-07-07)** — R2급 "조용한 무효" 빈틈 색출. ⓒ 훅배선 정상(`hooks.json`이 Bash·PowerShell·Write·Edit·MultiEdit·NotebookEdit 전부 커버)·ⓑ 잔여 휴면 없음. **ⓐ 자동승인(bypass) 미경고(07 §1 MUST) → `sodam-agentic-start` 온보딩에 경고 추가**(훅은 그 모드 원천 감지 불가 → 사람 확인 안내). validate PASS·selftest 22/0 재확인. (✅커밋 2026-07-07)
+  - **ⓓ ✅구현 완료(2026-07-07, guard catastrophic deny를 harness 위임보다 앞으로 이동 — 원래 권고):** `delegate.isHarnessAlive()`가 Harness 작동 검증 안 함(이름+버전+guard.mjs **파일 존재**만, "// stub"도 통과) → 깨진/가짜 Harness가 위험명령·민감경로 위임을 유발해 둘 다 꺼질 소지(fail-open, B1 잔재·저위험 엣지). 권고: **치명(catastrophic) 명령은 Harness 유무 무관 Agentic도 항상 deny(방어심층)** — 이중 deny는 프롬프트 없어 무해. 설계·안전핵심 변경이라 별도 승인 권장.
+
 ## 1. 지금까지 된 것 (빌드·검증 완료)
 - **F4 안전 훅**: `hooks/guard.mjs`·`delegate.mjs`·`hooks.json` + `data/agentic-rules.json`. (`node hooks/_selftest.mjs` → 22 PASS, 2026-06-28 재확인)
 - **게이트0**: `.claude-plugin/plugin.json`·`marketplace.json`.

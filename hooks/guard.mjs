@@ -304,12 +304,15 @@ function main() {
       }
     }
 
-    // ① 위험·치명 명령 — Harness가 살아있으면 위임(중복 차단/프롬프트 방지)
-    if (harness) { passThrough(); return; }
+    // ① 치명(catastrophic) 명령 — Harness 유무 무관 항상 deny (ⓓ 방어심층)
+    //   근거: isHarnessAlive()는 guard.mjs 파일 존재만 확인 → 껍데기/깨진 Harness면 위임 후 무방비.
+    //   되돌릴 수 없는 명령은 어떤 경우에도 막는다(fail-closed). 이중 deny는 프롬프트 없어 무해.
     if (level === "catastrophic") {
       decide("deny", "되돌릴 수 없는 위험한 명령이라 막았어요. 정말 필요하면 더 작은 단위로 나눠서 해보세요.");
       return;
     }
+    // ① 그 외 위험(재귀/단일 삭제) — Harness가 살아있으면 위임(중복 차단/프롬프트 방지)
+    if (harness) { passThrough(); return; }
     // ① 폴더(재귀) 삭제 → deny (백업·되돌리기 어려움)
     if (anyMatch(RECURSIVE_DELETE, cmd)) {
       decide("deny", FOLDER_DENY_MSG);
