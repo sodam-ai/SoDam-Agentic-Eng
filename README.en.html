@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SoDamAgentic</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+    <style>
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #1a1a1a;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SoDamAgentic</h1>
+</header>
+<h1 id="sodamagentic">SoDamAgentic</h1>
+<blockquote>
+<p>A <strong>Claude Code / Codex plugin</strong> for beginner
+vibe-coders. It spoon-feeds, in <strong>plain language</strong>, how to
+properly direct an AI (plan first → review → safety). 🇰🇷 한국어: <a
+href="./README.md">README.md</a> 📖 For the detailed edition
+(architecture, security, FAQ, uninstall, etc.), see <strong><a
+href="./GUIDE.en.md">GUIDE.en.md</a></strong>.</p>
+</blockquote>
+<blockquote>
+<p>⚠️ Currently in <strong>Phase 1 (MVP)</strong>. Some features are
+early-stage.</p>
+</blockquote>
+<p><strong>Contents:</strong> <a href="#features">Features</a> · <a
+href="#requirements">Requirements</a> · <a href="#install">Install</a> ·
+<a href="#usage">Usage</a> · <a href="#commands">Commands</a> · <a
+href="#test">Test</a> · <a href="#uninstall">Uninstall</a> · <a
+href="#safety">Safety</a> · <a href="#trouble">Troubleshooting</a> · <a
+href="#license">License</a> · <a href="#family">Family</a></p>
+<hr />
+<p><a id="features"></a> ## What it does (4 things)</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Onboarding</strong></td>
+<td><code>/sodam-agentic-start</code> — explains the 4 steps of
+directing an AI, in Korean</td>
+</tr>
+<tr>
+<td><strong>Plan First (F2)</strong></td>
+<td>Before writing code, shows a “what / why / done-criteria” plan and
+asks for approval</td>
+</tr>
+<tr>
+<td><strong>Easy Review (F3)</strong></td>
+<td>Summarizes changes as “what / why / any risks?” in plain
+language</td>
+</tr>
+<tr>
+<td><strong>Safety (F4)</strong></td>
+<td>Auto-blocks/asks on risky commands, key exposure, writes outside the
+work folder, settings changes</td>
+</tr>
+</tbody>
+</table>
+<p><a id="requirements"></a> ## Requirements - <strong>Node.js
+18+</strong> (the safety hook needs it) - <strong>Claude Code</strong>
+(or Codex)</p>
+<p><a id="install"></a> ## Install (Claude Code) &gt; This repository is
+<strong>private</strong> — it installs only for accounts with
+access.</p>
+<ol type="1">
+<li><p>Add the marketplace:</p>
+<pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
+<li><p>Install:</p>
+<pre><code>/plugin install sodam-agentic@sodam</code></pre></li>
+<li><p>Verify: type <code>/sodam-agentic</code> — three commands should
+appear.</p></li>
+</ol>
+<h2 id="install-codex">Install (Codex)</h2>
+<ol type="1">
+<li><p>Clone this repository:</p>
+<pre><code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
+<li><p>From <strong>your project folder</strong>, run the install script
+(update the path to where you cloned):</p>
+<pre><code>node C:\path\to\SoDam-Agentic-Eng\codex\install.mjs</code></pre></li>
+<li><p>Done: skills are copied to your project’s
+<code>.agents/skills/</code>.</p></li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Safety hooks (F4) are weaker in Codex than in Claude
+Code.</strong> See <a
+href="./GUIDE.en.md#security-data-flow">GUIDE.en.md §10</a>.</p>
+</blockquote>
+<p><a id="usage"></a> ## Usage (beginner steps) 1.
+<code>/sodam-agentic-start</code> → read the onboarding. 2. Ask “make
+○○” → if a <strong>plan appears first</strong>, approve with
+“yes/proceed”. 3. After the work, read the <strong>review
+summary</strong> and check the risks.</p>
+<blockquote>
+<p>Curious about the <strong>architecture</strong> (components, hook
+decision flow) or <strong>security/data flow</strong>? → <a
+href="./GUIDE.en.md#architecture">GUIDE.en.md §9–10</a></p>
+</blockquote>
+<p><a id="commands"></a> ## Commands | Command | Description | |—|—| |
+<code>/sodam-agentic-start</code> | Onboarding | |
+<code>/sodam-agentic-plan</code> | Plan first | |
+<code>/sodam-agentic-review</code> | Change review |</p>
+<p><a id="test"></a> ## Test / Verify - <strong>Structure
+check:</strong> <code>node scripts/validate.mjs</code> (validates
+manifest / skills / hooks) - <strong>Live safety hook:</strong> after
+install, try a risky command and confirm it is blocked</p>
+<p><a id="uninstall"></a> ## Uninstall - Claude Code: type
+<code>/plugin uninstall sodam-agentic</code> → done once
+<code>/sodam-agentic</code> no longer shows commands. - Codex: delete
+the copied skill folder(s) from <code>.agents/skills/</code> directly. -
+Leftover data: this plugin creates no persistent settings/logs/backups,
+so nothing remains after removal. Details → <a
+href="./GUIDE.en.md#uninstall">GUIDE.en.md §11</a></p>
+<p><a id="safety"></a> ## Safety notes - <strong>Never put
+secrets</strong> (API keys, passwords, <code>.env</code>) in code, docs,
+or logs. - The safety net blocks irreversible risks and asks on the
+rest. It is <strong>not “100% safe.”</strong> - In
+auto-accept/bypass-permissions mode, confirmation prompts pass through
+silently — use <code>Shift+Tab</code> for “ask every time.”</p>
+<p><a id="trouble"></a> ## Troubleshooting | Symptom | Fix | |—|—| |
+<code>/sodam-agentic</code> doesn’t show | Reinstall
+(<code>/plugin install sodam-agentic@sodam</code>) | | Korean text is
+garbled | Capture the screen and report | | Code without a plan | Skill
+lost to another feature — to be enforced in Phase 2 | | “Node not found”
+| Install Node.js 18+ and retry |</p>
+<p>Full 11-row table, FAQ, and changelog → <a
+href="./GUIDE.en.md#troubleshooting">GUIDE.en.md §12–16</a></p>
+<p><a id="family"></a> ## The SoDam family (stronger together)</p>
+<p>SoDamAgentic is the entry point of a 6-plugin family. Installing them
+together makes things safer and more complete.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Role</th>
+<th>Install order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🛡 SoDamHarness</td>
+<td>Safety · backup · undo</td>
+<td>1st (recommended)</td>
+</tr>
+<tr>
+<td>🔁 SoDamLoop</td>
+<td>Autonomous repeat engine</td>
+<td>2nd</td>
+</tr>
+<tr>
+<td>🧠 SoDamContext</td>
+<td>Documentation health check</td>
+<td>3rd</td>
+</tr>
+<tr>
+<td>🚀 <strong>SoDamAgentic</strong></td>
+<td><strong>Entry point · plan · review (this one)</strong></td>
+<td>4th</td>
+</tr>
+<tr>
+<td>✏️ SoDamPrompt</td>
+<td>Prompt-learning web app</td>
+<td>5th</td>
+</tr>
+<tr>
+<td>🔍 SoDamReverse</td>
+<td>Code/app analysis reports</td>
+<td>6th</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Full collaboration spec: <a
+href="./docs/family-synergy.md">docs/family-synergy.md</a></p>
+</blockquote>
+<p><a id="license"></a> ## License, copyright &amp; commercial use</p>
+<p><strong>Apache License 2.0</strong> · Copyright <strong>SoDam AI
+Studio</strong> · 2026 (full text: <a
+href="./LICENSE"><code>LICENSE</code></a>, notice: <a
+href="./NOTICE"><code>NOTICE</code></a>). Modify, copy, redistribute,
+<strong>commercial use</strong>, sell, run as a service, use in
+education, deliver to clients — all ✅ (NOTICE-preservation condition).
+Provided <strong>“AS IS,” no warranty</strong> — outcomes are your
+responsibility. This kit is <strong>free</strong>, but <strong>AI model
+(Claude/Codex) usage fees and terms follow Anthropic’s/OpenAI’s own
+terms</strong> separately. “Claude/Codex” etc. are trademarks of their
+owners, used only descriptively. ⚠️ Some items are still pending legal
+review (e.g. trademark scope) — full text → <a
+href="./GUIDE.en.md#license-legal">GUIDE.en.md §14</a> (not legal
+advice, for reference only)</p>
+</body>
+</html>

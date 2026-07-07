@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>소담 에이전틱 (SoDamAgentic)</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+    <style>
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #1a1a1a;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">소담 에이전틱 (SoDamAgentic)</h1>
+</header>
+<h1 id="소담-에이전틱-sodamagentic">소담 에이전틱 (SoDamAgentic)</h1>
+<blockquote>
+<p>초보 바이브코더를 위한 <strong>Claude Code / Codex 플러그인</strong>.
+“AI에게 제대로 일 시키는 법(계획 먼저 → 검토 → 안전)”을 <strong>쉬운
+한국어</strong>로 떠먹여 줍니다. 🇺🇸 English: <a
+href="./README.en.md">README.en.md</a> 📖 더 상세한
+설명(아키텍처·보안·FAQ·제거 방법 등)은 <strong><a
+href="./GUIDE.md">GUIDE.md — 왕초보 가이드</a></strong> 를 보세요.</p>
+</blockquote>
+<blockquote>
+<p>⚠️ 현재 <strong>Phase 1 (MVP) 구현 중</strong>입니다. 일부 기능은
+초기 버전입니다.</p>
+</blockquote>
+<p><strong>목차:</strong> <a href="#features">기능</a> · <a
+href="#requirements">준비물</a> · <a href="#install">설치</a> · <a
+href="#usage">사용법</a> · <a href="#commands">명령어</a> · <a
+href="#test">테스트</a> · <a href="#uninstall">제거</a> · <a
+href="#safety">안전</a> · <a href="#trouble">오류 대처</a> · <a
+href="#license">라이선스</a> · <a href="#family">패밀리</a></p>
+<hr />
+<p><a id="features"></a> ## 무엇을 해주나요 (4가지)</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>기능</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>온보딩</strong></td>
+<td><code>/sodam-agentic-start</code> — AI에게 일 시키는 4단계를
+한국어로 안내</td>
+</tr>
+<tr>
+<td><strong>계획 먼저 (F2)</strong></td>
+<td>코드 짜기 전에 “무엇을·왜·완성기준” 계획을 먼저 보여주고
+승인받음</td>
+</tr>
+<tr>
+<td><strong>변경점 검토 (F3)</strong></td>
+<td>바꾼 내용을 “무엇을 / 왜 / 위험은?” 쉬운 말로 요약</td>
+</tr>
+<tr>
+<td><strong>안전 (F4)</strong></td>
+<td>위험 명령·키 노출·작업폴더 밖 쓰기·설정파일 변경을 자동
+차단/확인</td>
+</tr>
+</tbody>
+</table>
+<p><a id="requirements"></a> ## 준비물 - <strong>Node.js 18
+이상</strong> (없으면 안전 훅이 안 돕니다) - <strong>Claude
+Code</strong> (또는 Codex)</p>
+<p><a id="install"></a> ## 설치 (Claude Code) — 따라하기 &gt; 이
+저장소는 <strong>비공개</strong>입니다. 본인 GitHub 계정으로 접근 가능할
+때만 설치됩니다.</p>
+<ol type="1">
+<li><p>마켓플레이스 추가 (입력칸에 그대로 붙여넣고 Enter):</p>
+<pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
+<li><p>설치:</p>
+<pre><code>/plugin install sodam-agentic@sodam</code></pre></li>
+<li><p>확인: <code>/sodam-agentic</code> 까지 입력 → 명령 3개가 뜨면
+성공.</p></li>
+</ol>
+<h2 id="설치-codex-codex-사용자">설치 (Codex) — Codex 사용자</h2>
+<ol type="1">
+<li><p>이 저장소를 클론합니다:</p>
+<pre><code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
+<li><p><strong>내 프로젝트 폴더</strong>에서 설치 스크립트를 실행합니다
+(클론한 경로로 바꾸세요):</p>
+<pre><code>node C:\경로\SoDam-Agentic-Eng\codex\install.mjs</code></pre></li>
+<li><p>완료: 스킬이 내 프로젝트의 <code>.agents/skills/</code>에
+복사됩니다.</p></li>
+</ol>
+<blockquote>
+<p>⚠️ Codex에서는 <strong>안전 훅(F4)이 작동하지 않습니다.</strong>
+계획(F2)·검토(F3) 스킬만 사용 가능합니다.</p>
+</blockquote>
+<p><a id="usage"></a> ## 사용법 (왕초보 단계) 1.
+<code>/sodam-agentic-start</code> → 온보딩 안내를 읽습니다. 2. “○○
+만들어줘”라고 부탁 → <strong>계획이 먼저</strong> 뜨면 “네/진행” 으로
+승인. 3. 작업이 끝나면 <strong>검토 요약</strong>을 읽고 위험을 직접
+확인.</p>
+<blockquote>
+<p>이 도구의 <strong>아키텍처(구성요소·훅 실행
+흐름)</strong>·<strong>보안/데이터 흐름</strong>이 궁금하면 → <a
+href="./GUIDE.md#architecture">GUIDE.md §9~10</a></p>
+</blockquote>
+<p><a id="commands"></a> ## 명령어 | 명령 | 설명 | |—|—| |
+<code>/sodam-agentic-start</code> | 온보딩(시작 안내) | |
+<code>/sodam-agentic-plan</code> | 계획 먼저 | |
+<code>/sodam-agentic-review</code> | 변경점 검토 |</p>
+<p><a id="test"></a> ## 테스트 / 검증 - <strong>구조 검증:</strong>
+<code>node scripts/validate.mjs</code> (매니페스트·스킬·훅 구조 점검) -
+<strong>안전 훅 라이브:</strong> 설치 후 위험 명령(예: 폴더 통째 삭제)을
+시켜 차단되는지 확인</p>
+<p><a id="uninstall"></a> ## 제거 방법 - Claude Code:
+<code>/plugin uninstall sodam-agentic</code> 입력 →
+<code>/sodam-agentic</code> 가 더는 안 뜨면 완료. - Codex:
+<code>.agents/skills/</code>에 복사된 스킬 폴더를 직접 삭제. - 남는
+데이터: 이 플러그인은 영구 설정·로그·백업을 만들지 않아 제거 후 남는
+파일이 없습니다. 자세히 → <a href="./GUIDE.md#uninstall">GUIDE.md
+§11</a></p>
+<p><a id="safety"></a> ## 안전 주의 (꼭!) - API
+키·비밀번호·<code>.env</code> 등 <strong>비밀정보는 코드·문서·로그
+어디에도 넣지 마세요.</strong> - 안전장치는 “되돌릴 수 없는 위험은 차단,
+나머지는 확인”입니다. <strong>“100% 안전”은 아닙니다.</strong> - 자동
+승인(auto-accept/bypass) 모드에서는 확인창이 조용히 통과됩니다 —
+<code>Shift+Tab</code>으로 “매번 물어봄”을 권장합니다.</p>
+<p><a id="trouble"></a> ## 오류 대처 | 증상 | 해결 | |—|—| |
+<code>/sodam-agentic</code> 안 뜸 | 설치 다시
+(<code>/plugin install sodam-agentic@sodam</code>) | | 한글이 깨짐 |
+화면을 캡처해 문의 | | 계획 없이 코드부터 짬 | 초기 버전 한계 — 보강
+예정 | | <code>Node가 없다</code>고 나옴 | Node.js 18+ 설치 후 재시도
+|</p>
+<p>더 자세한 표(9가지 증상)·FAQ·변경이력은 → <a
+href="./GUIDE.md#troubleshooting">GUIDE.md §12~16</a></p>
+<p><a id="family"></a> ## 소담 패밀리 (함께 쓰면 더 강력)</p>
+<p>SoDamAgentic은 6개 플러그인 패밀리의 진입점입니다. 함께 설치하면 더
+안전하고 완전합니다.</p>
+<table>
+<thead>
+<tr>
+<th>플러그인</th>
+<th>역할</th>
+<th>설치 순서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🛡 SoDamHarness</td>
+<td>안전·백업·되돌리기</td>
+<td>1번째 (필수)</td>
+</tr>
+<tr>
+<td>🔁 SoDamLoop</td>
+<td>자율 반복 엔진</td>
+<td>2번째</td>
+</tr>
+<tr>
+<td>🧠 SoDamContext</td>
+<td>설명서 건강검진</td>
+<td>3번째</td>
+</tr>
+<tr>
+<td>🚀 <strong>SoDamAgentic</strong></td>
+<td><strong>진입점·계획·검토 (지금 이것)</strong></td>
+<td>4번째</td>
+</tr>
+<tr>
+<td>✏️ SoDamPrompt</td>
+<td>프롬프트 입문 웹앱</td>
+<td>5번째</td>
+</tr>
+<tr>
+<td>🔍 SoDamReverse</td>
+<td>코드·앱 분석 보고서</td>
+<td>6번째</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>자세한 협업 규약: <a
+href="./docs/family-synergy.md">docs/family-synergy.md</a></p>
+</blockquote>
+<p><a id="license"></a> ## 라이선스 · 저작권 · 상업적 용도</p>
+<p><strong>Apache License 2.0</strong> · 저작권자 <strong>SoDam AI
+Studio</strong> · 2026(전문: <a
+href="./LICENSE"><code>LICENSE</code></a>, 고지: <a
+href="./NOTICE"><code>NOTICE</code></a>).
+수정·복제·재배포·<strong>상업적 사용</strong>·판매·서비스 운영·교육·납품
+모두 ✅ (NOTICE 보존 조건). <strong>“있는 그대로(AS IS)” 제공, 보증
+없음</strong> — 사용 결과는 사용자 책임입니다. 이 키트는
+<strong>무료</strong>지만, <strong>AI 모델(Claude/Codex) 사용료·약관은
+Anthropic·OpenAI를 따로 따릅니다.</strong> “Claude·Codex” 등은 각사
+상표이며 설명적 표기로만 사용합니다. ⚠️ 법무 확인 대기 중인 항목(상표
+범위 등) 포함 전체 내용은 → <a href="./GUIDE.md#license-legal">GUIDE.md
+§14</a> (법률 자문 아님, 참고용)</p>
+</body>
+</html>

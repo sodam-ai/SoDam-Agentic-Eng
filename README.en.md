@@ -1,13 +1,17 @@
 # SoDamAgentic
 
 > A **Claude Code / Codex plugin** for beginner vibe-coders.
-> It spoon-feeds, in **plain Korean**, how to properly direct an AI (plan first → review → safety).
+> It spoon-feeds, in **plain language**, how to properly direct an AI (plan first → review → safety).
 > 🇰🇷 한국어: [README.md](./README.md)
+> 📖 For the detailed edition (architecture, security, FAQ, uninstall, etc.), see **[GUIDE.en.md](./GUIDE.en.md)**.
 
 > ⚠️ Currently in **Phase 1 (MVP)**. Some features are early-stage.
 
+**Contents:** [Features](#features) · [Requirements](#requirements) · [Install](#install) · [Usage](#usage) · [Commands](#commands) · [Test](#test) · [Uninstall](#uninstall) · [Safety](#safety) · [Troubleshooting](#trouble) · [License](#license) · [Family](#family)
+
 ---
 
+<a id="features"></a>
 ## What it does (4 things)
 
 | Feature | Description |
@@ -17,10 +21,12 @@
 | **Easy Review (F3)** | Summarizes changes as "what / why / any risks?" in plain language |
 | **Safety (F4)** | Auto-blocks/asks on risky commands, key exposure, writes outside the work folder, settings changes |
 
+<a id="requirements"></a>
 ## Requirements
 - **Node.js 18+** (the safety hook needs it)
 - **Claude Code** (or Codex)
 
+<a id="install"></a>
 ## Install (Claude Code)
 > This repository is **private** — it installs only for accounts with access.
 
@@ -46,13 +52,17 @@
    ```
 3. Done: skills are copied to your project's `.agents/skills/`.
 
-> ⚠️ **Safety hooks (F4) do not work in Codex.** Only the Plan (F2) and Review (F3) skills are available.
+> ⚠️ **Safety hooks (F4) are weaker in Codex than in Claude Code.** See [GUIDE.en.md §10](./GUIDE.en.md#security-data-flow).
 
+<a id="usage"></a>
 ## Usage (beginner steps)
 1. `/sodam-agentic-start` → read the onboarding.
 2. Ask "make ○○" → if a **plan appears first**, approve with "yes/proceed".
 3. After the work, read the **review summary** and check the risks.
 
+> Curious about the **architecture** (components, hook decision flow) or **security/data flow**? → [GUIDE.en.md §9–10](./GUIDE.en.md#architecture)
+
+<a id="commands"></a>
 ## Commands
 | Command | Description |
 |---|---|
@@ -60,21 +70,54 @@
 | `/sodam-agentic-plan` | Plan first |
 | `/sodam-agentic-review` | Change review |
 
+<a id="test"></a>
 ## Test / Verify
 - **Structure check:** `node scripts/validate.mjs` (validates manifest / skills / hooks)
 - **Live safety hook:** after install, try a risky command and confirm it is blocked
 
+<a id="uninstall"></a>
+## Uninstall
+- Claude Code: type `/plugin uninstall sodam-agentic` → done once `/sodam-agentic` no longer shows commands.
+- Codex: delete the copied skill folder(s) from `.agents/skills/` directly.
+- Leftover data: this plugin creates no persistent settings/logs/backups, so nothing remains after removal. Details → [GUIDE.en.md §11](./GUIDE.en.md#uninstall)
+
+<a id="safety"></a>
 ## Safety notes
 - **Never put secrets** (API keys, passwords, `.env`) in code, docs, or logs.
 - The safety net blocks irreversible risks and asks on the rest. It is **not "100% safe."**
+- In auto-accept/bypass-permissions mode, confirmation prompts pass through silently — use `Shift+Tab` for "ask every time."
 
+<a id="trouble"></a>
 ## Troubleshooting
 | Symptom | Fix |
 |---|---|
 | `/sodam-agentic` doesn't show | Reinstall (`/plugin install sodam-agentic@sodam`) |
 | Korean text is garbled | Capture the screen and report |
-| Code without a plan | Early-version limitation — to be improved |
+| Code without a plan | Skill lost to another feature — to be enforced in Phase 2 |
 | "Node not found" | Install Node.js 18+ and retry |
 
-## License
-Apache-2.0 © SoDam AI Studio
+Full 11-row table, FAQ, and changelog → [GUIDE.en.md §12–16](./GUIDE.en.md#troubleshooting)
+
+<a id="family"></a>
+## The SoDam family (stronger together)
+
+SoDamAgentic is the entry point of a 6-plugin family. Installing them together makes things safer and more complete.
+
+| Plugin | Role | Install order |
+|---|---|---|
+| 🛡 SoDamHarness | Safety · backup · undo | 1st (recommended) |
+| 🔁 SoDamLoop | Autonomous repeat engine | 2nd |
+| 🧠 SoDamContext | Documentation health check | 3rd |
+| 🚀 **SoDamAgentic** | **Entry point · plan · review (this one)** | 4th |
+| ✏️ SoDamPrompt | Prompt-learning web app | 5th |
+| 🔍 SoDamReverse | Code/app analysis reports | 6th |
+
+> Full collaboration spec: [docs/family-synergy.md](./docs/family-synergy.md)
+
+<a id="license"></a>
+## License, copyright & commercial use
+
+**Apache License 2.0** · Copyright **SoDam AI Studio** · 2026 (full text: [`LICENSE`](./LICENSE), notice: [`NOTICE`](./NOTICE)).
+Modify, copy, redistribute, **commercial use**, sell, run as a service, use in education, deliver to clients — all ✅ (NOTICE-preservation condition). Provided **"AS IS," no warranty** — outcomes are your responsibility.
+This kit is **free**, but **AI model (Claude/Codex) usage fees and terms follow Anthropic's/OpenAI's own terms** separately. "Claude/Codex" etc. are trademarks of their owners, used only descriptively.
+⚠️ Some items are still pending legal review (e.g. trademark scope) — full text → [GUIDE.en.md §14](./GUIDE.en.md#license-legal) (not legal advice, for reference only)
