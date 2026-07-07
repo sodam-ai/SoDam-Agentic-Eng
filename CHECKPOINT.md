@@ -7,7 +7,24 @@
 
 > ⛔ **R2 재도입 금지 (2026-07-07 회귀 차단됨):** `isAgenticActive()` 세션게이트를 **되살리지 마세요.** 세션 생성 코드가 repo에 없어 F4를 항상 휴면(fail-open)시키는 결함으로 이미 폐기됨(01_PRD §5·05_AUDIT B1 위배). `BUNDLE_COEXISTENCE §2 슬롯3`도 R2대로 정합 완료(커밋 `0001780`). guard는 **설치 시 항상 평가**, 공존은 `isHarnessAlive()` 위임이 담당. — *이날 다른 세션이 작업트리에서 이 게이트를 재도입하려던 것을 HEAD로 복원·차단함(selftest 22 PASS 재확인). 세션게이트 재구현 계획이 있다면 먼저 R2 근거를 다시 읽을 것.*
 
-- ✅ **README+GUIDE 전면 개정 (2026-07-07)** — `.PRD/09_DOCS_README_GUIDE.md`·`08_LICENSE_LEGAL.md`를 이번에 처음 전량 읽고 대조. `docs/사용가이드.md`·`USER-GUIDE.en.md` → 루트 `GUIDE.md`·`GUIDE.en.md`로 이동+개명(사용자 문서 컨벤션+PRD09 자체 명명 근거). staleness 2건 수정(LICENSE "미확정"→확정 사실, AGENTS.md "미구현"→구현됨), PRD09 MUST 누락이던 **제거방법** 절 추가, 사용자 요청 신규 절(목차·아키텍처·보안/데이터흐름·FAQ·변경이력 토글) 추가. README는 lean 유지(PRD09 readme-lean 원칙)+GUIDE 링크. `pandoc`으로 `GUIDE.md/en·README.md/en` → 대응 `.html` 4종 기계적 생성(md 원본과 내용 동일 보장). PDF·`docs/왕초보-테스트-가이드.md`·`SUITE-README.*`는 스코프 밖(안 건드림). 법무 미결 항목(상표 등)은 "확인 필요"로 계속 열어둠(과장 금지). — CC 2.1.201 스키마 변경 대응: `plugin.json` 경로 필드 **`./` 접두사 필수**(bare 경로 `Invalid input`), **`agents`는 디렉터리 불가·개별 `.md` 파일**(`["./agents/easy-reviewer.md"]` — skills/commands는 디렉터리 OK). `marketplace.json` top-level `description` 추가. 검증: `claude plugin validate --strict ✔`(0/0) + `validate.mjs 9/0` + `_selftest 22 PASS`. → `init-mvp` 커밋·푸시.
+> ### 🔜 다음 단계 (2026-07-07 확정 — 여기부터 이어서)
+>
+> 코드·문서측은 완료·커밋(`origin/init-mvp` 동기화). **남은 병목은 전부 "사람만 할 수 있는 검증"** — PRD 01 §5 성공기준("실제 설치 성공 + Harness 없이도 폴백 작동")은 로직(selftest)이 아니라 **라이브로만 증명됨**("초록불 ≠ 성공"). 아래는 §2 상세와 1:1 정합하는 2026-07-07 기준 우선순위·리스크 확정판.
+>
+> | 순위 | 작업 | 누가 | 준비물(있음) | 예상 리스크·변수·충돌 |
+> |---|---|---|---|---|
+> | **①** | **라이브 F4 차단 실증** | 사람(AI 불가) | `docs/F4-라이브검증-런북.md` | persona-safety가 먼저 "진행할까요?" → "예" 후 guard 메시지 확인 / **auto-accept·bypass 모드면 무의미**(`Shift+Tab`→"매번 물어봄") / **Harness 동시설치 시 재귀삭제·민감경로·단일삭제는 위임돼 guard 대신 Harness 메시지**(정상·버그 아님; 치명·키·settings는 항상 guard — 런북 §0-3) |
+> | **②** | **비개발자 베타 1명** | 사람 | `docs/왕초보-테스트-가이드.md` | F2/F3는 "부탁"이라 다른 스킬에 밀려 자동발동 안 될 수 있음(실측 2회 ❌) → 초보자가 "안 된다" 오해. **정상 한계로 안내**(Phase 2 강제화 예정) |
+> | **③** | **법무 확인** | 사람 | GUIDE §14에 "확인 필요" 명시 | 상표(Claude/Codex·"에이전틱")·차용코드 GPL·라이선스 최종. **미확인 공개 시 법적 노출**(변호사 관점) |
+> | **④** | **master/main 브랜치 정리** | 사람+AI 협의 | 미착수 | **master 직접 commit/push 금지**(§4). **배포 결정 후에만**. 잘못하면 히스토리 꼬임 |
+> | (Phase 2) | F2/F3 강제 훅화·F6 안전기록·F7 Codex패리티 | AI(나중) | — | 지금 아님(스코프 이탈·과설계 방지) |
+>
+> **⚠️ 최우선 변수 — 병렬 세션 회귀(오늘 실측 2회):** 다른 세션이 (1) `guard.mjs`에 R2 세션게이트, (2) 이 CHECKPOINT에서 README+GUIDE 기록을 각각 되돌림 → 둘 다 HEAD로 복원함. **작업 시작 전 이 repo를 편집 중인 다른 Claude Code 세션이 없는지 확인**(위 ⛔ 경고). **커밋 직후 `git status`·`git diff`로 회귀 점검을 습관화.**
+> **AI가 지금 더 할 코드작업은 없음** — 억지 추가는 Simplicity·drive-by 금지 위반. 다음 세션도 코드부터 만들지 말 것.
+> **저위험 잔가지(선택):** stale `docs/*.pdf`(원본이 루트로 이동해 안 맞음·gitignore·무해), 미추적 스크래치 `.doc-html-header.html`·`.pair-programming-session.md`.
+
+- ✅ **README+GUIDE 전면 개정 (2026-07-07)** — `docs/사용가이드.md`·`USER-GUIDE.en.md` → 루트 `GUIDE.md`·`GUIDE.en.md` 이동+개명. staleness 2건 수정(LICENSE "미확정"→확정 사실, AGENTS.md "미구현"→구현됨), PRD09 MUST 누락이던 **제거방법** 절 추가, 신규 절(목차·아키텍처·보안/데이터흐름·FAQ·변경이력 토글). README는 lean 유지+GUIDE 링크. `pandoc`으로 `GUIDE/README`(ko/en) → `.html` 4종 기계 생성(내용 동일). 검증 `validate 9/0`·시크릿 0·상호링크 전부 존재. → 커밋 `4da185f`.
+- ✅ **매니페스트 검증버그 수정** — CC 2.1.201 스키마 변경 대응: `plugin.json` 경로 필드 **`./` 접두사 필수**(bare 경로 `Invalid input`), **`agents`는 디렉터리 불가·개별 `.md` 파일**(`["./agents/easy-reviewer.md"]` — skills/commands는 디렉터리 OK). `marketplace.json` top-level `description` 추가. 검증: `claude plugin validate --strict ✔`(0/0) + `validate.mjs 9/0` + `_selftest 22 PASS`. → `init-mvp` 커밋·푸시.
 - ✅ **형제 Harness도 동일 수정 완료**(타 세션, 커밋 `25a49fe`, `feat/phase1-mvp` 푸시). Harness는 `agents` 필드 없어 그 함정 없음.
 - ⚠️ **R2 — F4 폴백 활성화 빈틈(미해결·조사 필요)**: `hooks/guard.mjs:267` `if(!isAgenticActive()) passThrough()` → 활성 에이전틱 세션(`~/.sodamagentic/session-*.json` status:"running") 없으면 **완전 휴면**. 그런데 **세션을 켜는 코드가 Agentic repo에 없음**(온보딩 스킬=마크다운 안내뿐, `_selftest`만 시뮬). PRE-1 coexistence 게이트(BUNDLE_COEXISTENCE §2 슬롯3)의 부작용 가능성 → **Harness 부재 시 F4 최소폴백이 실제로 안 뜰 소지**(01 §5 "Harness 없이도 폴백 작동" 성공기준과 충돌 가능). **라이브 F4 차단 검증 전 반드시**: 세션 활성화 주체(온보딩? Loop? 미구현?) 규명. 안 그러면 "차단 안 됨"을 버그로 오판.
 
