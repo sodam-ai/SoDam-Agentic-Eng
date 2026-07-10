@@ -91,5 +91,5 @@ console.log('  sodam-agentic-start  — 온보딩 시작 안내 (F1)');
 console.log('  sodam-agentic-plan   — 새 작업 전 계획 먼저 (F2)');
 console.log('  sodam-agentic-review — 작업 후 변경점 검토 (F3)');
 console.log('');
-console.log(YELLOW('⚠️  다시 한 번: 안전 훅(F4)은 Codex에서 작동하지 않습니다.'));
+console.log(YELLOW('⚠️  다시 한 번: 안전 훅(F4)은 Codex에서 Claude Code만큼 강하게 작동하지 않습니다.'));
 console.log('   Claude Code에서 사용하면 F4까지 모두 작동합니다.\n');
