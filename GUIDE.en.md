@@ -346,6 +346,16 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 </details>
 
 <details>
+<summary><b>✅ 2026-07-11 Live verification + bug fix (patch within the same version)</b> — click to expand</summary>
+
+- **Confirmed the safety hook (F4) actually works in a real usage session.** Until now it had only passed self-checks (code simulation) — this time a real risky-looking command was tried and confirmed to be genuinely blocked.
+- Found and fixed one real issue in the process: when several actions were chained together in one request (e.g. "move this folder and create a file"), a completely harmless action could get wrongly blocked as "dangerous." This is now fixed, and re-checked to confirm genuinely dangerous commands are still blocked just as before.
+- Unified inconsistent Codex install wording (the start-of-install message and the end-of-install message used to say different things).
+- ⚠️ **If your installed copy is older, this fix may not be applied yet.** Uninstall and reinstall to pick up the latest version (see [§12 Troubleshooting](#troubleshooting)).
+
+</details>
+
+<details>
 <summary><b>🗓️ [0.2.0] — Phase 2 (planned)</b> — click to expand</summary>
 
 - F6. Safety history (view block/ask history)
@@ -386,10 +396,11 @@ A. This plugin itself makes no network requests (see [§10 Security & data flow]
 ## 17. Current development status (honestly)
 
 - ✅ **Verified:** install, Korean rendering, command consistency, **onboarding (F1) actually works**.
-- ✅ **Code complete + self-test passing:** the safety hook (F4) now always turns on, catastrophic commands are always blocked regardless of a sibling plugin, and the auto-accept-mode limitation is documented in onboarding. All 22 self-tests pass.
-- ⬜ **Still needs a human to confirm directly:** whether the above blocking is visible in a real live Claude Code session, whether Plan (F2)/Review (F3) reliably auto-trigger without losing to other features, a beta test where a non-developer completes the whole flow alone, and final legal review (trademark/license).
+- ✅ **Code complete + self-test passing:** the safety hook (F4) now always turns on, catastrophic commands are always blocked regardless of a sibling plugin, and the auto-accept-mode limitation is documented in onboarding. All 25 self-tests pass.
+- ✅ **Live-verified (2026-07-11):** confirmed the safety blocking actually appears in a real usage session, and fixed + re-confirmed an over-blocking issue (harmless work wrongly blocked when actions were chained together) found during that check.
+- ⬜ **Still needs a human to confirm directly:** whether Plan (F2)/Review (F3) reliably auto-trigger without losing to other features, a beta test where a non-developer completes the whole flow alone, and final legal review (trademark/license).
 - This is pre-beta for non-developers. There may be rough edges, and **finding them is the current goal.** No exaggeration — this is the honest, current state.
 
 ---
 
-*Document version date: 2026-07-07 · This guide is written to match "what is actually implemented and verified so far."*
+*Document version date: 2026-07-11 · This guide is written to match "what is actually implemented and verified so far."*
