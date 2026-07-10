@@ -22,6 +22,7 @@ node_modules/
 .plugin-config/
 .complexity-log.md
 .todos-report.md
+.pair-programming-session.md
 
 # 테스트 임시 산출물
 _selftest.mjs
@@ -39,3 +40,6 @@ Thumbs.db
 # 생성 PDF/HTML (소스=MD에서 재생성 가능 — 저장소엔 소스만 추적)
 docs/*.pdf
 docs/*.html
+
+# 문서 HTML 생성용 pandoc 헤더 (로컬 빌드 입력 — 저장소엔 불필요)
+.doc-html-header.html
