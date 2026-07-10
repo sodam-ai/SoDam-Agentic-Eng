@@ -111,24 +111,53 @@ function bashTokens(cmd) {
 }
 
 // ── 셸 명령에서 경로 후보(민감 검사용) ── (Harness 검증 로직)
-const SHELL_OPS = new Set(["|", "||", "&&", ";", "&", ">", ">>", "<", "2>", "2>>"]);
+// 명령 구분자(새 명령 시작) vs 리다이렉트(다음 토큰=경로 대상)를 구분해야
+// "cd X && echo hi > note.txt" 같은 연쇄 명령에서 echo/hi 같은 일반 단어를
+// 경로로 오인하지 않는다(실측 버그, 2026-07-11 라이브 발견).
+const CMD_SEPARATORS = new Set(["|", "||", "&&", ";", "&"]);
+const REDIRECTS = new Set([">", ">>", "<", "2>", "2>>"]);
+// 이 명령들의 인자만 "경로일 수 있다"고 본다(과탐지 방지, 인자는 플래그를 건너뛰어도 추적).
+const PATH_TAKING_CMDS = new Set([
+  "rm", "del", "erase", "rmdir", "rd", "ri", "remove-item", "unlink",
+  "cat", "type", "more", "less", "get-content",
+  "cd", "cp", "copy", "mv", "move", "touch", "mkdir", "md",
+]);
+function looksLikePath(t) {
+  return t.includes("/") || t.includes("\\") || /^[a-zA-Z]:/.test(t) || t.startsWith("~");
+}
 function commandPaths(cmd) {
   const out = [];
   const toks = bashTokens(cmd);
+  let inPathCmdSegment = false; // 직전 && ; | 이후 명령이 경로를 다루는 명령인지(플래그 넘어서도 유지)
   for (let i = 0; i < toks.length; i++) {
-    if (i === 0) continue;
-    const prevTok = (toks[i - 1] || "").replace(/^["']+|["']+$/g, "");
-    if (/^-[Cc]$/.test(prevTok)) continue; // git -C <경로> / -c <key=val> 의 값 제외
-    const t = toks[i].replace(/^["';|&]+|["';|&]+$/g, "");
+    const raw = toks[i];
+    const quoteStripped = raw.replace(/^["']+|["']+$/g, "");
+
+    if (CMD_SEPARATORS.has(quoteStripped)) { inPathCmdSegment = false; continue; }
+    if (REDIRECTS.has(quoteStripped)) { continue; } // 자기 자신은 후보 아님, 다음 토큰이 대상
+
+    const t = raw.replace(/^["';|&]+|["';|&]+$/g, "");
     if (!t) continue;
-    if (t.startsWith("-")) continue;
-    if (t.startsWith("/")) {
-      if (!WIN) out.push(t);
-      else if (/[\\/].+/.test(t.slice(1))) out.push(t);
+
+    const prevQuoteStripped = i > 0 ? (toks[i - 1] || "").replace(/^["']+|["']+$/g, "") : "";
+    if (/^-[Cc]$/.test(prevQuoteStripped)) continue; // git -C <경로> / -c <key=val> 의 값 제외
+
+    if (i === 0 || CMD_SEPARATORS.has(prevQuoteStripped)) {
+      // 이 토큰은 (새) 명령어 이름 — 그 자체는 경로 후보 아님, 경로다루는명령인지만 기록
+      inPathCmdSegment = PATH_TAKING_CMDS.has(t.toLowerCase());
       continue;
     }
-    if (SHELL_OPS.has(t)) continue;
-    out.push(t);
+
+    if (t.startsWith("-")) continue; // 플래그는 경로 아님(세그먼트 상태는 유지)
+
+    if (t.startsWith("/")) {
+      if (!WIN) { out.push(t); continue; }
+      else if (/[\\/].+/.test(t.slice(1))) { out.push(t); continue; }
+      continue;
+    }
+
+    const prevIsRedirect = REDIRECTS.has(prevQuoteStripped);
+    if (prevIsRedirect || inPathCmdSegment || looksLikePath(t)) out.push(t);
   }
   return out;
 }

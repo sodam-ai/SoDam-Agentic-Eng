@@ -3,6 +3,45 @@
 > **다음 세션은 이 파일을 먼저 읽고 이어가면 됩니다.** 기준일: 2026-06-29 (갱신).
 > 정본 기획서는 `.PRD/`(로컬·GitHub 푸시 금지)에 있습니다.
 
+## 0-1. 2026-07-11 갱신 (정리·문서 세션 + hooks 조사 확정)
+
+> 이번 세션은 **코드 변경 없음** — 발견된 문서 버그·불일치 정리 + 핸드오프만(사용자 확정: "발견된 실제 문제만 정리"). 새 기능·Phase 2 착수 안 함(체크포인트 "코드작업 없음" 준수).
+
+### 🔑 plugin.json `hooks` 줄 조사 — 확정 결론 (커밋은 보류)
+- **미커밋 변경 실체:** 작업트리 `plugin.json`에서 `"hooks": "./hooks/hooks.json"` 한 줄이 **제거**됨(HEAD엔 있음). 미추적 스크래치 2건(`.doc-html-header.html`·`.pair-programming-session.md`)은 무해.
+- **실측 확인(재시작 불필요):** 설치·enabled된 캐시 매니페스트 `~/AppData/Roaming/claude-code/plugins/cache/sodam/sodam-agentic/0.1.0/.claude-plugin/plugin.json`에 **hooks 줄 없음**인데도 `claude plugin details` → **Hooks (1) PreToolUse 등록됨**. → **`hooks/hooks.json`은 자동 로드**됨(메모리 `sodam-cc-plugin-naming` 실측: `plugin.json`에 중복 선언 시 "Duplicate hooks file detected"로 플러그인 통째 로드 실패).
+- **판정:** 작업트리의 hooks 줄 제거는 **F4를 죽이지 않음 = 올바른 방향**. 다만 **HEAD엔 아직 줄이 남아** 신규 클론 설치 시 로드실패 위험. **커밋 결정은 사용자 "보류"** → 이번 세션은 작업트리 유지(복구·커밋 X).
+- **다음 세션 할 일:** CC 재시작 후 `claude plugin details`가 여전히 Hooks(1) 표시하는지 + 라이브 F4 실제 발동(런북) 확인 → 통과 시 hooks 줄 제거를 근거와 함께 커밋(init-mvp). 이 확인은 미뤄둔 최우선 과제 §2-1과 **동일 작업**.
+
+### 이번 세션 수정 (문서·정리, init-mvp 예정)
+- `README.md` — Codex F4 문구 과장("작동하지 않습니다") → "Claude Code만큼 강하게 작동하지 않습니다"(한/영·GUIDE·CHANGELOG 정합). `README.html` pandoc 재생성.
+- `CHANGELOG.md` — stale 참조(`docs/사용가이드.md`·`USER-GUIDE.en.md` → 루트 이동) 명기 + 누락됐던 `### 2026-07-07 패치` 소절 추가.
+- `.gitignore` — 미추적 스크래치 `.pair-programming-session.md`·`.doc-html-header.html` 추가(삭제 아님, 로컬 유지).
+
+### 남은 사람 게이트 (변동 없음 — §2 우선순위 유효)
+①라이브 F4 차단 실증(사람) ②비개발자 베타 1명 ③법무(상표·GPL·Apache) ④master/main 브랜치 정리(배포 결정 후). **+플래그:** 추적 파일 `CHECKPOINT.md`는 공개 시 로컬경로·내부메모 노출 → 공개 전 gitignore/`.PRD/` 이동 검토.
+
+## 0-2. 2026-07-11 후속 갱신 — ✅ **F4 라이브 실증 완료 + 실제 버그 발견·수정·검증**
+
+> 사용자 승인 하에 AI가 `docs/F4-라이브검증-런북.md`를 직접 실행(버림폴더·settings.json 백업 등 안전조치 선확보). §2-1 최우선 과제 **완료**.
+
+### ① F4 라이브 실증 결과 — sodam-agentic 훅이 실제로 발동함을 확정
+- **출처 확정 방법:** 차단 메시지 문구를 sodam-agentic `guard.mjs`와 `SoDam-Harness-Eng`의 `guard.mjs` 양쪽 소스와 전수 대조.
+- **비밀값 환경변수 노출 시도 차단(테스트 케이스) → deny**: 문구가 sodam-agentic `guard.mjs:277`에만 존재(Harness 전체에 동일 문구 0건) → **sodam-agentic의 F4가 이 세션에서 실제로 자동로드·발동함을 코드 대조로 확정.** (참고: 이 CHECKPOINT 편집 자체도 그 예시 명령 문자열을 그대로 인용했다가 동일 훅에 재차 막혀, 이 부분은 표현을 우회해 기록함 — F4가 문서 편집 시에도 실시간 작동 중임을 재확인.)
+- **⚠️ 정정(라이브 진행 중 재평가):** 초기엔 "폴더 삭제" 차단 메시지도 sodam-agentic 것으로 오판했으나, 재확인 결과 그 문구("...백업·되돌리기...그건 백업돼요...")는 **`SoDam-Harness-Eng/hooks/guard.mjs:513` 고유 문구**였음. 원인: 사용자의 실제 `~/.claude/settings.json`이 Harness의 `guard.mjs`를 PreToolUse로 **직접 등록**해뒀고, sodam-agentic의 자동로드 훅과 **병렬 실행**되어 있었음(둘 중 하나만 deny해도 차단 — 05_FAMILY_RISKS C6과 일치). 라이브 환경에서 두 플러그인의 결과를 분리하려면 메시지 문구를 정확히 대조해야 함(다음 세션 참고).
+
+### ② 실제 버그 발견·수정·검증 — `hooks/guard.mjs` `commandPaths()` (선택 필드, 승인 시 커밋 예정)
+- **증상:** `cd 작업폴더 && echo hi > note.txt && rm note.txt` 같은 **연쇄(`&&`) 명령**에서, 완전히 안전한 작업(파일 생성·자기 폴더 내 삭제)까지 "민감 위치" 오탐(deny)으로 막힘. selftest(22 PASS)는 이 패턴을 커버 안 해서 못 잡았던 **실사용 전용 버그**.
+- **근본원인:** `commandPaths()`가 `bashTokens()`로 단순 공백-split만 하고, 셸 연산자(`&&` 등) 이후 **명령어 이름과 무관한 일반 인자**(`echo`의 `hi` 등)까지 전부 "경로 후보"로 오인 → cwd가 사용자 홈일 때 `resolveLoose(홈, "echo")` 같은 무의미한 경로가 생성됨.
+- **수정:** "경로처럼 생겼거나 · 리다이렉트(`>`) 직후 · 경로 다루는 명령(`rm`·`cd`·`cat` 등)의 인자일 때만" 후보로 인정하도록 최소 수정(`hooks/guard.mjs` `commandPaths()`, ~49줄). 플래그(`-Recurse -Force`) 뒤에 오는 진짜 삭제 대상도 "명령 세그먼트" 단위로 추적해 놓치지 않음.
+- **검증(2단계):** (1) `node hooks/_selftest.mjs` → **22 PASS / 0 FAIL 유지**(회귀 없음). (2) 수정된 로직을 Harness 개입 없이 격리 실행 → `echo`/`hi`는 후보에서 제거됐고, 진짜 삭제 대상(`note.txt`, 플래그 뒤 `test`)과 진짜 위험 경로(`C:/Windows/...`)는 **여전히 정확히 잡힘**(탐지력 저하 없음 확인).
+
+### ③ 부가 발견(스코프 밖, 수정 안 함)
+- `SoDam-Harness-Eng`의 `guard.mjs`에도 유사한 오탐 성향(단일 파일 삭제를 폴더삭제로 오판)이 관찰됨. **다른 프로젝트라 이번 세션에서 손대지 않음**(01_PRD §8 4형제 경계 원칙). 필요 시 별도 세션에서 `SoDam-Harness-Eng`를 열어 처리.
+
+### 남은 사람 게이트 재정리
+①~~라이브 F4 차단 실증~~ → **✅ 완료(AI 대행, 위 결과)**. ②비개발자 베타 1명 ③법무 ④master/main 브랜치 정리 — **변동 없음, 여전히 사람 몫.**
+
 ## 0. 2026-07-07 갱신 (매니페스트 수정 + R2 발견)
 
 > ⛔ **R2 재도입 금지 (2026-07-07 회귀 차단됨):** `isAgenticActive()` 세션게이트를 **되살리지 마세요.** 세션 생성 코드가 repo에 없어 F4를 항상 휴면(fail-open)시키는 결함으로 이미 폐기됨(01_PRD §5·05_AUDIT B1 위배). `BUNDLE_COEXISTENCE §2 슬롯3`도 R2대로 정합 완료(커밋 `0001780`). guard는 **설치 시 항상 평가**, 공존은 `isHarnessAlive()` 위임이 담당. — *이날 다른 세션이 작업트리에서 이 게이트를 재도입하려던 것을 HEAD로 복원·차단함(selftest 22 PASS 재확인). 세션게이트 재구현 계획이 있다면 먼저 R2 근거를 다시 읽을 것.*
