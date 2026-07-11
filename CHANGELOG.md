@@ -64,6 +64,7 @@
 
 - **`plugin.json` 중복 `hooks` 선언 제거:** `hooks/hooks.json`은 Claude Code가 자동 로드하므로, `plugin.json`에 `"hooks": "./hooks/hooks.json"`을 중복 선언하면 "Duplicate hooks file detected"로 플러그인 로드 자체가 실패할 위험이 있음을 확인. 해당 줄 제거(`9ff0e0e`). `validate.mjs` 9/0, `_selftest.mjs` 25 PASS 재확인 후 반영.
 - **실사용 검증 중 발견·수정 — 작업폴더 밖(비민감 경로) 쓰기 간극(D1):** `isSensitive()`가 홈·시스템 등 정해진 목록만 검사해, 그 외 작업폴더 밖 위치(예: 다른 프로젝트 폴더)로의 쓰기는 걸러지지 않던 간극을 라이브 검증에서 발견(07_SECURITY §1 "작업폴더 안만 쓰기 허용"과 실제 구현 간극). 치명 위치가 아니므로 deny 대신 `ask`로 한 단계 확인하도록 `isOutsideWorkdir()` 신설·연결(`34c26d3`). 회귀 테스트 2건 추가(로컬 전용 `_selftest.mjs`, 총 27 PASS) + 별도 독립 탐침 스크립트로 교차검증.
+- **실사용 검증 2차 발견·부분 수정 — 심볼릭/junction 링크 경유 우회:** 작업폴더 안에 링크를 만들고 그걸 통해 쓰면, 경로 문자열만 비교하는 기존 검사(`isSensitive`·`isSymlink`·`isOutsideWorkdir`)를 우회할 수 있음을 발견(07_SECURITY §2 "심볼릭 링크가 작업폴더를 벗어나면 deny"와 간극). **1단계(링크 생성 자체)만 우선 차단**: `data/agentic-rules.json`의 `extra_denied`에 `mklink`·`New-Item -ItemType Junction/SymbolicLink/HardLink`·`ln -s` 패턴 추가(`6542728`, 코드 무변경·데이터만). 회귀 테스트 3건 추가(총 30 PASS). **잔여 위험(의도적 보류):** 세션 시작 전부터 이미 존재하던 링크를 통한 우회, 또는 실경로(realpath) 해석 자체는 기존 함수 3곳을 함께 고쳐야 해 범위가 커서 별도 확인 후 진행 예정 — 아직 미착수.
 
 ---
 
