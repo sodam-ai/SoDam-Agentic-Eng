@@ -17,7 +17,7 @@
 // 4종 화이트리스트(최소 폴백):
 //   ① 위험·치명 명령(rm -rf·재귀삭제·format 등) → deny / 단일 파일 삭제 → ask(백업은 Harness 담당)
 //   ② API키·비밀값 노출(echo $KEY·.env 업로드·BASE_URL 변조·키 리터럴) → deny / .env 로컬 읽기 → ask
-//   ③ 작업폴더 밖 민감 위치(시스템·홈·자격증명 폴더) 쓰기 → deny
+//   ③ 작업폴더 밖 민감 위치(시스템·홈·자격증명 폴더) 쓰기 → deny / 그 외 작업폴더 밖 쓰기 → ask(2026-07-12, D1)
 //   ④ .claude/settings(.local).json 쓰기(주입 경로 CVE-2025-59536) → ask(확인)
 //
 // deny-first: 되돌릴 수 없는 건 deny, 되돌릴 수 있는 건 ask, 나머지는 조용히 통과(과잉 확인창 방지).
@@ -231,6 +231,17 @@ function isSensitive(absInput) {
   }
   return false;
 }
+// ── 작업폴더 밖 판정(D1, 2026-07-12) ── isSensitive()는 홈·시스템 등 "정해진 목록"만 검사한다.
+//   그 목록에 없는 임의 폴더(예: 다른 프로젝트)는 걸러지지 않아, 07_SECURITY §1 "작업폴더 안만
+//   쓰기 허용"과 실제 구현 사이에 간극이 있었다(라이브 검증 발견). 치명적 위치는 아니므로
+//   deny가 아니라 ask로 한 단계만 확인한다(deny-first 원칙: 되돌릴 수 있는 것 = ask).
+function isOutsideWorkdir(absInput, cwd) {
+  let a, c;
+  try { a = toComparable(path.isAbsolute(absInput) ? absInput : path.resolve(absInput)); } catch { return false; }
+  try { c = toComparable(path.resolve(cwd)); } catch { return false; }
+  if (a === c) return false;
+  return !a.startsWith(c + path.sep);
+}
 function isSymlink(p) {
   try {
     const abs = path.resolve(p);
@@ -331,6 +342,10 @@ function main() {
         decide("deny", "시스템·홈 등 민감한 위치를 건드리는 위험한 작업이라 막았어요. 안전을 위해 작업용 폴더 안에서만 진행해 주세요.");
         return;
       }
+      if (!harness && isOutsideWorkdir(ap, cwd)) {
+        decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.");
+        return;
+      }
     }
 
     // ① 치명(catastrophic) 명령 — Harness 유무 무관 항상 deny (ⓓ 방어심층)
@@ -366,6 +381,10 @@ function main() {
     }
     if (!harness && isSymlink(abs)) {
       decide("deny", "바로가기(심볼릭 링크) 파일이라 안전을 위해 막았어요.");
+      return;
+    }
+    if (!harness && isOutsideWorkdir(abs, cwd)) {
+      decide("ask", "지금 작업 중인 폴더 밖의 위치에 쓰려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.");
       return;
     }
   }
