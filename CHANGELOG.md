@@ -54,6 +54,16 @@
 - **문서 전면 개정:** `docs/사용가이드.md`·`docs/USER-GUIDE.en.md` → 루트 `GUIDE.md`·`GUIDE.en.md` 이동·개명. README(ko/en) lean화 + GUIDE 링크. staleness 수정(LICENSE 확정, AGENTS.md 구현 반영), 제거방법 절 추가. pandoc으로 `.html` 4종 기계 재생성.
 - **6형제 시너지 P0/P1:** `docs/family-synergy.md`(공통 헌법), `docs/api-contracts/harness-backup-api.md`, `scripts/family-health.mjs` 추가.
 
+### 2026-07-11 패치 (0.1.0 내 — 같은 버전)
+
+- **F4 라이브 실증 완료:** `docs/F4-라이브검증-런북.md`를 실제 세션에서 실행. 차단 메시지 문구를 `guard.mjs` 소스와 전수 대조해 sodam-agentic 자체 훅이 실제로 자동로드·발동함을 확정.
+- **실사용 전용 버그 발견·수정:** `hooks/guard.mjs`의 `commandPaths()`가 연쇄(`&&`) 명령에서 안전한 인자(예: `echo hi`)까지 경로 후보로 오인해 "민감 위치" 오탐(deny)되던 문제 수정. 경로를 다루는 명령(`rm`·`cd`·`cat` 등)의 인자·리다이렉트 대상만 후보로 인정하도록 최소 수정(`f66a445`). 회귀 테스트 3건 추가(로컬 전용 `_selftest.mjs`, 총 25 PASS).
+- **`codex/install.mjs` 문구 모순 정정:** Codex F4 한계 설명이 두 곳에서 서로 다르게("작동 안 함" vs "강하게 작동 안 함") 적혀 있던 것을 통일(`b75665d`).
+
+### 2026-07-12 패치 (0.1.0 내 — 같은 버전)
+
+- **`plugin.json` 중복 `hooks` 선언 제거:** `hooks/hooks.json`은 Claude Code가 자동 로드하므로, `plugin.json`에 `"hooks": "./hooks/hooks.json"`을 중복 선언하면 "Duplicate hooks file detected"로 플러그인 로드 자체가 실패할 위험이 있음을 확인. 해당 줄 제거(`9ff0e0e`). `validate.mjs` 9/0, `_selftest.mjs` 25 PASS 재확인 후 반영.
+
 ---
 
 ## 다음 예정 (Planned)
