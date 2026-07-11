@@ -30,7 +30,11 @@
     "\\b(cat|type|more|less|Get-Content)\\b[^|;&]*\\.env(\\b|$)"
   ],
 
-  "extra_denied": [],
+  "extra_denied": [
+    "\\bmklink\\b",
+    "New-Item\\b[^|;&]*-ItemType\\s+(SymbolicLink|Junction|HardLink)",
+    "\\bln\\s+-s\\b"
+  ],
   "extra_protected_paths": [],
 
   "family": {
