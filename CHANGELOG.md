@@ -63,6 +63,7 @@
 ### 2026-07-12 패치 (0.1.0 내 — 같은 버전)
 
 - **`plugin.json` 중복 `hooks` 선언 제거:** `hooks/hooks.json`은 Claude Code가 자동 로드하므로, `plugin.json`에 `"hooks": "./hooks/hooks.json"`을 중복 선언하면 "Duplicate hooks file detected"로 플러그인 로드 자체가 실패할 위험이 있음을 확인. 해당 줄 제거(`9ff0e0e`). `validate.mjs` 9/0, `_selftest.mjs` 25 PASS 재확인 후 반영.
+- **실사용 검증 중 발견·수정 — 작업폴더 밖(비민감 경로) 쓰기 간극(D1):** `isSensitive()`가 홈·시스템 등 정해진 목록만 검사해, 그 외 작업폴더 밖 위치(예: 다른 프로젝트 폴더)로의 쓰기는 걸러지지 않던 간극을 라이브 검증에서 발견(07_SECURITY §1 "작업폴더 안만 쓰기 허용"과 실제 구현 간극). 치명 위치가 아니므로 deny 대신 `ask`로 한 단계 확인하도록 `isOutsideWorkdir()` 신설·연결(`34c26d3`). 회귀 테스트 2건 추가(로컬 전용 `_selftest.mjs`, 총 27 PASS) + 별도 독립 탐침 스크립트로 교차검증.
 
 ---
 
