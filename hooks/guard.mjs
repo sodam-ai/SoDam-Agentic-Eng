@@ -262,6 +262,10 @@ const CATASTROPHIC = [
   /:\(\)\s*\{[^}]*\}\s*;\s*:/,
   /\bdd\b[^|;&]*\bof=\/dev\/(sd|nvme|disk|hd)/i,
   />\s*\/dev\/(sd|nvme|disk|hd)/i,
+  // 원격 코드 다운로드+즉시실행(07_SECURITY §2 "명령어 주입" 수용기준) — rm -rf급으로 되돌릴 수 없음
+  /\b(curl|wget)\b[^|;&]*\|\s*(bash|sh|zsh|python3?|node)\b/i,
+  /\b(iwr|invoke-webrequest|irm|invoke-restmethod)\b[^|;&]*\|\s*(iex|invoke-expression)\b/i,
+  /\b(iex|invoke-expression)\b\s*\(?[^;&|\n]*\b(downloadstring|invoke-webrequest|invoke-restmethod|\biwr\b|\birm\b)\b/i,
 ];
 const RISKY_DELETE = [
   /\brm\b/i, /\b(del|erase)\b/i, /\b(rmdir|rd)\b/i, /\bunlink\b/i, /\bremove-item\b/i, /\b(ri|rd)\b\s/i,
