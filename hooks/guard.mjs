@@ -297,6 +297,7 @@ function main() {
   const raw = readStdin();
   let input;
   try { input = JSON.parse(raw); } catch { passThrough(); return; }
+  if (!input || typeof input !== "object") { passThrough(); return; } // null·숫자 등 비객체 JSON도 안전 통과
 
   const toolName = input.tool_name || "";
   const ti = input.tool_input || {};
