@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>SoDamAgentic — Beginner's Guide</title>
+  <title>SoDamAgentic — Beginner Guide</title>
   <style>
     html {
       color: #1a1a1a;
@@ -332,9 +332,9 @@
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">SoDamAgentic — Beginner's Guide</h1>
+<h1 class="title">SoDamAgentic — Beginner Guide</h1>
 </header>
-<h1 id="sodamagentic-beginners-guide">SoDamAgentic — Beginner’s
+<h1 id="sodamagentic--beginners-guide">SoDamAgentic — Beginner's
 GUIDE</h1>
 <blockquote>
 <p>🇺🇸 English (this page) · 한국어(기본): <a
@@ -344,7 +344,7 @@ electronics</strong> can follow it step by step. Need the short version?
 See <a href="./README.en.md">README.en.md</a> first. This document is
 the <strong>detailed edition</strong>. ⚠️ <strong>Status:</strong> Phase
 1 (MVP). Some items are still awaiting a human live check (see
-“Development status” at the end).</p>
+"Development status" at the end).</p>
 </blockquote>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
@@ -371,28 +371,30 @@ use</a></li>
 <li><a href="#dev-status">Current development status (honestly)</a></li>
 </ol>
 <hr />
-<p><a id="what-is-this"></a> ## 0. What is this? (one sentence)</p>
+<p><a id="what-is-this"></a></p>
+<h2 id="0-what-is-this-one-sentence">0. What is this? (one
+sentence)</h2>
 <blockquote>
 <p><strong>SoDam</strong> is a <strong>Claude Code / Codex
 plugin</strong> that spoon-feeds, in <strong>plain language</strong>,
 how to properly direct an AI.</p>
 </blockquote>
 <p>Analogy: <strong>the AI is a factory machine; you are the person
-designing the factory.</strong> Instead of “just do it,” you first
+designing the factory.</strong> Instead of "just do it," you first
 decide <em>what / why / how far</em> to build, then review what the AI
 did, and block anything dangerous.</p>
-<p><strong>The 4 things it does:</strong> | Feature | One line | |—|—| |
-Onboarding | Explains the 4 steps of directing an AI, in Korean by
-default | | Plan First | Before writing code, shows a “what / why /
-done-criteria” plan and asks for approval | | Easy Review | Summarizes
-changes as “what / why / any risks?” | | Safety | Auto-blocks or asks on
-risky commands, secret exposure, writes in the wrong place, settings
-changes |</p>
+<p><strong>The 4 things it does:</strong> | Feature | One line |
+|---|---| | Onboarding | Explains the 4 steps of directing an AI, in
+Korean by default | | Plan First | Before writing code, shows a "what /
+why / done-criteria" plan and asks for approval | | Easy Review |
+Summarizes changes as "what / why / any risks?" | | Safety | Auto-blocks
+or asks on risky commands, secret exposure, writes in the wrong place,
+settings changes |</p>
 <blockquote>
 <p>💬 <strong>New to these terms?</strong> <code>plugin</code> = an
 add-on package that extends Claude Code/Codex · <code>hook</code> = a
 watchdog that automatically steps in right before/after the AI does
-something · <code>marketplace</code> = the “store” a plugin is fetched
+something · <code>marketplace</code> = the "store" a plugin is fetched
 from (here, a GitHub URL) · <code>slash command</code> = a command
 starting with <code>/</code> · <code>session</code> = this one
 conversation window (ends when you close it) · <code>MCP</code> = a
@@ -400,13 +402,10 @@ standard protocol for AI to talk to external tools (this plugin does not
 use it).</p>
 </blockquote>
 <hr />
-<p><a id="prerequisites"></a> ## 1. Prerequisites (required to work)</p>
+<p><a id="prerequisites"></a></p>
+<h2 id="1-prerequisites-required-to-work">1. Prerequisites (required to
+work)</h2>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr>
 <th>Item</th>
@@ -417,19 +416,22 @@ use it).</p>
 <tbody>
 <tr>
 <td><strong>Node.js 18+</strong></td>
-<td>The safety hook runs on it. Without it, safety won’t turn on</td>
-<td>https://nodejs.org → download “LTS”</td>
+<td>The safety hook runs on it. Without it, safety won't turn on</td>
+<td><a href="https://nodejs.org">https://nodejs.org</a> → download
+"LTS"</td>
 </tr>
 <tr>
 <td><strong>Claude Code</strong></td>
 <td>The program SoDam installs into (or Codex)</td>
-<td>https://code.claude.com (follow official setup)</td>
+<td><a href="https://code.claude.com">https://code.claude.com</a>
+(follow official setup)</td>
 </tr>
 <tr>
 <td><strong>GitHub account + access</strong></td>
 <td>SoDam is fetched from GitHub. The repo is currently
 <strong>private</strong>, so access is required</td>
-<td>https://github.com (free signup)</td>
+<td><a href="https://github.com">https://github.com</a> (free
+signup)</td>
 </tr>
 <tr>
 <td><strong>Internet connection</strong></td>
@@ -443,91 +445,111 @@ use it).</p>
 <code>node -v</code> → <code>v18....</code> or higher means OK.</p>
 </blockquote>
 <hr />
-<p><a id="install-programs"></a> ## 2. Downloading &amp; installing
-required programs (step by step)</p>
-<h3 id="install-node.js">2-1. Install Node.js</h3>
+<p><a id="install-programs"></a></p>
+<h2 id="2-downloading--installing-required-programs-step-by-step">2.
+Downloading &amp; installing required programs (step by step)</h2>
+<h3 id="2-1-install-nodejs">2-1. Install Node.js</h3>
 <ol type="1">
-<li>Go to https://nodejs.org → click the green <strong>“LTS”</strong>
-button to download.</li>
-<li>Double-click the installer → “Next → Next → Install” (keep
+<li>Go to <a href="https://nodejs.org">https://nodejs.org</a> → click
+the green <strong>"LTS"</strong> button to download.</li>
+<li>Double-click the installer → "Next → Next → Install" (keep
 defaults).</li>
 <li>Restarting your computer once afterward makes sure it takes
 effect.</li>
 </ol>
-<h3 id="get-claude-code-ready">2-2. Get Claude Code ready</h3>
+<h3 id="2-2-get-claude-code-ready">2-2. Get Claude Code ready</h3>
 <ul>
-<li>Already using Claude Code? Skip this — you’re using it right
+<li>Already using Claude Code? Skip this — you're using it right
 now.</li>
-<li>First time? Follow the official guide (https://code.claude.com).
-Node.js must be installed first.</li>
+<li>First time? Follow the official guide (<a
+href="https://code.claude.com">https://code.claude.com</a>). Node.js
+must be installed first.</li>
 </ul>
 <hr />
-<p><a id="quickstart"></a> ## 3. Quick start (3-step golden path)</p>
+<p><a id="quickstart"></a></p>
+<h2 id="3-quick-start-3-step-golden-path">3. Quick start (3-step golden
+path)</h2>
 <ol type="1">
-<li><p><strong>Install:</strong> in the Claude Code input box:</p>
+<li><strong>Install:</strong> in the Claude Code input box:
 <pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
 /plugin install sodam-agentic@sodam</code></pre></li>
-<li><p><strong>Start:</strong> <code>/sodam-agentic-start</code> →
-onboarding appears.</p></li>
-<li><p><strong>Ask it to do something:</strong> “make ○○” → if a
-<strong>plan</strong> appears first, approve with “yes” → work happens →
-check the <strong>review summary</strong>.</p></li>
+<li><strong>Start:</strong> <code>/sodam-agentic-start</code> →
+onboarding appears.</li>
+<li><strong>Ask it to do something:</strong> "make ○○" → if a
+<strong>plan</strong> appears first, approve with "yes" → work happens →
+check the <strong>review summary</strong>.</li>
 </ol>
-<p>→ A “this works” moment in about 5 minutes.</p>
+<p>→ A "this works" moment in about 5 minutes.</p>
 <hr />
-<p><a id="install-detail"></a> ## 4. Installation (detailed)</p>
+<p><a id="install-detail"></a></p>
+<h2 id="4-installation-detailed">4. Installation (detailed)</h2>
 <blockquote>
 <p>⚠️ This repository is currently <strong>private</strong> — it
 installs only for GitHub accounts with access.</p>
 </blockquote>
-<p><strong>Claude Code:</strong> 1. Register the marketplace (the
-“store”) — paste this into the input box and press Enter:
-<code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code>
-→ Success looks like an “added / sodam” message. &gt; 🖼️ <em>(screenshot
-placeholder — to be added after a human live test)</em> 2. Install:
-<code>/plugin install sodam-agentic@sodam</code> → Success looks like
-“installed.” 3. Verify: type <code>/sodam-agentic</code> — three
-commands (<code>-start</code>, <code>-plan</code>, <code>-review</code>)
-should appear. &gt; 🖼️ <em>(screenshot placeholder)</em></p>
-<p><strong>(For the developer’s own local testing)</strong> you can
+<p><strong>Claude Code:</strong></p>
+<ol type="1">
+<li>Register the marketplace (the "store") — paste this into the input
+box and press Enter:
+<pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre>
+→ Success looks like an "added / sodam" message.
+<blockquote>
+<p>🖼️ <em>(screenshot placeholder — to be added after a human live
+test)</em></p>
+</blockquote></li>
+<li>Install:
+<pre><code>/plugin install sodam-agentic@sodam</code></pre>
+→ Success looks like "installed."</li>
+<li>Verify: type <code>/sodam-agentic</code> — three commands
+(<code>-start</code>, <code>-plan</code>, <code>-review</code>) should
+appear.
+<blockquote>
+<p>🖼️ <em>(screenshot placeholder)</em></p>
+</blockquote></li>
+</ol>
+<p><strong>(For the developer's own local testing)</strong> you can
 install from a local folder instead of the internet:</p>
 <pre><code>/plugin marketplace add D:/AI_Dev_Work/2026y/26y_06m_26d_SoDam-Agentic-Eng
 /plugin install sodam-agentic@sodam</code></pre>
-<p><strong>Codex users:</strong> 1. Clone the repository:
-<code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code> 2.
-From your project folder, run:
-<code>node C:\path\to\SoDam-Agentic-Eng\codex\install.mjs</code> 3. Done
-— skills are copied into your project’s <code>.agents/skills/</code>.
-&gt; ⚠️ <strong>Safety hooks (F4) are weaker in Codex than in Claude
+<p><strong>Codex users:</strong></p>
+<ol type="1">
+<li>Clone the repository:
+<code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code></li>
+<li>From your project folder, run:
+<code>node C:\path\to\SoDam-Agentic-Eng\codex\install.mjs</code></li>
+<li>Done — skills are copied into your project's
+<code>.agents/skills/</code>.</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Safety hooks (F4) are weaker in Codex than in Claude
 Code</strong> — see <a href="#security-data-flow">§10 Security &amp;
 data flow</a>.</p>
+</blockquote>
 <hr />
-<p><a id="usage"></a> ## 5. Run / use / how it works (step by step)</p>
+<p><a id="usage"></a></p>
+<h2 id="5-run--use--how-it-works-step-by-step">5. Run / use / how it
+works (step by step)</h2>
 <ol type="1">
 <li>Type <strong><code>/sodam-agentic-start</code></strong> → read the
-“4 steps to direct an AI” onboarding.</li>
+"4 steps to direct an AI" onboarding.</li>
 <li>(Recommended) Run <strong><code>/init</code></strong> once → the AI
 recognizes your current project folder. <em>Beginners skip this most
 often.</em></li>
-<li><strong>Ask in plain language:</strong> e.g. “build me a notepad web
-page.” (You don’t need to run a check/diagnostic command first — just
+<li><strong>Ask in plain language:</strong> e.g. "build me a notepad web
+page." (You don't need to run a check/diagnostic command first — just
 asking is the natural first step.)</li>
 <li><strong>Check the plan:</strong> before writing code, the AI should
-show a “① what ② why ③ done-criteria” plan — read it and approve with
-<strong>“yes/proceed.”</strong></li>
-<li><strong>Review:</strong> once the work is done, read the “what
-changed, why, any risk?” summary and judge for yourself.</li>
-<li><strong>Safety:</strong> if you ask for something risky
-(e.g. deleting a whole folder), it auto-blocks or asks “are you
-sure?”</li>
+show a "① what ② why ③ done-criteria" plan — read it and approve with
+<strong>"yes/proceed."</strong></li>
+<li><strong>Review:</strong> once the work is done, read the "what
+changed, why, any risk?" summary and judge for yourself.</li>
+<li><strong>Safety:</strong> if you ask for something risky (e.g.
+deleting a whole folder), it auto-blocks or asks "are you sure?"</li>
 </ol>
 <hr />
-<p><a id="commands"></a> ## 6. Command list</p>
+<p><a id="commands"></a></p>
+<h2 id="6-command-list">6. Command list</h2>
 <table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr>
 <th>Command</th>
@@ -541,11 +563,11 @@ sure?”</li>
 </tr>
 <tr>
 <td><code>/sodam-agentic-plan</code></td>
-<td>“Plan first” feature (usually auto-triggers)</td>
+<td>"Plan first" feature (usually auto-triggers)</td>
 </tr>
 <tr>
 <td><code>/sodam-agentic-review</code></td>
-<td>“Change review” feature (usually auto-triggers)</td>
+<td>"Change review" feature (usually auto-triggers)</td>
 </tr>
 </tbody>
 </table>
@@ -554,7 +576,8 @@ sure?”</li>
 (<code>/sodam-agentic:sodam-agentic-start</code>).</p>
 </blockquote>
 <hr />
-<p><a id="workflow"></a> ## 7. Workflow (how it operates)</p>
+<p><a id="workflow"></a></p>
+<h2 id="7-workflow-how-it-operates">7. Workflow (how it operates)</h2>
 <pre><code>[Start] /sodam-agentic-start  →  safety on + 4-step onboarding
    │
    ▼
@@ -565,20 +588,18 @@ sure?”</li>
    │
    ▼
 [Review]  &quot;what / why / risk&quot; summary  →  you decide  →  done</code></pre>
-<p>Core principle: <strong>“Not the AI running the show” — the human
-stays in the driver’s seat.</strong></p>
+<p>Core principle: <strong>"Not the AI running the show" — the human
+stays in the driver's seat.</strong></p>
 <hr />
-<p><a id="file-locations"></a> ## 8. File &amp; document locations</p>
+<p><a id="file-locations"></a></p>
+<h2 id="8-file--document-locations">8. File &amp; document
+locations</h2>
 <p><strong>Development folder (source):</strong>
 <code>D:\AI_Dev_Work\2026y\26y_06m_26d_SoDam-Agentic-Eng</code>
-<strong>GitHub (internet):</strong>
-https://github.com/sodam-ai/SoDam-Agentic-Eng (private, branch
-<code>init-mvp</code>)</p>
+<strong>GitHub (internet):</strong> <a
+href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai/SoDam-Agentic-Eng</a>
+(private, branch <code>init-mvp</code>)</p>
 <table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr>
 <th>What</th>
@@ -653,15 +674,11 @@ matching <code>.html</code> versions</td>
 </tbody>
 </table>
 <hr />
-<p><a id="architecture"></a> ## 9. Architecture</p>
+<p><a id="architecture"></a></p>
+<h2 id="9-architecture">9. Architecture</h2>
 <p>This plugin is a <strong>purely local tool — no server, no database,
 no login.</strong> Its parts:</p>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr>
 <th>Component</th>
@@ -674,7 +691,7 @@ no login.</strong> Its parts:</p>
 <td>Manifest</td>
 <td><code>.claude-plugin/plugin.json</code>,
 <code>marketplace.json</code></td>
-<td>Tells Claude Code “this folder is a plugin”</td>
+<td>Tells Claude Code "this folder is a plugin"</td>
 </tr>
 <tr>
 <td>Onboarding (F1)</td>
@@ -729,8 +746,8 @@ flow</h3>
 <li><code>isHarnessAlive()</code> in <code>hooks/delegate.mjs</code>
 detects whether the sibling plugin <strong>SoDamHarness</strong> is
 present.</li>
-<li>If Harness is present, “overlapping” risks (recursive delete,
-sensitive paths, etc.) are delegated to it so you don’t get asked twice
+<li>If Harness is present, "overlapping" risks (recursive delete,
+sensitive paths, etc.) are delegated to it so you don't get asked twice
 — Harness also adds automatic backup/undo.</li>
 <li><strong>But irreversible, catastrophic commands (disk-wipe-grade)
 are always blocked by this plugin too, regardless of Harness</strong> —
@@ -738,10 +755,11 @@ a defense-in-depth safeguard for when a sibling is missing or
 broken.</li>
 </ul>
 <hr />
-<p><a id="security-data-flow"></a> ## 10. Security &amp; data flow</p>
+<p><a id="security-data-flow"></a></p>
+<h2 id="10-security--data-flow">10. Security &amp; data flow</h2>
 <ul>
 <li><strong>What this plugin reads:</strong> only the tool name and its
-arguments that Claude Code is about to run (e.g. the command string, or
+arguments that Claude Code is about to run (e.g. the command string, or
 the file path being written) — delivered to the hook via standard input
 (stdin). It does not otherwise inspect your file contents or
 conversation.</li>
@@ -752,15 +770,10 @@ self-test result: 0 findings — <code>hooks/_selftest.mjs</code>)</li>
 <li><strong>Persistent data:</strong> the current version does not
 create any separate settings/log/backup files — every safety decision
 happens instantly in the moment and is not saved anywhere. This section
-will be updated if Phase 2 adds “safety history (F6).”</li>
+will be updated if Phase 2 adds "safety history (F6)."</li>
 </ul>
 <h3 id="the-3-real-decision-levels">The 3 real decision levels</h3>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr>
 <th>Level</th>
@@ -776,24 +789,25 @@ will be updated if Phase 2 adds “safety history (F6).”</li>
 </tr>
 <tr>
 <td>❓ ask</td>
-<td>deleting a single file, editing
-<code>.claude/settings.json</code></td>
-<td>“This is hard to undo… are you sure you want to proceed?”</td>
+<td>deleting a single file, editing <code>.claude/settings.json</code>,
+writing outside the working folder</td>
+<td>"This is hard to undo… are you sure you want to proceed?"</td>
 </tr>
 <tr>
 <td>⛔ deny</td>
 <td>trying to expose an API key</td>
-<td>“Blocked — this could expose an API key or secret…”</td>
+<td>"Blocked — this could expose an API key or secret…"</td>
 </tr>
 <tr>
 <td>⛔ deny</td>
 <td>deleting an entire folder</td>
-<td>“Blocked — safely stopped this whole-folder delete…”</td>
+<td>"Blocked — safely stopped this whole-folder delete…"</td>
 </tr>
 <tr>
 <td>⛔ deny (always, catastrophic)</td>
-<td>a disk-wipe-grade command</td>
-<td>“Blocked — this is an irreversible, dangerous command…”</td>
+<td>a disk-wipe-grade command, <code>curl url | bash</code> (running
+downloaded code without ever checking it)</td>
+<td>"Blocked — this is an irreversible, dangerous command…"</td>
 </tr>
 </tbody>
 </table>
@@ -802,27 +816,36 @@ will be updated if Phase 2 adds “safety history (F6).”</li>
 (<code>hooks/guard.mjs</code>) — no exaggeration, exactly how it
 behaves.</p>
 </blockquote>
+<blockquote>
+<p><strong>Consistency hardening (2026-07-12):</strong> telling the AI
+to run the exact command directly can no longer bypass the checks above
+— whether you ask in plain language or specify the exact command, it is
+checked the same way.</p>
+</blockquote>
 <hr />
-<p><a id="uninstall"></a> ## 11. Uninstall</p>
-<p><strong>Claude Code:</strong> 1. Type
-<code>/plugin uninstall sodam-agentic</code> in the input box (or remove
-it from the marketplace screen). 2. Verify: typing
-<code>/sodam-agentic</code> no longer shows the commands.</p>
-<p><strong>Codex:</strong> - Installation copies files, so removal means
-deleting the SoDam-related skill folder(s) from your project’s
-<code>.agents/skills/</code> directly.</p>
-<p><strong>What’s left behind:</strong> this plugin currently creates no
+<p><a id="uninstall"></a></p>
+<h2 id="11-uninstall">11. Uninstall</h2>
+<p><strong>Claude Code:</strong></p>
+<ol type="1">
+<li>Type <code>/plugin uninstall sodam-agentic</code> in the input box
+(or remove it from the marketplace screen).</li>
+<li>Verify: typing <code>/sodam-agentic</code> no longer shows the
+commands.</li>
+</ol>
+<p><strong>Codex:</strong></p>
+<ul>
+<li>Installation copies files, so removal means deleting the
+SoDam-related skill folder(s) from your project's
+<code>.agents/skills/</code> directly.</li>
+</ul>
+<p><strong>What's left behind:</strong> this plugin currently creates no
 separate persistent settings/log/backup files, so nothing remains on
 your computer after removal. (This section will be updated if a future
 safety-history feature adds persistent data.)</p>
 <hr />
-<p><a id="troubleshooting"></a> ## 12. Troubleshooting</p>
+<p><a id="troubleshooting"></a></p>
+<h2 id="12-troubleshooting">12. Troubleshooting</h2>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr>
 <th>Symptom (what you see)</th>
@@ -833,21 +856,21 @@ safety-history feature adds persistent data.)</p>
 <tbody>
 <tr>
 <td>Installed, but nothing seems to happen</td>
-<td>Didn’t run <code>/init</code> / skipped onboarding</td>
+<td>Didn't run <code>/init</code> / skipped onboarding</td>
 <td>Start with <code>/sodam-agentic-start</code> to check status</td>
 </tr>
 <tr>
-<td><code>/sodam-agentic</code> doesn’t show anything</td>
+<td><code>/sodam-agentic</code> doesn't show anything</td>
 <td>Not installed</td>
 <td>Reinstall: <code>/plugin install sodam-agentic@sodam</code></td>
 </tr>
 <tr>
-<td>“No access / permission denied” during install</td>
+<td>"No access / permission denied" during install</td>
 <td>No access to the private repo</td>
-<td>Confirm you’re logged into the right GitHub account with access</td>
+<td>Confirm you're logged into the right GitHub account with access</td>
 </tr>
 <tr>
-<td>“Node not found”</td>
+<td>"Node not found"</td>
 <td>Node.js not installed</td>
 <td>Install Node.js 18+ per <a href="#install-programs">§2</a> and
 retry</td>
@@ -860,11 +883,11 @@ provided)</td>
 </tr>
 <tr>
 <td>Code gets written without a plan first</td>
-<td>Another skill won out (F2 is a “request,” not enforced)</td>
+<td>Another skill won out (F2 is a "request," not enforced)</td>
 <td>May be expected — report it; enforcement is planned for Phase 2</td>
 </tr>
 <tr>
-<td>A risky command wasn’t blocked</td>
+<td>A risky command wasn't blocked</td>
 <td>Safety hook not running</td>
 <td>Capture and report (check Node.js and install status)</td>
 </tr>
@@ -882,32 +905,34 @@ provided)</td>
 <td>Can I put in a password/API key?</td>
 <td>—</td>
 <td><strong>Never.</strong> Keep secrets only in your own environment
-(e.g. <code>.env</code>)</td>
+(e.g. <code>.env</code>)</td>
 </tr>
 <tr>
-<td>I want to remove it / it’s acting odd after an update</td>
+<td>I want to remove it / it's acting odd after an update</td>
 <td>Uninstall / update conflict</td>
 <td>See <a href="#uninstall">§11 Uninstall</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<p><a id="safety-notes"></a> ## 13. Safety notes (must follow)</p>
+<p><a id="safety-notes"></a></p>
+<h2 id="13-safety-notes-must-follow">13. Safety notes (must follow)</h2>
 <ul>
 <li><strong>Never put secrets</strong> — passwords, API keys,
 <code>.env</code> contents — in code, docs, or chat.</li>
 <li>The safety net blocks irreversible risks and asks on the rest. It is
-<strong>not “100% safe”</strong> — the final call is always yours.</li>
+<strong>not "100% safe"</strong> — the final call is always yours.</li>
 <li>Be careful about letting the AI auto-run newly downloaded external
 files or tools.</li>
 <li>If <strong>auto-accept / bypass-permissions</strong> mode is on
 (shown at the bottom of the screen), confirmation prompts pass through
-silently — for real safety, use <code>Shift+Tab</code> to switch to “ask
-every time.”</li>
+silently — for real safety, use <code>Shift+Tab</code> to switch to "ask
+every time."</li>
 </ul>
 <hr />
-<p><a id="license-legal"></a> ## 14. License, copyright &amp; commercial
-use (important — please read)</p>
+<p><a id="license-legal"></a></p>
+<h2 id="14-license-copyright--commercial-use-important--please-read">14.
+License, copyright &amp; commercial use (important — please read)</h2>
 <blockquote>
 <p>⚠️ <strong>This is not legal advice.</strong> The following is
 general guidance; verify at your own responsibility before real-world
@@ -923,60 +948,68 @@ modify ✅ / copy ✅ / redistribute ✅ / commercial use ✅ / sell ✅ /
 run as a service ✅ / use in education ✅ / deliver to clients/companies
 ✅.</li>
 <li><strong>Warranty &amp; liability:</strong> this software is provided
-<strong>“AS IS,” with no warranty of any kind.</strong> Outcomes from
+<strong>"AS IS," with no warranty of any kind.</strong> Outcomes from
 using it are <strong>your responsibility</strong> (including data loss
 or malfunction).</li>
 <li><strong>AI model fees/terms are separate:</strong> this kit is
 <strong>free (Apache-2.0)</strong>, but <strong>the usage fees and terms
-for the AI models (Claude/Codex) follow Anthropic’s and OpenAI’s own
-terms</strong> — unrelated to this tool’s license.</li>
-<li><strong>Third-party trademarks:</strong> “Claude, Anthropic, Codex,
-OpenAI” are trademarks of their respective owners. Used only in a
+for the AI models (Claude/Codex) follow Anthropic's and OpenAI's own
+terms</strong> — unrelated to this tool's license.</li>
+<li><strong>Third-party trademarks:</strong> "Claude, Anthropic, Codex,
+OpenAI" are trademarks of their respective owners. Used only in a
 <strong>descriptive (compatibility/target) sense</strong> — never
 implying official partnership or endorsement.</li>
 <li><strong>No unauthorized inclusion:</strong> no third-party works,
 trademarks, logos, personal data, client information, or secrets are
 included (zero in this repository too).</li>
 <li><strong>Adding external assets:</strong> if you add fonts, images,
-or icons, <strong>check each asset’s own license for commercial-use
+or icons, <strong>check each asset's own license for commercial-use
 permission</strong> separately.</li>
 <li><strong>GPL/AGPL-style strong copyleft code is avoided</strong>
 (risk of propagating source-disclosure obligations on commercial
 delivery).</li>
 <li>⚠️ <strong>Still pending (awaiting legal review):</strong> whether
-the product name / “agentic engineering” phrasing conflicts with any
+the product name / "agentic engineering" phrasing conflicts with any
 trademark, and re-confirming the exact license of any referenced
 external code. This section will be updated once resolved.</li>
 </ul>
 <hr />
-<p><a id="changelog"></a> ## 15. Changelog summary</p>
+<p><a id="changelog"></a></p>
+<h2 id="15-changelog-summary">15. Changelog summary</h2>
 <details>
-<summary>
-<b>📦 [0.1.0] — 2026-06-28 (initial release, Phase 1 MVP)</b> — click to
-expand
-</summary>
-<p><strong>Added</strong> - F1 Onboarding — 4-step Korean guidance (with
-Codex support) - F2 Plan First — approve a “what / why / done-criteria”
-plan before code - F3 Easy Review — plain-language change summary +
-delegate sub-agent - F4 Safety hooks — 4-category minimal fallback
-blocking, Harness delegation, fail-closed - F5 Install support for both
-tools (Claude Code + Codex)</p>
-<p><strong>Docs &amp; verification tools added</strong> - README
-(ko/en), GUIDE (ko/en), sibling-collaboration doc
-(<code>family-synergy.md</code>) - Structure validator
-(<code>validate.mjs</code>), 6-sibling health check, safety self-test
-(<code>_selftest.mjs</code>) - <code>LICENSE</code> (Apache-2.0),
-<code>NOTICE</code></p>
-<p><strong>Known limitations</strong> - F2/F3 are “requests,” not
-enforced (can lose to other skills) — enforcement planned for Phase 2 -
-F4 safety is weaker in Codex than in Claude Code — parity planned for
-Phase 2</p>
+<summary><b>📦 [0.1.0] — 2026-06-28 (initial release, Phase 1 MVP)</b> — click to expand</summary>
+
+<p><strong>Added</strong></p>
+<ul>
+<li>F1 Onboarding — 4-step Korean guidance (with Codex support)</li>
+<li>F2 Plan First — approve a "what / why / done-criteria" plan before
+code</li>
+<li>F3 Easy Review — plain-language change summary + delegate
+sub-agent</li>
+<li>F4 Safety hooks — 4-category minimal fallback blocking, Harness
+delegation, fail-closed</li>
+<li>F5 Install support for both tools (Claude Code + Codex)</li>
+</ul>
+<p><strong>Docs &amp; verification tools added</strong></p>
+<ul>
+<li>README (ko/en), GUIDE (ko/en), sibling-collaboration doc
+(<code>family-synergy.md</code>)</li>
+<li>Structure validator (<code>validate.mjs</code>), 6-sibling health
+check, safety self-test (<code>_selftest.mjs</code>)</li>
+<li><code>LICENSE</code> (Apache-2.0), <code>NOTICE</code></li>
+</ul>
+<p><strong>Known limitations</strong></p>
+<ul>
+<li>F2/F3 are "requests," not enforced (can lose to other skills) —
+enforcement planned for Phase 2</li>
+<li>F4 safety is weaker in Codex than in Claude Code — parity planned
+for Phase 2</li>
+</ul>
 </details>
+
 <details>
-<summary>
-<b>🔧 2026-07-07 Safety hardening (patch within the same version)</b> —
-click to expand
-</summary>
+<summary><b>🔧 2026-07-07 Safety hardening (patch within the same version)</b> — click to expand</summary>
+
 <ul>
 <li>Fixed a defect where the safety fallback (F4) could stay dormant
 under certain conditions — it now always turns on once installed.</li>
@@ -986,15 +1019,14 @@ blocked regardless of whether the sibling SoDamHarness is installed
 <li>Documented, in onboarding, the limitation that confirmation prompts
 pass through silently in auto-accept mode.</li>
 <li>Full overhaul of these docs (README/GUIDE) — fixed stale claims
-(e.g. “license not finalized”), added Architecture, Security, FAQ, and
+(e.g. "license not finalized"), added Architecture, Security, FAQ, and
 Uninstall sections.</li>
 </ul>
 </details>
+
 <details>
-<summary>
-<b>✅ 2026-07-11 Live verification + bug fix (patch within the same version)</b> —
-click to expand
-</summary>
+<summary><b>✅ 2026-07-11 Live verification + bug fix (patch within the same version)</b> — click to expand</summary>
+
 <ul>
 <li><strong>Confirmed the safety hook (F4) actually works in a real
 usage session.</strong> Until now it had only passed self-checks (code
@@ -1013,10 +1045,45 @@ applied yet.</strong> Uninstall and reinstall to pick up the latest
 version (see <a href="#troubleshooting">§12 Troubleshooting</a>).</li>
 </ul>
 </details>
+
 <details>
-<summary>
-<b>🗓️ [0.2.0] — Phase 2 (planned)</b> — click to expand
-</summary>
+<summary><b>🛡️ 2026-07-12·13 Safety hardening — 5 real bugs found & fixed + security audit completed</b> — click to expand</summary>
+
+<p><strong>Found and fixed through live testing</strong></p>
+<ul>
+<li>Fixed a crash that could happen when the safety hook received a very
+unusual input signal.</li>
+<li>Found and closed a gap where <strong>the "no writing outside the
+working folder" rule was missing in some cases</strong>.</li>
+<li>Added a check so that creating a shortcut (symbolic link) itself now
+requires confirmation.</li>
+<li><strong>(Most serious) Found and closed a real gap where, if you
+told the AI to run an exact command directly, the working-folder rule
+above was skipped entirely.</strong> Now the same check applies whether
+you ask in plain language or specify the exact command.</li>
+<li>Added a new safeguard against <strong>running downloaded code
+without ever checking it</strong> (the common
+<code>curl url | bash</code> attack pattern) — this was not being
+checked at all until now.</li>
+<li>Strengthened the wording for the Review (F3) feature so it triggers
+more reliably. <strong>We are not yet certain this actually improved
+things</strong> — recorded honestly, without overstating it.</li>
+</ul>
+<p><strong>Separate OWASP-based security audit</strong></p>
+<ul>
+<li>Re-checked every required item on the OWASP ASVS checklist (secret
+exposure, settings-file protection, error-message information leaks,
+dependencies, etc.) — all passed.</li>
+<li>Re-scanned every tracked file in the repository for
+accidentally-committed secrets — 0 found.</li>
+</ul>
+<p><strong>Regression tests</strong>: the safety hook's own test suite
+grew from 22 to <strong>42 checks</strong>, all passing.</p>
+</details>
+
+<details>
+<summary><b>🗓️ [0.2.0] — Phase 2 (planned)</b> — click to expand</summary>
+
 <ul>
 <li>F6. Safety history (view block/ask history)</li>
 <li>F7. Codex safety parity (protection equal to F4)</li>
@@ -1024,37 +1091,40 @@ version (see <a href="#troubleshooting">§12 Troubleshooting</a>).</li>
 auto-trigger)</li>
 </ul>
 </details>
+
 <hr />
-<p><a id="faq"></a> ## 16. FAQ</p>
-<p><strong>Q. Is this really safe?</strong> A. No — it’s not “100%
-safe.” It blocks irreversible risks and asks about the rest. The final
+<p><a id="faq"></a></p>
+<h2 id="16-faq">16. FAQ</h2>
+<p><strong>Q. Is this really safe?</strong> A. No — it's not "100%
+safe." It blocks irreversible risks and asks about the rest. The final
 judgment is always yours.</p>
 <p><strong>Q. Does it cost money?</strong> A. The plugin itself is free
 (Apache-2.0). Using Claude/Codex (model usage fees) follows
-Anthropic’s/OpenAI’s own terms separately.</p>
+Anthropic's/OpenAI's own terms separately.</p>
 <p><strong>Q. Is it just as safe in Codex as in Claude Code?</strong> A.
-No. Plan (F2) and Review (F3) work, but the safety hook (F4) is not as
+No. Plan (F2) and Review (F3) work, but the safety hook (F4) is not as
 strong in Codex as in Claude Code (parity planned for Phase 2).</p>
 <p><strong>Q. Can I use it without SoDamHarness installed?</strong> A.
-Yes. Without Harness, this plugin’s “minimal safety fallback” runs in
+Yes. Without Harness, this plugin's "minimal safety fallback" runs in
 full mode. Stronger features like automatic backup/undo require Harness,
 though.</p>
 <p><strong>Q. Can I use it commercially?</strong> A. This plugin itself
 is Apache-2.0, so commercial use, redistribution, and running it as a
 service are all allowed (NOTICE-preservation condition). But check
-Anthropic’s/OpenAI’s own commercial terms for using Claude/Codex.</p>
+Anthropic's/OpenAI's own commercial terms for using Claude/Codex.</p>
 <p><strong>Q. Do I have to install the other 5 sibling plugins
-too?</strong> A. No. This plugin works fine on its own with minimal
-safety. Pairing it with SoDamHarness makes it stronger (see the “SoDam
-family” table in the README).</p>
+too?</strong> A. No. This plugin works fine on its own with minimal
+safety. Pairing it with SoDamHarness makes it stronger (see the "SoDam
+family" table in the README).</p>
 <p><strong>Q. Is what I ask the AI to do sent somewhere?</strong> A.
 This plugin itself makes no network requests (see <a
-href="#security-data-flow">§10 Security &amp; data flow</a>). That’s
+href="#security-data-flow">§10 Security &amp; data flow</a>). That's
 separate from Claude Code/Codex itself communicating with the AI
 model.</p>
 <hr />
-<p><a id="dev-status"></a> ## 17. Current development status
-(honestly)</p>
+<p><a id="dev-status"></a></p>
+<h2 id="17-current-development-status-honestly">17. Current development
+status (honestly)</h2>
 <ul>
 <li>✅ <strong>Verified:</strong> install, Korean rendering, command
 consistency, <strong>onboarding (F1) actually works</strong>.</li>
@@ -1062,20 +1132,26 @@ consistency, <strong>onboarding (F1) actually works</strong>.</li>
 hook (F4) now always turns on, catastrophic commands are always blocked
 regardless of a sibling plugin, and the auto-accept-mode limitation is
 documented in onboarding. All 25 self-tests pass.</li>
-<li>✅ <strong>Live-verified (2026-07-11):</strong> confirmed the safety
-blocking actually appears in a real usage session, and fixed +
-re-confirmed an over-blocking issue (harmless work wrongly blocked when
-actions were chained together) found during that check.</li>
-<li>⬜ <strong>Still needs a human to confirm directly:</strong> whether
-Plan (F2)/Review (F3) reliably auto-trigger without losing to
-other features, a beta test where a non-developer completes the whole
-flow alone, and final legal review (trademark/license).</li>
+<li>✅ <strong>Multiple rounds of live verification
+(2026-07-11~13):</strong> repeated real-usage testing found and fixed 5
+real bugs (see "Changelog summary" above), and every required item on
+the international OWASP security checklist was re-confirmed.</li>
+<li>⚠️ <strong>Still uncertain — stated honestly:</strong> whether
+Review (F3) reliably auto-triggers in a fully unscripted, real-world
+usage session has not been conclusively confirmed even after repeated
+testing.</li>
+<li>⬜ <strong>Still needs a human to confirm directly (next in
+order):</strong> ① one genuinely unscripted usage session — building
+something from scratch with no preset script (everything tested so far
+has been a scripted safety-test scenario) → ② a beta test where a
+non-developer completes the whole flow alone → ③ final legal review
+(trademark/license).</li>
 <li>This is pre-beta for non-developers. There may be rough edges, and
 <strong>finding them is the current goal.</strong> No exaggeration —
 this is the honest, current state.</li>
 </ul>
 <hr />
-<p><em>Document version date: 2026-07-11 · This guide is written to
-match “what is actually implemented and verified so far.”</em></p>
+<p><em>Document version date: 2026-07-13 · This guide is written to
+match "what is actually implemented and verified so far."</em></p>
 </body>
 </html>

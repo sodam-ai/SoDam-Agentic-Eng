@@ -242,12 +242,14 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 | Level | Example situation | What actually appears (summarized) |
 |---|---|---|
 | ✅ safe (pass) | `echo hello`, creating a new file | (no message — it just proceeds) |
-| ❓ ask | deleting a single file, editing `.claude/settings.json` | "This is hard to undo… are you sure you want to proceed?" |
+| ❓ ask | deleting a single file, editing `.claude/settings.json`, writing outside the working folder | "This is hard to undo… are you sure you want to proceed?" |
 | ⛔ deny | trying to expose an API key | "Blocked — this could expose an API key or secret…" |
 | ⛔ deny | deleting an entire folder | "Blocked — safely stopped this whole-folder delete…" |
-| ⛔ deny (always, catastrophic) | a disk-wipe-grade command | "Blocked — this is an irreversible, dangerous command…" |
+| ⛔ deny (always, catastrophic) | a disk-wipe-grade command, `curl url \| bash` (running downloaded code without ever checking it) | "Blocked — this is an irreversible, dangerous command…" |
 
 > This table is taken directly from the actual code (`hooks/guard.mjs`) — no exaggeration, exactly how it behaves.
+
+> **Consistency hardening (2026-07-12):** telling the AI to run the exact command directly can no longer bypass the checks above — whether you ask in plain language or specify the exact command, it is checked the same way.
 
 ---
 
@@ -356,6 +358,25 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 </details>
 
 <details>
+<summary><b>🛡️ 2026-07-12·13 Safety hardening — 5 real bugs found & fixed + security audit completed</b> — click to expand</summary>
+
+**Found and fixed through live testing**
+- Fixed a crash that could happen when the safety hook received a very unusual input signal.
+- Found and closed a gap where **the "no writing outside the working folder" rule was missing in some cases**.
+- Added a check so that creating a shortcut (symbolic link) itself now requires confirmation.
+- **(Most serious) Found and closed a real gap where, if you told the AI to run an exact command directly, the working-folder rule above was skipped entirely.** Now the same check applies whether you ask in plain language or specify the exact command.
+- Added a new safeguard against **running downloaded code without ever checking it** (the common `curl url | bash` attack pattern) — this was not being checked at all until now.
+- Strengthened the wording for the Review (F3) feature so it triggers more reliably. **We are not yet certain this actually improved things** — recorded honestly, without overstating it.
+
+**Separate OWASP-based security audit**
+- Re-checked every required item on the OWASP ASVS checklist (secret exposure, settings-file protection, error-message information leaks, dependencies, etc.) — all passed.
+- Re-scanned every tracked file in the repository for accidentally-committed secrets — 0 found.
+
+**Regression tests**: the safety hook's own test suite grew from 22 to **42 checks**, all passing.
+
+</details>
+
+<details>
 <summary><b>🗓️ [0.2.0] — Phase 2 (planned)</b> — click to expand</summary>
 
 - F6. Safety history (view block/ask history)
@@ -397,10 +418,11 @@ A. This plugin itself makes no network requests (see [§10 Security & data flow]
 
 - ✅ **Verified:** install, Korean rendering, command consistency, **onboarding (F1) actually works**.
 - ✅ **Code complete + self-test passing:** the safety hook (F4) now always turns on, catastrophic commands are always blocked regardless of a sibling plugin, and the auto-accept-mode limitation is documented in onboarding. All 25 self-tests pass.
-- ✅ **Live-verified (2026-07-11):** confirmed the safety blocking actually appears in a real usage session, and fixed + re-confirmed an over-blocking issue (harmless work wrongly blocked when actions were chained together) found during that check.
-- ⬜ **Still needs a human to confirm directly:** whether Plan (F2)/Review (F3) reliably auto-trigger without losing to other features, a beta test where a non-developer completes the whole flow alone, and final legal review (trademark/license).
+- ✅ **Multiple rounds of live verification (2026-07-11~13):** repeated real-usage testing found and fixed 5 real bugs (see "Changelog summary" above), and every required item on the international OWASP security checklist was re-confirmed.
+- ⚠️ **Still uncertain — stated honestly:** whether Review (F3) reliably auto-triggers in a fully unscripted, real-world usage session has not been conclusively confirmed even after repeated testing.
+- ⬜ **Still needs a human to confirm directly (next in order):** ① one genuinely unscripted usage session — building something from scratch with no preset script (everything tested so far has been a scripted safety-test scenario) → ② a beta test where a non-developer completes the whole flow alone → ③ final legal review (trademark/license).
 - This is pre-beta for non-developers. There may be rough edges, and **finding them is the current goal.** No exaggeration — this is the honest, current state.
 
 ---
 
-*Document version date: 2026-07-11 · This guide is written to match "what is actually implemented and verified so far."*
+*Document version date: 2026-07-13 · This guide is written to match "what is actually implemented and verified so far."*
