@@ -330,9 +330,11 @@ function main() {
       decide("ask", "비밀값이 들어 있을 수 있는 파일(.env 등)을 여는 작업이에요. 키가 화면·기록에 남지 않게 주의하세요. 정말 진행할까요?");
       return;
     }
-    if (level === "safe") { passThrough(); return; }
 
     // ③④ 명령이 건드리는 경로 검사 — ④ settings는 항상, ③ 민감위치는 Harness 없을 때만(있으면 위임)
+    // ⚠️ 위험도 등급(level)과 무관하게 항상 실행한다(2026-07-12 라이브 검증 발견): "safe" 등급 명령
+    // (echo·Set-Content 등 리다이렉트/쓰기 계열)이 위험 명령 목록에 없다는 이유로 이 검사 자체를
+    // 건너뛰어, 셸 명령으로는 민감경로·작업폴더 밖 쓰기가 무방비로 통과되던 구멍을 막음.
     const paths = commandPaths(cmd).map((p) => resolveLoose(cwd, p));
     for (const ap of paths) {
       if (isSettingsFile(ap)) {
@@ -348,6 +350,8 @@ function main() {
         return;
       }
     }
+
+    if (level === "safe") { passThrough(); return; }
 
     // ① 치명(catastrophic) 명령 — Harness 유무 무관 항상 deny (ⓓ 방어심층)
     //   근거: isHarnessAlive()는 guard.mjs 파일 존재만 확인 → 껍데기/깨진 Harness면 위임 후 무방비.
