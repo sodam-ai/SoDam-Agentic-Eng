@@ -250,6 +250,26 @@ function isSymlink(p) {
     return false;
   }
 }
+// ── 링크 경유 우회 판정(2026-07-14, CHECKPOINT 잔여위험 해소) ──
+// 기존 isSymlink()은 "쓰기 대상 파일 자체"만 lstat해서, 중간 폴더가 심볼릭 링크/junction이면
+// (예: 작업폴더\linkdir\file.txt, linkdir가 작업폴더 밖을 가리킴) 놓쳤다. 작업폴더부터 대상까지
+// 경로의 각 구성요소를 전부 lstat해서, 어디든 링크가 끼어 있으면 잡는다.
+// realpath 정규화 대신 이 방식을 쓰는 이유: cwd 자체가 심볼릭 경로인 환경(예: macOS /tmp)에서
+// realpath 비교는 정상적인 작업폴더 내 쓰기까지 전부 오탐(링크로 오판)낼 수 있어, cwd 자신의
+// 경로 형태를 건드리지 않는 이 컴포넌트별 lstat 방식이 더 안전하다.
+function pathTraversesSymlink(absTarget, cwd) {
+  let cAbs;
+  try { cAbs = path.resolve(cwd); } catch { return isSymlink(absTarget); }
+  const rel = path.relative(cAbs, absTarget);
+  if (!rel || rel.startsWith("..") || path.isAbsolute(rel)) return isSymlink(absTarget); // 작업폴더 밖은 leaf만(밖 여부는 다른 검사가 처리)
+  let cur = cAbs;
+  for (const seg of rel.split(path.sep)) {
+    if (!seg) continue;
+    cur = path.join(cur, seg);
+    if (isSymlink(cur)) return true;
+  }
+  return false;
+}
 
 // ── ① 위험 등급 (패턴 초안 — §8.8 한계) ── (Harness 검증 로직 복사)
 const CATASTROPHIC = [
@@ -349,6 +369,10 @@ function main() {
         decide("deny", "시스템·홈 등 민감한 위치를 건드리는 위험한 작업이라 막았어요. 안전을 위해 작업용 폴더 안에서만 진행해 주세요.");
         return;
       }
+      if (!harness && pathTraversesSymlink(ap, cwd)) {
+        decide("deny", "경로 중간에 바로가기(심볼릭 링크·폴더 연결)가 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.");
+        return;
+      }
       if (!harness && isOutsideWorkdir(ap, cwd)) {
         decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.");
         return;
@@ -388,8 +412,8 @@ function main() {
       decide("deny", "시스템·홈 등 민감한 위치의 파일이라 안전을 위해 막았어요.");
       return;
     }
-    if (!harness && isSymlink(abs)) {
-      decide("deny", "바로가기(심볼릭 링크) 파일이라 안전을 위해 막았어요.");
+    if (!harness && pathTraversesSymlink(abs, cwd)) {
+      decide("deny", "바로가기(심볼릭 링크) 파일이거나 경로 중간에 폴더 연결(junction)이 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.");
       return;
     }
     if (!harness && isOutsideWorkdir(abs, cwd)) {
