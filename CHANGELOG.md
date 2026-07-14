@@ -74,11 +74,18 @@
 
 - **잔여 위험 해소 — 심볼릭/junction 링크 경유 우회(2026-07-12 §0-5에서 "범위 커서 보류"로 남겼던 항목):** 기존 `isSymlink()`는 "쓰기 대상 파일 자체"만 lstat해서, 중간 폴더가 junction/심볼릭 링크면(예: 작업폴더\linkdir\file.txt, `linkdir`가 작업폴더 밖을 가리킴) 놓쳤음(`07_SECURITY.md` §2 "심볼릭 링크가 작업폴더를 벗어나면 deny" 수용기준과 실제 구현 간극). realpath 전체 정규화 대신, 작업폴더~대상 사이 경로의 모든 구성요소를 개별 lstat하는 `pathTraversesSymlink()`를 신설해 Write/Edit·셸 명령 양쪽의 경로검사에 연결(F4 안전-핵심 변경이라 사용자 승인 후 진행). realpath 방식을 피한 이유: cwd 자체가 심볼릭 경로인 환경(예: macOS `/tmp`)에서 정상적인 작업폴더 내 쓰기까지 전부 링크로 오탐할 위험이 있어, cwd 경로 형태를 건드리지 않는 컴포넌트별 lstat가 더 안전하다고 판단. 실제 junction을 만들어 경유 쓰기(Write)·경유 삭제(셸 `rm`) 둘 다 이제 `deny`되는 것을 라이브 재현으로 확인(이전엔 무방비로 통과). 회귀 테스트 2건 추가(로컬 전용 `_selftest.mjs`, 총 44 PASS, 기존 42건 회귀 없음 확인).
 
+### 2026-07-15 패치 — Phase 2: F6 안전 기록 + F7 Codex 안전 패리티
+
+> 전제조건 재정리: Phase 2 착수 조건이던 "비개발자 베타 1~3명"은 이 도구가 처음부터 사용자 본인 개인용으로
+> 구현 중임이 확정되며 해당없음 처리됨(`01_PRD.md §7`). 단 마켓플레이스·플러그인 설치 방식(F5)은 그대로 유지되고
+> PRIVATE 저장소를 유지하며 Phase는 끝까지 진행하는 것으로 확정.
+
+- **F6. 안전 기록(SafetyLog) 구현.** `guard.mjs`의 `decide()`가 deny/ask를 결정할 때마다 `~/.sodamagentic/safety-log.jsonl`에 `{id, action, target, reason, created_at}` 형식으로 기록(JSONL, append-only — 가족 관례인 Reverse `.sodam-re/safety-log.jsonl`·Loop `runs/*.jsonl`과 일치). 안전한 통과(passThrough)는 기록 안 함(로그 비대화 방지). `target`은 저장 전 기존 `KEY_DENY`/`KEY_ASK` 패턴으로 마스킹해 비밀값이 로그에 남지 않게 함(`02_DATA_MODEL.md` "키 값 로그 저장 금지" 준수). 로그 쓰기 실패가 안전 판정 자체를 막지 않도록 try/catch로 best-effort 처리. 조회는 신규 `/sodam-agentic-log` 명령(`commands/sodam-agentic-log.md`)이 JSONL을 읽어 쉬운 한국어로 요약. 회귀 테스트 4건 추가(총 54 PASS).
+- **F7. Codex 안전 패리티 구현.** WebFetch로 Codex CLI의 실제 훅 스키마를 확인한 결과 `PreToolUse` 이벤트·`tool_name`/`tool_input`/`cwd` 입력·`{hookSpecificOutput:{permissionDecision,permissionDecisionReason}}` 출력 형식이 Claude Code와 사실상 동일함을 확인 — 새 안전 로직을 만들지 않고 기존 `guard.mjs`(F4·F6 포함)를 그대로 재사용(`01_PRD §8` "안전 중복 신규구현 금지" 준수). `codex/install.mjs`가 `hooks/`+`data/`를 `.agents/` 아래로 복사하고 `.codex/hooks.json`에 `PreToolUse` 항목을 등록(기존 `.codex/hooks.json` 내용이 있으면 덮어쓰지 않고 병합, 재설치 시 중복 등록 방지). 회귀 테스트 6건 추가(설치·병합·중복방지 검증).
+- **⚠️ 정직한 한계(구현 완료, 라이브 미검증):** Codex에서 `"permissionDecision": "ask"`가 실제로 대화형 확인창을 띄우는지, `.codex/hooks.json`을 Codex가 정확히 어느 경로에서 읽는지는 공식 문서로 100% 확정하지 못함 — Codex CLI로 직접 설치·테스트해 확인 필요(설치 후 안내 문구에 검증 방법 포함).
+
 ---
 
 ## 다음 예정 (Planned)
 
-### [0.2.0] — Phase 2
-- F6. 안전 기록 (차단·확인 이력 조회)
-- F7. Codex 안전 패리티 (F4 동등 보호)
-- F2/F3 PreToolUse hook 강제화 (스킬 경쟁 한계 근본 해결)
+- F2/F3 PreToolUse hook 강제화 (스킬 경쟁 한계 근본 해결) — `03_PHASES.md` 공식 Phase 2 범위엔 없고 이전 세션 메모에만 있던 항목이라 착수 여부 별도 결정 필요.

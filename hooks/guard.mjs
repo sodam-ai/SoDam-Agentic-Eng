@@ -22,8 +22,11 @@
 //
 // deny-first: 되돌릴 수 없는 건 deny, 되돌릴 수 있는 건 ask, 나머지는 조용히 통과(과잉 확인창 방지).
 // 정직한 한계: 위험 패턴은 "초안"이며 모든 위험을 100% 잡지 못한다(01_PRD §8.8).
+//
+// F6(2026-07-15): deny/ask 결정마다 ~/.sodamagentic/safety-log.jsonl에 기록(로그 실패가
+// 안전 판정을 절대 막지 않도록 best-effort). 조회는 commands/sodam-agentic-log.md.
 
-import { readFileSync, readdirSync, existsSync, lstatSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, lstatSync, appendFileSync, mkdirSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,6 +42,10 @@ import { isHarnessAlive } from "./delegate.mjs";
 const WIN = process.platform === "win32";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const RULES_PATH = path.join(here, "..", "data", "agentic-rules.json");
+// SODAM_AGENTIC_DATA 오버라이드는 _selftest.mjs가 실제 홈 디렉터리를 건드리지 않고
+// 격리된 임시 폴더에서 로그 기록을 검증하기 위함(운영 시에는 항상 홈 디렉터리 사용).
+const LOG_DIR = process.env.SODAM_AGENTIC_DATA || path.join(homedir(), ".sodamagentic");
+const LOG_PATH = path.join(LOG_DIR, "safety-log.jsonl");
 
 // ── 규칙 로드 (데이터-주도 + fail-closed 내장 기본값) ──
 // 키탐지 패턴을 데이터에 두는 이유: guard.mjs 소스에 민감 환경변수 접근 리터럴을 두지 않아
@@ -88,8 +95,33 @@ function readStdin() {
   try { return readFileSync(0, "utf8"); } catch { return ""; }
 }
 
+// ── F6: 안전 기록 — 키/토큰 패턴 마스킹 후 저장(02_DATA_MODEL "키 값 로그 저장 금지" 준수) ──
+function maskSecrets(s) {
+  let out = String(s);
+  for (const re of KEY_DENY) out = out.replace(re, "[REDACTED]");
+  for (const re of KEY_ASK) out = out.replace(re, "[REDACTED]");
+  return out;
+}
+// target: 차단/확인 대상(경로 또는 명령 원문). 로그 실패가 안전 판정을 절대 막지 않도록 best-effort.
+function logSafetyEvent(action, target, reason) {
+  try {
+    mkdirSync(LOG_DIR, { recursive: true });
+    const entry = {
+      id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      action,
+      target: maskSecrets(target == null ? "" : String(target)),
+      reason,
+      created_at: new Date().toISOString(),
+    };
+    appendFileSync(LOG_PATH, JSON.stringify(entry) + "\n", "utf8");
+  } catch {
+    // 로그는 관측용 부가기능 — 실패해도 안전 판정(decide 결과)에는 영향 없음
+  }
+}
+
 // ── 결정 출력 후 종료 ──
-function decide(decision, reason) {
+function decide(decision, reason, target) {
+  logSafetyEvent(decision, target, reason);
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {
@@ -102,7 +134,7 @@ function decide(decision, reason) {
   process.exit(0);
 }
 function passThrough() {
-  process.exit(0); // 출력 없음 = 기본 권한 흐름(우리가 판단 안 함)
+  process.exit(0); // 출력 없음 = 기본 권한 흐름(우리가 판단 안 함) — F6 기록 대상 아님(로그 비대화 방지)
 }
 
 // ── Bash 명령 토큰화 (따옴표 제거) ──
@@ -339,7 +371,7 @@ function main() {
 
     // ② 키/비밀값 노출 — 등급과 무관하게 먼저 검사(echo $KEY 같은 건 '안전'으로 분류되니까)
     if (anyMatch(KEY_DENY, cmd)) {
-      decide("deny", "API 키·비밀값이 노출될 수 있는 작업이라 막았어요. 키는 코드·화면·외부 전송 어디에도 남기면 안 돼요(.env 등 본인 환경에만 보관).");
+      decide("deny", "API 키·비밀값이 노출될 수 있는 작업이라 막았어요. 키는 코드·화면·외부 전송 어디에도 남기면 안 돼요(.env 등 본인 환경에만 보관).", cmd);
       return;
     }
 
@@ -351,7 +383,7 @@ function main() {
 
     // ② .env 로컬 읽기 등 모호한 키 접근 → ask (safe로 분류돼도 확인)
     if (level === "safe" && anyMatch(KEY_ASK, cmd)) {
-      decide("ask", "비밀값이 들어 있을 수 있는 파일(.env 등)을 여는 작업이에요. 키가 화면·기록에 남지 않게 주의하세요. 정말 진행할까요?");
+      decide("ask", "비밀값이 들어 있을 수 있는 파일(.env 등)을 여는 작업이에요. 키가 화면·기록에 남지 않게 주의하세요. 정말 진행할까요?", cmd);
       return;
     }
 
@@ -362,19 +394,19 @@ function main() {
     const paths = commandPaths(cmd).map((p) => resolveLoose(cwd, p));
     for (const ap of paths) {
       if (isSettingsFile(ap)) {
-        decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?");
+        decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?", ap);
         return;
       }
       if (!harness && isSensitive(ap)) {
-        decide("deny", "시스템·홈 등 민감한 위치를 건드리는 위험한 작업이라 막았어요. 안전을 위해 작업용 폴더 안에서만 진행해 주세요.");
+        decide("deny", "시스템·홈 등 민감한 위치를 건드리는 위험한 작업이라 막았어요. 안전을 위해 작업용 폴더 안에서만 진행해 주세요.", ap);
         return;
       }
       if (!harness && pathTraversesSymlink(ap, cwd)) {
-        decide("deny", "경로 중간에 바로가기(심볼릭 링크·폴더 연결)가 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.");
+        decide("deny", "경로 중간에 바로가기(심볼릭 링크·폴더 연결)가 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.", ap);
         return;
       }
       if (!harness && isOutsideWorkdir(ap, cwd)) {
-        decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.");
+        decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.", ap);
         return;
       }
     }
@@ -385,18 +417,18 @@ function main() {
     //   근거: isHarnessAlive()는 guard.mjs 파일 존재만 확인 → 껍데기/깨진 Harness면 위임 후 무방비.
     //   되돌릴 수 없는 명령은 어떤 경우에도 막는다(fail-closed). 이중 deny는 프롬프트 없어 무해.
     if (level === "catastrophic") {
-      decide("deny", "되돌릴 수 없는 위험한 명령이라 막았어요. 정말 필요하면 더 작은 단위로 나눠서 해보세요.");
+      decide("deny", "되돌릴 수 없는 위험한 명령이라 막았어요. 정말 필요하면 더 작은 단위로 나눠서 해보세요.", cmd);
       return;
     }
     // ① 그 외 위험(재귀/단일 삭제) — Harness가 살아있으면 위임(중복 차단/프롬프트 방지)
     if (harness) { passThrough(); return; }
     // ① 폴더(재귀) 삭제 → deny (백업·되돌리기 어려움)
     if (anyMatch(RECURSIVE_DELETE, cmd)) {
-      decide("deny", FOLDER_DENY_MSG);
+      decide("deny", FOLDER_DENY_MSG, cmd);
       return;
     }
     // ① 단일 파일 삭제 등 risky → ask (Agentic은 백업 안 함 — Harness가 있으면 되돌리기 가능)
-    decide("ask", "되돌리기 어려운 작업이에요. (SoDamHarness가 함께 설치돼 있으면 백업·되돌리기를 도와줘요.) 작게 나눠서 하면 더 안전해요. 정말 진행할까요?");
+    decide("ask", "되돌리기 어려운 작업이에요. (SoDamHarness가 함께 설치돼 있으면 백업·되돌리기를 도와줘요.) 작게 나눠서 하면 더 안전해요. 정말 진행할까요?", cmd);
     return;
   }
 
@@ -405,19 +437,19 @@ function main() {
   for (const t of targets) {
     const abs = resolveLoose(cwd, t);
     if (isSettingsFile(abs)) { // ④
-      decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?");
+      decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?", abs);
       return;
     }
     if (!harness && isSensitive(abs)) { // ③ Harness 없을 때만(있으면 위임)
-      decide("deny", "시스템·홈 등 민감한 위치의 파일이라 안전을 위해 막았어요.");
+      decide("deny", "시스템·홈 등 민감한 위치의 파일이라 안전을 위해 막았어요.", abs);
       return;
     }
     if (!harness && pathTraversesSymlink(abs, cwd)) {
-      decide("deny", "바로가기(심볼릭 링크) 파일이거나 경로 중간에 폴더 연결(junction)이 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.");
+      decide("deny", "바로가기(심볼릭 링크) 파일이거나 경로 중간에 폴더 연결(junction)이 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.", abs);
       return;
     }
     if (!harness && isOutsideWorkdir(abs, cwd)) {
-      decide("ask", "지금 작업 중인 폴더 밖의 위치에 쓰려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.");
+      decide("ask", "지금 작업 중인 폴더 밖의 위치에 쓰려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.", abs);
       return;
     }
   }
@@ -425,7 +457,7 @@ function main() {
   const contents = writeContents(ti);
   for (const c of contents) {
     if (anyMatch(KEY_DENY, c)) {
-      decide("deny", "파일에 API 키·비밀값을 직접 적으려는 것 같아 막았어요. 키는 코드에 넣지 말고 .env 같은 본인 환경 변수로 관리하세요.");
+      decide("deny", "파일에 API 키·비밀값을 직접 적으려는 것 같아 막았어요. 키는 코드에 넣지 말고 .env 같은 본인 환경 변수로 관리하세요.", "[파일 내용 - 비밀값 패턴 감지, 원문 미기록]");
       return;
     }
   }
