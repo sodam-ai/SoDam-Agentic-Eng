@@ -344,8 +344,9 @@ href="./README.md">README.md</a> 📖 For the detailed edition
 href="./GUIDE.en.md">GUIDE.en.md</a></strong>.</p>
 </blockquote>
 <blockquote>
-<p>⚠️ Currently in <strong>Phase 1 (MVP)</strong>. Some features are
-early-stage.</p>
+<p>⚠️ Currently: <strong>Phase 1 (MVP) complete + part of Phase 2 (F6
+safety history, F7 Codex safety parity) complete.</strong> Some features
+are early-stage.</p>
 </blockquote>
 <p><strong>Contents:</strong> <a href="#features">Features</a> · <a
 href="#requirements">Requirements</a> · <a href="#install">Install</a> ·
@@ -354,12 +355,9 @@ href="#test">Test</a> · <a href="#uninstall">Uninstall</a> · <a
 href="#safety">Safety</a> · <a href="#trouble">Troubleshooting</a> · <a
 href="#license">License</a> · <a href="#family">Family</a></p>
 <hr />
-<p><a id="features"></a> ## What it does (4 things)</p>
+<p><a id="features"></a></p>
+<h2 id="what-it-does-4-things">What it does (4 things)</h2>
 <table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr>
 <th>Feature</th>
@@ -374,12 +372,12 @@ directing an AI, in Korean</td>
 </tr>
 <tr>
 <td><strong>Plan First (F2)</strong></td>
-<td>Before writing code, shows a “what / why / done-criteria” plan and
+<td>Before writing code, shows a "what / why / done-criteria" plan and
 asks for approval</td>
 </tr>
 <tr>
 <td><strong>Easy Review (F3)</strong></td>
-<td>Summarizes changes as “what / why / any risks?” in plain
+<td>Summarizes changes as "what / why / any risks?" in plain
 language</td>
 </tr>
 <tr>
@@ -389,83 +387,155 @@ work folder, settings changes</td>
 </tr>
 </tbody>
 </table>
-<p><a id="requirements"></a> ## Requirements - <strong>Node.js
-18+</strong> (the safety hook needs it) - <strong>Claude Code</strong>
-(or Codex)</p>
-<p><a id="install"></a> ## Install (Claude Code) &gt; This repository is
-<strong>private</strong> — it installs only for accounts with
-access.</p>
+<p><a id="requirements"></a></p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>Node.js 18+</strong> (the safety hook needs it)</li>
+<li><strong>Claude Code</strong> (or Codex)</li>
+</ul>
+<p><a id="install"></a></p>
+<h2 id="install-claude-code">Install (Claude Code)</h2>
+<blockquote>
+<p>This repository is <strong>private</strong> — it installs only for
+accounts with access.</p>
+</blockquote>
 <ol type="1">
-<li><p>Add the marketplace:</p>
+<li>Add the marketplace:
 <pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
-<li><p>Install:</p>
+<li>Install:
 <pre><code>/plugin install sodam-agentic@sodam</code></pre></li>
-<li><p>Verify: type <code>/sodam-agentic</code> — three commands should
-appear.</p></li>
+<li>Verify: type <code>/sodam-agentic</code> — three commands should
+appear.</li>
 </ol>
 <h2 id="install-codex">Install (Codex)</h2>
 <ol type="1">
-<li><p>Clone this repository:</p>
+<li>Clone this repository:
 <pre><code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre></li>
-<li><p>From <strong>your project folder</strong>, run the install script
-(update the path to where you cloned):</p>
+<li>From <strong>your project folder</strong>, run the install script
+(update the path to where you cloned):
 <pre><code>node C:\path\to\SoDam-Agentic-Eng\codex\install.mjs</code></pre></li>
-<li><p>Done: skills are copied to your project’s
-<code>.agents/skills/</code>.</p></li>
+<li>Done: skills are copied to your project's
+<code>.agents/skills/</code>.</li>
 </ol>
 <blockquote>
-<p>⚠️ <strong>Safety hooks (F4) are weaker in Codex than in Claude
-Code.</strong> See <a
-href="./GUIDE.en.md#security-data-flow">GUIDE.en.md §10</a>.</p>
+<p>⚠️ <strong>The same safety hook (F4) and safety history (F6) are now
+registered in Codex too</strong> (F7, 2026-07-15). Plan (F2) and Review
+(F3) skills work the same way. However, whether the "ask" confirmation
+prompt actually appears in Codex hasn't been confirmed by a human yet —
+see <a href="./GUIDE.en.md#security-data-flow">GUIDE.en.md §10</a>.</p>
 </blockquote>
-<p><a id="usage"></a> ## Usage (beginner steps) 1.
-<code>/sodam-agentic-start</code> → read the onboarding. 2. Ask “make
-○○” → if a <strong>plan appears first</strong>, approve with
-“yes/proceed”. 3. After the work, read the <strong>review
-summary</strong> and check the risks.</p>
+<p><a id="usage"></a></p>
+<h2 id="usage-beginner-steps">Usage (beginner steps)</h2>
+<ol type="1">
+<li><code>/sodam-agentic-start</code> → read the onboarding.</li>
+<li>Ask "make ○○" → if a <strong>plan appears first</strong>, approve
+with "yes/proceed".</li>
+<li>After the work, read the <strong>review summary</strong> and check
+the risks.</li>
+</ol>
 <blockquote>
 <p>Curious about the <strong>architecture</strong> (components, hook
 decision flow) or <strong>security/data flow</strong>? → <a
 href="./GUIDE.en.md#architecture">GUIDE.en.md §9–10</a></p>
 </blockquote>
-<p><a id="commands"></a> ## Commands | Command | Description | |—|—| |
-<code>/sodam-agentic-start</code> | Onboarding | |
-<code>/sodam-agentic-plan</code> | Plan first | |
-<code>/sodam-agentic-review</code> | Change review |</p>
-<p><a id="test"></a> ## Test / Verify - <strong>Structure
-check:</strong> <code>node scripts/validate.mjs</code> (validates
-manifest / skills / hooks) - <strong>Live safety hook:</strong> after
-install, try a risky command and confirm it is blocked</p>
-<p><a id="uninstall"></a> ## Uninstall - Claude Code: type
-<code>/plugin uninstall sodam-agentic</code> → done once
-<code>/sodam-agentic</code> no longer shows commands. - Codex: delete
-the copied skill folder(s) from <code>.agents/skills/</code> directly. -
-Leftover data: this plugin creates no persistent settings/logs/backups,
-so nothing remains after removal. Details → <a
-href="./GUIDE.en.md#uninstall">GUIDE.en.md §11</a></p>
-<p><a id="safety"></a> ## Safety notes - <strong>Never put
-secrets</strong> (API keys, passwords, <code>.env</code>) in code, docs,
-or logs. - The safety net blocks irreversible risks and asks on the
-rest. It is <strong>not “100% safe.”</strong> - In
-auto-accept/bypass-permissions mode, confirmation prompts pass through
-silently — use <code>Shift+Tab</code> for “ask every time.”</p>
-<p><a id="trouble"></a> ## Troubleshooting | Symptom | Fix | |—|—| |
-<code>/sodam-agentic</code> doesn’t show | Reinstall
-(<code>/plugin install sodam-agentic@sodam</code>) | | Korean text is
-garbled | Capture the screen and report | | Code without a plan | Skill
-lost to another feature — to be enforced in Phase 2 | | “Node not found”
-| Install Node.js 18+ and retry |</p>
+<p><a id="commands"></a></p>
+<h2 id="commands">Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/sodam-agentic-start</code></td>
+<td>Onboarding</td>
+</tr>
+<tr>
+<td><code>/sodam-agentic-plan</code></td>
+<td>Plan first</td>
+</tr>
+<tr>
+<td><code>/sodam-agentic-review</code></td>
+<td>Change review</td>
+</tr>
+<tr>
+<td><code>/sodam-agentic-log</code></td>
+<td>View block/ask history (F6)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="test"></a></p>
+<h2 id="test--verify">Test / Verify</h2>
+<ul>
+<li><strong>Structure check:</strong>
+<code>node scripts/validate.mjs</code> (validates manifest / skills /
+hooks)</li>
+<li><strong>Live safety hook:</strong> after install, try a risky
+command and confirm it is blocked</li>
+</ul>
+<p><a id="uninstall"></a></p>
+<h2 id="uninstall">Uninstall</h2>
+<ul>
+<li>Claude Code: type <code>/plugin uninstall sodam-agentic</code> →
+done once <code>/sodam-agentic</code> no longer shows commands.</li>
+<li>Codex: delete the copied skill folder(s) from
+<code>.agents/skills/</code> directly.</li>
+<li>Leftover data: the safety log file
+(<code>~/.sodamagentic/safety-log.jsonl</code>, F6) lives outside the
+plugin folder, so it is not automatically deleted on removal. Details →
+<a href="./GUIDE.en.md#uninstall">GUIDE.en.md §11</a></li>
+</ul>
+<p><a id="safety"></a></p>
+<h2 id="safety-notes">Safety notes</h2>
+<ul>
+<li><strong>Never put secrets</strong> (API keys, passwords,
+<code>.env</code>) in code, docs, or logs.</li>
+<li>The safety net blocks irreversible risks and asks on the rest. It is
+<strong>not "100% safe."</strong></li>
+<li>In auto-accept/bypass-permissions mode, confirmation prompts pass
+through silently — use <code>Shift+Tab</code> for "ask every time."</li>
+<li>Blocked (deny) or asked-about (ask) actions can be reviewed later
+with <code>/sodam-agentic-log</code> (F6; safe pass-throughs aren't
+logged; stored on your computer only).</li>
+</ul>
+<p><a id="trouble"></a></p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/sodam-agentic</code> doesn't show</td>
+<td>Reinstall (<code>/plugin install sodam-agentic@sodam</code>)</td>
+</tr>
+<tr>
+<td>Korean text is garbled</td>
+<td>Capture the screen and report</td>
+</tr>
+<tr>
+<td>Code without a plan</td>
+<td>Skill lost to another feature — to be enforced in Phase 2</td>
+</tr>
+<tr>
+<td>"Node not found"</td>
+<td>Install Node.js 18+ and retry</td>
+</tr>
+</tbody>
+</table>
 <p>Full 11-row table, FAQ, and changelog → <a
 href="./GUIDE.en.md#troubleshooting">GUIDE.en.md §12–16</a></p>
-<p><a id="family"></a> ## The SoDam family (stronger together)</p>
+<p><a id="family"></a></p>
+<h2 id="the-sodam-family-stronger-together">The SoDam family (stronger
+together)</h2>
 <p>SoDamAgentic is the entry point of a 6-plugin family. Installing them
 together makes things safer and more complete.</p>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr>
 <th>Plugin</th>
@@ -510,19 +580,30 @@ together makes things safer and more complete.</p>
 <p>Full collaboration spec: <a
 href="./docs/family-synergy.md">docs/family-synergy.md</a></p>
 </blockquote>
-<p><a id="license"></a> ## License, copyright &amp; commercial use</p>
+<p><a id="license"></a></p>
+<h2 id="license-copyright--commercial-use">License, copyright &amp;
+commercial use</h2>
+<blockquote>
+<p>⚠️ This repository is currently <strong>private</strong> and has not
+been publicly released yet (a personal-use tool, confirmed 2026-07-15).
+The terms below are stated in advance for a future public release.</p>
+</blockquote>
 <p><strong>Apache License 2.0</strong> · Copyright <strong>SoDam AI
 Studio</strong> · 2026 (full text: <a
 href="./LICENSE"><code>LICENSE</code></a>, notice: <a
 href="./NOTICE"><code>NOTICE</code></a>). Modify, copy, redistribute,
 <strong>commercial use</strong>, sell, run as a service, use in
-education, deliver to clients — all ✅ (NOTICE-preservation condition).
-Provided <strong>“AS IS,” no warranty</strong> — outcomes are your
+education, deliver to clients — all ✅ (subject to marking modified
+files as changed + preserving <code>LICENSE</code>/<code>NOTICE</code>).
+Provided <strong>"AS IS," with no warranty of any kind</strong> — to the
+extent permitted by law, the copyright holder/contributors are not
+liable for any damages (including data loss); outcomes are your
 responsibility. This kit is <strong>free</strong>, but <strong>AI model
-(Claude/Codex) usage fees and terms follow Anthropic’s/OpenAI’s own
-terms</strong> separately. “Claude/Codex” etc. are trademarks of their
-owners, used only descriptively. ⚠️ Some items are still pending legal
-review (e.g. trademark scope) — full text → <a
+(Claude/Codex) usage fees and terms follow Anthropic's/OpenAI's own
+terms</strong> separately. "Claude/Codex" etc. are trademarks of their
+owners, used only descriptively, never implying endorsement. ⚠️ Some
+items are still pending legal review (e.g. trademark scope, not required
+until public release) — full text + redistribution checklist → <a
 href="./GUIDE.en.md#license-legal">GUIDE.en.md §14</a> (not legal
 advice, for reference only)</p>
 </body>

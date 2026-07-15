@@ -5,7 +5,7 @@
 > 🇰🇷 한국어: [README.md](./README.md)
 > 📖 For the detailed edition (architecture, security, FAQ, uninstall, etc.), see **[GUIDE.en.md](./GUIDE.en.md)**.
 
-> ⚠️ Currently in **Phase 1 (MVP)**. Some features are early-stage.
+> ⚠️ Currently: **Phase 1 (MVP) complete + part of Phase 2 (F6 safety history, F7 Codex safety parity) complete.** Some features are early-stage.
 
 **Contents:** [Features](#features) · [Requirements](#requirements) · [Install](#install) · [Usage](#usage) · [Commands](#commands) · [Test](#test) · [Uninstall](#uninstall) · [Safety](#safety) · [Troubleshooting](#trouble) · [License](#license) · [Family](#family)
 
@@ -52,7 +52,7 @@
    ```
 3. Done: skills are copied to your project's `.agents/skills/`.
 
-> ⚠️ **Safety hooks (F4) are weaker in Codex than in Claude Code.** See [GUIDE.en.md §10](./GUIDE.en.md#security-data-flow).
+> ⚠️ **The same safety hook (F4) and safety history (F6) are now registered in Codex too** (F7, 2026-07-15). Plan (F2) and Review (F3) skills work the same way. However, whether the "ask" confirmation prompt actually appears in Codex hasn't been confirmed by a human yet — see [GUIDE.en.md §10](./GUIDE.en.md#security-data-flow).
 
 <a id="usage"></a>
 ## Usage (beginner steps)
@@ -69,6 +69,7 @@
 | `/sodam-agentic-start` | Onboarding |
 | `/sodam-agentic-plan` | Plan first |
 | `/sodam-agentic-review` | Change review |
+| `/sodam-agentic-log` | View block/ask history (F6) |
 
 <a id="test"></a>
 ## Test / Verify
@@ -79,13 +80,14 @@
 ## Uninstall
 - Claude Code: type `/plugin uninstall sodam-agentic` → done once `/sodam-agentic` no longer shows commands.
 - Codex: delete the copied skill folder(s) from `.agents/skills/` directly.
-- Leftover data: this plugin creates no persistent settings/logs/backups, so nothing remains after removal. Details → [GUIDE.en.md §11](./GUIDE.en.md#uninstall)
+- Leftover data: the safety log file (`~/.sodamagentic/safety-log.jsonl`, F6) lives outside the plugin folder, so it is not automatically deleted on removal. Details → [GUIDE.en.md §11](./GUIDE.en.md#uninstall)
 
 <a id="safety"></a>
 ## Safety notes
 - **Never put secrets** (API keys, passwords, `.env`) in code, docs, or logs.
 - The safety net blocks irreversible risks and asks on the rest. It is **not "100% safe."**
 - In auto-accept/bypass-permissions mode, confirmation prompts pass through silently — use `Shift+Tab` for "ask every time."
+- Blocked (deny) or asked-about (ask) actions can be reviewed later with `/sodam-agentic-log` (F6; safe pass-throughs aren't logged; stored on your computer only).
 
 <a id="trouble"></a>
 ## Troubleshooting
@@ -117,7 +119,9 @@ SoDamAgentic is the entry point of a 6-plugin family. Installing them together m
 <a id="license"></a>
 ## License, copyright & commercial use
 
+> ⚠️ This repository is currently **private** and has not been publicly released yet (a personal-use tool, confirmed 2026-07-15). The terms below are stated in advance for a future public release.
+
 **Apache License 2.0** · Copyright **SoDam AI Studio** · 2026 (full text: [`LICENSE`](./LICENSE), notice: [`NOTICE`](./NOTICE)).
-Modify, copy, redistribute, **commercial use**, sell, run as a service, use in education, deliver to clients — all ✅ (NOTICE-preservation condition). Provided **"AS IS," no warranty** — outcomes are your responsibility.
-This kit is **free**, but **AI model (Claude/Codex) usage fees and terms follow Anthropic's/OpenAI's own terms** separately. "Claude/Codex" etc. are trademarks of their owners, used only descriptively.
-⚠️ Some items are still pending legal review (e.g. trademark scope) — full text → [GUIDE.en.md §14](./GUIDE.en.md#license-legal) (not legal advice, for reference only)
+Modify, copy, redistribute, **commercial use**, sell, run as a service, use in education, deliver to clients — all ✅ (subject to marking modified files as changed + preserving `LICENSE`/`NOTICE`). Provided **"AS IS," with no warranty of any kind** — to the extent permitted by law, the copyright holder/contributors are not liable for any damages (including data loss); outcomes are your responsibility.
+This kit is **free**, but **AI model (Claude/Codex) usage fees and terms follow Anthropic's/OpenAI's own terms** separately. "Claude/Codex" etc. are trademarks of their owners, used only descriptively, never implying endorsement.
+⚠️ Some items are still pending legal review (e.g. trademark scope, not required until public release) — full text + redistribution checklist → [GUIDE.en.md §14](./GUIDE.en.md#license-legal) (not legal advice, for reference only)
