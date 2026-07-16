@@ -84,6 +84,15 @@
 - **F7. Codex 안전 패리티 구현.** WebFetch로 Codex CLI의 실제 훅 스키마를 확인한 결과 `PreToolUse` 이벤트·`tool_name`/`tool_input`/`cwd` 입력·`{hookSpecificOutput:{permissionDecision,permissionDecisionReason}}` 출력 형식이 Claude Code와 사실상 동일함을 확인 — 새 안전 로직을 만들지 않고 기존 `guard.mjs`(F4·F6 포함)를 그대로 재사용(`01_PRD §8` "안전 중복 신규구현 금지" 준수). `codex/install.mjs`가 `hooks/`+`data/`를 `.agents/` 아래로 복사하고 `.codex/hooks.json`에 `PreToolUse` 항목을 등록(기존 `.codex/hooks.json` 내용이 있으면 덮어쓰지 않고 병합, 재설치 시 중복 등록 방지). 회귀 테스트 6건 추가(설치·병합·중복방지 검증).
 - **⚠️ 정직한 한계(구현 완료, 라이브 미검증):** Codex에서 `"permissionDecision": "ask"`가 실제로 대화형 확인창을 띄우는지, `.codex/hooks.json`을 Codex가 정확히 어느 경로에서 읽는지는 공식 문서로 100% 확정하지 못함 — Codex CLI로 직접 설치·테스트해 확인 필요(설치 후 안내 문구에 검증 방법 포함).
 
+### 2026-07-16 패치 — 안전 메시지에 플러그인 출처 표시 추가 (소담 패밀리 충돌 대비)
+
+> 배경: `CHECKPOINT.md §0-2`(2026-07-11)에서 사용자의 실제 `settings.json`에 SoDamHarness의 훅이 직접 등록돼 있어, sodam-agentic의 자동로드 훅과 **동시에** 발동한 라이브 사례가 있었다. 당시 AI조차 두 플러그인의 소스코드를 줄 단위로 대조해야만 어느 쪽이 차단한 건지 구분할 수 있었다 — 실제 사용자는 구분할 방법이 전혀 없었다는 뜻. `05_FAMILY_RISKS.md` PART A의 "여러 플러그인이 같이 있을 때 초보자 혼란"이 실측으로 재현된 사례.
+
+- **`hooks/guard.mjs`의 `decide()` 함수 한 곳만 수정** — 모든 확인(ask)·차단(deny) 메시지 앞에 `[소담 에이전틱]` 접두사를 자동으로 붙임(13개 호출부 개별 수정 아님, 단일 지점 변경 — Simplicity First). 화면에 뜨는 메시지와 `/sodam-agentic-log` 조회 기록 양쪽에 동일하게 적용.
+- **의도적으로 하지 않은 것(정직 고지):** 이 변경은 충돌 자체를 막지 않는다. 진짜 충돌 방지(안전 훅 무력화 자기감지·훅 병렬실행 순서)는 `docs/family-synergy.md`가 SoDamHarness 단독 소유로 명시한 영역이라, Agentic이 재구현하면 "안전 중복 신규구현 금지"(`01_PRD.md §8`) 원칙을 어기게 된다. 이번 변경은 딱 "충돌이 나도 어느 플러그인인지 바로 알 수 있게" 하는 범위로 한정했다.
+- **문서 동기화:** `GUIDE.md`/`GUIDE.en.md` §10의 "실제 판정 3단계 예시" 표가 "실제 코드 문구를 그대로 옮긴 것"이라 명시하고 있어, 표의 예시 문구 4곳(ko·en 각각)에도 동일 접두사 반영 + HTML 재생성.
+- **검증:** `validate.mjs` 10/0, `_selftest.mjs` 54 PASS(회귀 0 — 테스트가 `reason` 필드를 타입 체크만 하고 정확한 문자열 비교를 하지 않음을 사전 확인했기 때문에 예상된 결과).
+
 ---
 
 ## 다음 예정 (Planned)

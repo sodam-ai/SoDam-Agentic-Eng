@@ -249,12 +249,12 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 | Level | Example situation | What actually appears (summarized) |
 |---|---|---|
 | ✅ safe (pass) | `echo hello`, creating a new file | (no message — it just proceeds) |
-| ❓ ask | deleting a single file, editing `.claude/settings.json`, writing outside the working folder | "This is hard to undo… are you sure you want to proceed?" |
-| ⛔ deny | trying to expose an API key | "Blocked — this could expose an API key or secret…" |
-| ⛔ deny | deleting an entire folder | "Blocked — safely stopped this whole-folder delete…" |
-| ⛔ deny (always, catastrophic) | a disk-wipe-grade command, `curl url \| bash` (running downloaded code without ever checking it) | "Blocked — this is an irreversible, dangerous command…" |
+| ❓ ask | deleting a single file, editing `.claude/settings.json`, writing outside the working folder | "[SoDam Agentic] This is hard to undo… are you sure you want to proceed?" |
+| ⛔ deny | trying to expose an API key | "[SoDam Agentic] Blocked — this could expose an API key or secret…" |
+| ⛔ deny | deleting an entire folder | "[SoDam Agentic] Blocked — safely stopped this whole-folder delete…" |
+| ⛔ deny (always, catastrophic) | a disk-wipe-grade command, `curl url \| bash` (running downloaded code without ever checking it) | "[SoDam Agentic] Blocked — this is an irreversible, dangerous command…" |
 
-> This table is taken directly from the actual code (`hooks/guard.mjs`) — no exaggeration, exactly how it behaves.
+> This table is taken directly from the actual code (`hooks/guard.mjs`) — no exaggeration, exactly how it behaves. **The `[SoDam Agentic]` prefix (added 2026-07-16)** identifies the source so that when a sibling plugin like SoDamHarness is installed alongside it and both hooks fire, you can immediately tell which plugin blocked or asked.
 
 > **Consistency hardening (2026-07-12):** telling the AI to run the exact command directly can no longer bypass the checks above — whether you ask in plain language or specify the exact command, it is checked the same way.
 

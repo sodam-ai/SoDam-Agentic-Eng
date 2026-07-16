@@ -120,14 +120,16 @@ function logSafetyEvent(action, target, reason) {
 }
 
 // ── 결정 출력 후 종료 ──
+// 소담 패밀리(Harness 등)와 동시 설치 시 어느 플러그인이 막았는지 사용자가 구분할 수 있도록 출처 표시.
 function decide(decision, reason, target) {
-  logSafetyEvent(decision, target, reason);
+  const taggedReason = `[소담 에이전틱] ${reason}`;
+  logSafetyEvent(decision, target, taggedReason);
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
         permissionDecision: decision,
-        permissionDecisionReason: reason,
+        permissionDecisionReason: taggedReason,
       },
     }),
   );

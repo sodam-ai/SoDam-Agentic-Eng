@@ -841,30 +841,37 @@ href="#commands"><code>/sodam-agentic-log</code></a> command.</li>
 <td>❓ ask</td>
 <td>deleting a single file, editing <code>.claude/settings.json</code>,
 writing outside the working folder</td>
-<td>"This is hard to undo… are you sure you want to proceed?"</td>
+<td>"[SoDam Agentic] This is hard to undo… are you sure you want to
+proceed?"</td>
 </tr>
 <tr>
 <td>⛔ deny</td>
 <td>trying to expose an API key</td>
-<td>"Blocked — this could expose an API key or secret…"</td>
+<td>"[SoDam Agentic] Blocked — this could expose an API key or
+secret…"</td>
 </tr>
 <tr>
 <td>⛔ deny</td>
 <td>deleting an entire folder</td>
-<td>"Blocked — safely stopped this whole-folder delete…"</td>
+<td>"[SoDam Agentic] Blocked — safely stopped this whole-folder
+delete…"</td>
 </tr>
 <tr>
 <td>⛔ deny (always, catastrophic)</td>
 <td>a disk-wipe-grade command, <code>curl url | bash</code> (running
 downloaded code without ever checking it)</td>
-<td>"Blocked — this is an irreversible, dangerous command…"</td>
+<td>"[SoDam Agentic] Blocked — this is an irreversible, dangerous
+command…"</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
 <p>This table is taken directly from the actual code
 (<code>hooks/guard.mjs</code>) — no exaggeration, exactly how it
-behaves.</p>
+behaves. <strong>The <code>[SoDam Agentic]</code> prefix (added
+2026-07-16)</strong> identifies the source so that when a sibling plugin
+like SoDamHarness is installed alongside it and both hooks fire, you can
+immediately tell which plugin blocked or asked.</p>
 </blockquote>
 <blockquote>
 <p><strong>Consistency hardening (2026-07-12):</strong> telling the AI
