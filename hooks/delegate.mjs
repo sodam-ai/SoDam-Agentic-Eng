@@ -30,7 +30,10 @@ function cmpVersion(a, b) {
   return 0;
 }
 
-// pluginsBase 아래(2단계까지)에서 name == "sodam-harness" 매니페스트를 찾는다.
+// pluginsBase 아래(3단계까지)에서 name == "sodam-harness" 매니페스트를 찾는다.
+// 3단계까지 보는 이유(2026-07-16 실측 발견): 실제 Windows Claude Code 설치는
+// <marketplace>/<plugin>/<version>/.claude-plugin/plugin.json 처럼 버전 폴더가 한 겹 더 있다
+// (2단계까지만 보면 그 버전 폴더 안의 매니페스트를 놓친다).
 function findHarness(pluginsBase) {
   if (!existsSync(pluginsBase)) return null;
   const dirs = [];
@@ -40,7 +43,12 @@ function findHarness(pluginsBase) {
     dirs.push(p1);
     for (const e2 of safeReaddir(p1)) {
       const p2 = path.join(p1, e2);
-      try { if (statSync(p2).isDirectory()) dirs.push(p2); } catch { /* skip */ }
+      try { if (!statSync(p2).isDirectory()) continue; } catch { continue; }
+      dirs.push(p2);
+      for (const e3 of safeReaddir(p2)) {
+        const p3 = path.join(p2, e3);
+        try { if (statSync(p3).isDirectory()) dirs.push(p3); } catch { /* skip */ }
+      }
     }
   }
   for (const dir of dirs) {
@@ -68,7 +76,26 @@ export function isHarnessAliveAt(pluginsBase) {
   }
 }
 
-// 운영 경로: 사용자 홈의 Claude Code plugins 폴더만 본다(오버라이드 불가).
+// 운영 경로: 사용자 홈의 Claude Code plugins 폴더 후보들만 본다(임의 env 오버라이드 불가 —
+//   테스트 백도어 아님, OS 표준 사용자별 앱데이터 위치 조회일 뿐).
+// 2026-07-16 실측 발견: 실제 Windows Claude Code는 plugin 캐시를 ~/.claude/plugins가 아니라
+//   %APPDATA%\claude-code\plugins\cache 에 둔다. 기존 경로는 그대로 두고(다른 설치 방식/환경
+//   대비) 실제 확인된 경로를 후보로 추가한다 — 하나라도 찾으면 위임.
+function pluginsBaseCandidates() {
+  const out = [path.join(homedir(), ".claude", "plugins")];
+  if (process.platform === "win32" && process.env.APPDATA) {
+    out.push(path.join(process.env.APPDATA, "claude-code", "plugins", "cache"));
+  }
+  return out;
+}
+// _selftest.mjs 전용: Agentic 자체 폴백 로직(harness=false 상황)을 이 실행 기기의 실제
+// Harness 설치 여부와 무관하게 결정적으로 검증하기 위한 강제 플래그. "위임(harness=true)"으로
+// 속이는 방향이 아니라 그 반대(항상 폴백)만 가능 — 보호를 줄이는 방향이 아니라 늘리는 방향이라
+// 위 "테스트용 오버라이드(백도어) 없음" 원칙(안전 완화 방지)과 충돌하지 않는다.
 export function isHarnessAlive() {
-  return isHarnessAliveAt(path.join(homedir(), ".claude", "plugins"));
+  if (process.env.SODAM_AGENTIC_TEST_FORCE_NO_HARNESS === "1") return false;
+  for (const base of pluginsBaseCandidates()) {
+    if (isHarnessAliveAt(base)) return true;
+  }
+  return false;
 }

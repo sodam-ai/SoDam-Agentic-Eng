@@ -24,7 +24,7 @@
 // 정직한 한계: 위험 패턴은 "초안"이며 모든 위험을 100% 잡지 못한다(01_PRD §8.8).
 //
 // F6(2026-07-15): deny/ask 결정마다 ~/.sodamagentic/safety-log.jsonl에 기록(로그 실패가
-// 안전 판정을 절대 막지 않도록 best-effort). 조회는 commands/sodam-agentic-log.md.
+// 안전 판정을 절대 막지 않도록 best-effort). 조회는 commands/log.md(/sodam-agentic:log).
 
 import { readFileSync, readdirSync, existsSync, lstatSync, appendFileSync, mkdirSync } from "node:fs";
 import { homedir } from "node:os";
@@ -407,7 +407,11 @@ function main() {
         decide("deny", "경로 중간에 바로가기(심볼릭 링크·폴더 연결)가 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.", ap);
         return;
       }
-      if (!harness && isOutsideWorkdir(ap, cwd)) {
+      // ⚠️ harness 유무와 무관하게 항상 실행(2026-07-17 라이브 검증 발견): SoDamHarness 실제
+      // 설치본(guard.mjs)을 직접 읽고 실행해보니 "작업폴더 밖 새 파일 쓰기 → 확인" 보호를
+      // 전혀 구현하지 않는다(설계상 의도적 — "cwd 밖이면 무조건 차단은 과잉"이라 폐기했다고
+      // 스스로 명시). 위임했는데 이 보호만 조용히 사라지는 걸 막기 위해 이 체크만은 항상 자체 수행.
+      if (isOutsideWorkdir(ap, cwd)) {
         decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.", ap);
         return;
       }
@@ -450,7 +454,8 @@ function main() {
       decide("deny", "바로가기(심볼릭 링크) 파일이거나 경로 중간에 폴더 연결(junction)이 있어 실제로 어디에 쓰는지 확실하지 않아요. 안전을 위해 막았어요.", abs);
       return;
     }
-    if (!harness && isOutsideWorkdir(abs, cwd)) {
+    // ⚠️ harness 유무와 무관하게 항상 실행 — 위 셸 명령 분기와 동일 근거(2026-07-17).
+    if (isOutsideWorkdir(abs, cwd)) {
       decide("ask", "지금 작업 중인 폴더 밖의 위치에 쓰려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.", abs);
       return;
     }
