@@ -228,7 +228,7 @@ Claude Code를 열고 아래 명령어를 입력하세요.
 
 **설치 확인:**
 ```
-/sodam-agentic-start
+/sodam-agentic:start
 ```
 → 소담 온보딩 화면이 나오면 성공입니다.
 
@@ -542,7 +542,7 @@ Claude Code 채팅창에 `/` 를 입력하면 사용 가능한 스킬 목록이 
 
 | 명령어 | 하는 일 |
 |--------|---------|
-| `/sodam-agentic-start` | 소담 스위트 온보딩 시작 |
+| `/sodam-agentic:start` | 소담 스위트 온보딩 시작 |
 
 > AI에게 작업을 시키면 자동으로 계획-확인 흐름이 발동됩니다.
 

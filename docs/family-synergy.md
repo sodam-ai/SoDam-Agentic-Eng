@@ -121,7 +121,7 @@ Harness·Loop·Agentic 모두 "초보 베타 1명" 조건을 Phase 1 졸업 요�
 1. SoDamHarness 설치 → /sodam-harness-start → 위험 명령 1회 테스트
 2. SoDamContext 설치 → /sodam-context-start → 설명서 건강검진 1회
 3. SoDamLoop 설치   → /sodam-loop-start → 간단한 반복 작업 1회
-4. SoDamAgentic 설치→ /sodam-agentic-start → 계획→실행→검토 1회 완주
+4. SoDamAgentic 설치→ /sodam-agentic:start → 계획→실행→검토 1회 완주
 목표 시간: 60~90분
 성공 기준: 초보 1명이 안내서 없이 각 단계를 통과
 ```

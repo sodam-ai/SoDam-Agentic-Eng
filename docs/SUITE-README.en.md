@@ -226,7 +226,7 @@ After the installation complete message appears:
 
 **Verify installation:**
 ```
-/sodam-agentic-start
+/sodam-agentic:start
 ```
 → If the SoDam onboarding screen appears, installation was successful.
 
@@ -540,7 +540,7 @@ Layer 3: File integrity verification (integrity.json SHA-256)
 
 | Command | What It Does |
 |---------|-------------|
-| `/sodam-agentic-start` | Start SoDam suite onboarding |
+| `/sodam-agentic:start` | Start SoDam suite onboarding |
 
 > When you give the AI a task, the plan-confirm flow activates automatically.
 

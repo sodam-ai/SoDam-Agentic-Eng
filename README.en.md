@@ -16,7 +16,7 @@
 
 | Feature | Description |
 |---|---|
-| **Onboarding** | `/sodam-agentic-start` — explains the 4 steps of directing an AI, in Korean |
+| **Onboarding** | `/sodam-agentic:start` — explains the 4 steps of directing an AI, in Korean |
 | **Plan First (F2)** | Before writing code, shows a "what / why / done-criteria" plan and asks for approval |
 | **Easy Review (F3)** | Summarizes changes as "what / why / any risks?" in plain language |
 | **Safety (F4)** | Auto-blocks/asks on risky commands, key exposure, writes outside the work folder, settings changes |
@@ -38,7 +38,7 @@
    ```
    /plugin install sodam-agentic@sodam
    ```
-3. Verify: type `/sodam-agentic` — three commands should appear.
+3. Verify: type `/sodam-agentic:` — four commands should appear.
 
 ## Install (Codex)
 
@@ -56,7 +56,7 @@
 
 <a id="usage"></a>
 ## Usage (beginner steps)
-1. `/sodam-agentic-start` → read the onboarding.
+1. `/sodam-agentic:start` → read the onboarding.
 2. Ask "make ○○" → if a **plan appears first**, approve with "yes/proceed".
 3. After the work, read the **review summary** and check the risks.
 
@@ -66,10 +66,10 @@
 ## Commands
 | Command | Description |
 |---|---|
-| `/sodam-agentic-start` | Onboarding |
-| `/sodam-agentic-plan` | Plan first |
-| `/sodam-agentic-review` | Change review |
-| `/sodam-agentic-log` | View block/ask history (F6) |
+| `/sodam-agentic:start` | Onboarding |
+| `/sodam-agentic:plan` | Plan first |
+| `/sodam-agentic:review` | Change review |
+| `/sodam-agentic:log` | View block/ask history (F6) |
 
 <a id="test"></a>
 ## Test / Verify
@@ -87,7 +87,7 @@
 - **Never put secrets** (API keys, passwords, `.env`) in code, docs, or logs.
 - The safety net blocks irreversible risks and asks on the rest. It is **not "100% safe."**
 - In auto-accept/bypass-permissions mode, confirmation prompts pass through silently — use `Shift+Tab` for "ask every time."
-- Blocked (deny) or asked-about (ask) actions can be reviewed later with `/sodam-agentic-log` (F6; safe pass-throughs aren't logged; stored on your computer only).
+- Blocked (deny) or asked-about (ask) actions can be reviewed later with `/sodam-agentic:log` (F6; safe pass-throughs aren't logged; stored on your computer only).
 
 <a id="trouble"></a>
 ## Troubleshooting
@@ -98,7 +98,7 @@
 | Code without a plan | Skill lost to another feature — to be enforced in Phase 2 |
 | "Node not found" | Install Node.js 18+ and retry |
 
-Full 11-row table, FAQ, and changelog → [GUIDE.en.md §12–16](./GUIDE.en.md#troubleshooting)
+Full 13-row table, FAQ, and changelog → [GUIDE.en.md §12–16](./GUIDE.en.md#troubleshooting)
 
 <a id="family"></a>
 ## The SoDam family (stronger together)
@@ -124,4 +124,5 @@ SoDamAgentic is the entry point of a 6-plugin family. Installing them together m
 **Apache License 2.0** · Copyright **SoDam AI Studio** · 2026 (full text: [`LICENSE`](./LICENSE), notice: [`NOTICE`](./NOTICE)).
 Modify, copy, redistribute, **commercial use**, sell, run as a service, use in education, deliver to clients — all ✅ (subject to marking modified files as changed + preserving `LICENSE`/`NOTICE`). Provided **"AS IS," with no warranty of any kind** — to the extent permitted by law, the copyright holder/contributors are not liable for any damages (including data loss); outcomes are your responsibility.
 This kit is **free**, but **AI model (Claude/Codex) usage fees and terms follow Anthropic's/OpenAI's own terms** separately. "Claude/Codex" etc. are trademarks of their owners, used only descriptively, never implying endorsement.
+This project was **developed with the help of an AI coding tool (Claude Code)** — if you plan to redistribute or use it commercially, also check the legal considerations around AI-assisted content separately (details: [GUIDE.en.md §14](./GUIDE.en.md#license-legal)).
 ⚠️ Some items are still pending legal review (e.g. trademark scope, not required until public release) — full text + redistribution checklist → [GUIDE.en.md §14](./GUIDE.en.md#license-legal) (not legal advice, for reference only)

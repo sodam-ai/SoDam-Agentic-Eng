@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>소담 에이전틱 (SoDamAgentic) — 왕초보 가이드</title>
+  <title>소담 에이전틱 (SoDamAgentic) — 왕초보 가이드 (GUIDE)</title>
   <style>
     html {
       color: #1a1a1a;
@@ -332,9 +332,10 @@
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">소담 에이전틱 (SoDamAgentic) — 왕초보 가이드</h1>
+<h1 class="title">소담 에이전틱 (SoDamAgentic) — 왕초보 가이드
+(GUIDE)</h1>
 </header>
-<h1 id="소담-에이전틱-sodamagentic--왕초보-가이드-guide">소담 에이전틱
+<h1 id="소담-에이전틱-sodamagentic-왕초보-가이드-guide">소담 에이전틱
 (SoDamAgentic) — 왕초보 가이드 (GUIDE)</h1>
 <blockquote>
 <p>🇰🇷 한국어 가이드 (기본) · 영어 가이드: <a
@@ -344,8 +345,8 @@ href="./GUIDE.en.md">GUIDE.en.md</a> 이 가이드는
 href="./README.md">README.md</a>를 먼저 보세요. 이 문서는
 <strong>상세판</strong>입니다. ⚠️ <strong>현재 상태:</strong> Phase 1
 (MVP) 완료 + Phase 2 일부(F6 안전 기록·F7 Codex 안전 패리티) 완료.
-일부는 아직 사람의 라이브 확인을 기다리고 있습니다(맨 끝 "현재 개발
-상태" 참고).</p>
+일부는 아직 사람의 라이브 확인을 기다리고 있습니다(맨 끝 “현재 개발
+상태” 참고).</p>
 </blockquote>
 <hr />
 <h2 id="목차">목차</h2>
@@ -370,38 +371,40 @@ href="./README.md">README.md</a>를 먼저 보세요. 이 문서는
 <li><a href="#dev-status">현재 개발 상태 (정직하게)</a></li>
 </ol>
 <hr />
-<p><a id="what-is-this"></a></p>
-<h2 id="0-이-도구가-무엇인가요-한-문장">0. 이 도구가 무엇인가요? (한
-문장)</h2>
+<p><a id="what-is-this"></a> ## 0. 이 도구가 무엇인가요? (한 문장)</p>
 <blockquote>
-<p><strong>소담</strong>은 "AI에게 일을 제대로 시키는 법"을 <strong>쉬운
-한국어로 떠먹여 주는</strong>, Claude Code/Codex용 **플러그인(추가
-기능)**입니다.</p>
+<p><strong>소담</strong>은 “AI에게 일을 제대로 시키는 법”을 <strong>쉬운
+한국어로 떠먹여 주는</strong>, Claude Code/Codex용 <strong>플러그인(추가
+기능)</strong>입니다.</p>
 </blockquote>
 <p>비유: <strong>AI는 공장의 기계, 당신은 그 공장을 설계하는
-사람</strong>입니다. "알아서 해"가 아니라
+사람</strong>입니다. “알아서 해”가 아니라
 <strong>무엇을·왜·어디까지</strong> 만들지 먼저 정하고, AI가 한 일을
 검토하고, 위험한 건 막습니다.</p>
-<p><strong>해주는 4가지:</strong> | 기능 | 한 줄 설명 | |---|---| |
-온보딩 | AI에게 일 시키는 4단계를 한국어로 안내 | | 계획 먼저 | 코드
-짜기 전에 "무엇을·왜·완성기준" 계획을 먼저 보여주고 승인받음 | | 변경점
-검토 | 바꾼 내용을 "무엇을 / 왜 / 위험은?"으로 쉽게 요약 | | 안전 | 위험
+<p><strong>해주는 4가지:</strong> | 기능 | 한 줄 설명 | |—|—| | 온보딩 |
+AI에게 일 시키는 4단계를 한국어로 안내 | | 계획 먼저 | 코드 짜기 전에
+“무엇을·왜·완성기준” 계획을 먼저 보여주고 승인받음 | | 변경점 검토 |
+바꾼 내용을 “무엇을 / 왜 / 위험은?”으로 쉽게 요약 | | 안전 | 위험
 명령·비밀번호 노출·엉뚱한 위치 쓰기·설정 변경을 자동으로 막거나 확인
 |</p>
 <blockquote>
 <p>💬 <strong>용어가 낯설다면:</strong> <code>플러그인</code>=AI
 프로그램에 기능을 더하는 부품 · <code>훅(hook)</code>=AI가 뭘 하기
 직전에 자동으로 끼어드는 감시장치 · <code>마켓플레이스</code>=플러그인을
-받아오는 "가게"(여기선 GitHub 주소) ·
+받아오는 “가게”(여기선 GitHub 주소) ·
 <code>슬래시 명령</code>=<code>/</code>로 시작하는 명령 ·
 <code>세션</code>=지금 이 대화창 하나(닫으면 끝) · <code>MCP</code>=AI가
 외부 도구와 대화하는 규격(이 플러그인은 사용하지 않음).</p>
 </blockquote>
 <hr />
-<p><a id="prerequisites"></a></p>
-<h2 id="1-사전-준비물-이게-있어야-작동합니다">1. 사전 준비물 (이게
-있어야 작동합니다)</h2>
+<p><a id="prerequisites"></a> ## 1. 사전 준비물 (이게 있어야
+작동합니다)</p>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>준비물</th>
@@ -413,20 +416,18 @@ href="./README.md">README.md</a>를 먼저 보세요. 이 문서는
 <tr>
 <td><strong>Node.js 18 이상</strong></td>
 <td>안전장치(훅)가 이걸로 돌아갑니다. 없으면 안전 기능이 안 켜져요</td>
-<td><a href="https://nodejs.org">https://nodejs.org</a> → "LTS" 버전
-다운로드</td>
+<td>https://nodejs.org → “LTS” 버전 다운로드</td>
 </tr>
 <tr>
 <td><strong>Claude Code</strong></td>
 <td>소담이 설치되는 프로그램 (또는 Codex)</td>
-<td><a href="https://code.claude.com">https://code.claude.com</a> (공식
-안내 따라 설치)</td>
+<td>https://code.claude.com (공식 안내 따라 설치)</td>
 </tr>
 <tr>
 <td><strong>GitHub 계정 + 접근 권한</strong></td>
 <td>소담은 GitHub(인터넷 코드 창고)에서 받습니다. 현재
 <strong>비공개</strong>라 권한 필요</td>
-<td><a href="https://github.com">https://github.com</a> (가입 무료)</td>
+<td>https://github.com (가입 무료)</td>
 </tr>
 <tr>
 <td><strong>인터넷 연결</strong></td>
@@ -440,106 +441,88 @@ href="./README.md">README.md</a>를 먼저 보세요. 이 문서는
 <code>node -v</code> 입력 → <code>v18....</code> 이상이면 OK.</p>
 </blockquote>
 <hr />
-<p><a id="install-programs"></a></p>
-<h2 id="2-필요-프로그램-다운로드설치-단계별">2. 필요 프로그램
-다운로드·설치 (단계별)</h2>
-<h3 id="2-1-nodejs-설치">2-1. Node.js 설치</h3>
+<p><a id="install-programs"></a> ## 2. 필요 프로그램 다운로드·설치
+(단계별)</p>
+<h3 id="node.js-설치">2-1. Node.js 설치</h3>
 <ol type="1">
-<li><a href="https://nodejs.org">https://nodejs.org</a> 접속 → 초록색
-<strong>"LTS"</strong> 버튼 클릭해 내려받기.</li>
-<li>받은 설치 파일을 더블클릭 → "다음 → 다음 → 설치" (기본값
+<li>https://nodejs.org 접속 → 초록색 <strong>“LTS”</strong> 버튼 클릭해
+내려받기.</li>
+<li>받은 설치 파일을 더블클릭 → “다음 → 다음 → 설치” (기본값
 그대로).</li>
 <li>설치 후 컴퓨터를 한 번 껐다 켜면 확실합니다.</li>
 </ol>
-<h3 id="2-2-claude-code-준비">2-2. Claude Code 준비</h3>
+<h3 id="claude-code-준비">2-2. Claude Code 준비</h3>
 <ul>
 <li>이미 Claude Code를 쓰고 계신다면 건너뛰세요. (지금 이 대화가 Claude
 Code입니다.)</li>
-<li>처음이라면 공식 안내(<a
-href="https://code.claude.com">https://code.claude.com</a>)를 따라
-설치하세요. (Node.js가 먼저 깔려 있어야 합니다.)</li>
+<li>처음이라면 공식 안내(https://code.claude.com)를 따라 설치하세요.
+(Node.js가 먼저 깔려 있어야 합니다.)</li>
 </ul>
 <hr />
-<p><a id="quickstart"></a></p>
-<h2 id="3-빠른-시작-3단계-골든패스">3. 빠른 시작 (3단계 골든패스)</h2>
+<p><a id="quickstart"></a> ## 3. 빠른 시작 (3단계 골든패스)</p>
 <ol type="1">
-<li><strong>설치:</strong> Claude Code 입력칸에
+<li><p><strong>설치:</strong> Claude Code 입력칸에</p>
 <pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
 /plugin install sodam-agentic@sodam</code></pre></li>
-<li><strong>시작:</strong> <code>/sodam-agentic-start</code> → 한국어
-안내가 뜸.</li>
-<li><strong>시키기:</strong> "○○ 만들어줘"라고 부탁 →
-<strong>계획</strong>이 먼저 뜨면 "네" → 작업 → <strong>검토
-요약</strong> 확인.</li>
+<li><p><strong>시작:</strong> <code>/sodam-agentic:start</code> → 한국어
+안내가 뜸.</p></li>
+<li><p><strong>시키기:</strong> “○○ 만들어줘”라고 부탁 →
+<strong>계획</strong>이 먼저 뜨면 “네” → 작업 → <strong>검토
+요약</strong> 확인.</p></li>
 </ol>
-<p>→ 여기까지 5분이면 "됐다" 경험 완료.</p>
+<p>→ 여기까지 5분이면 “됐다” 경험 완료.</p>
 <hr />
-<p><a id="install-detail"></a></p>
-<h2 id="4-설치-방법-상세">4. 설치 방법 (상세)</h2>
+<p><a id="install-detail"></a> ## 4. 설치 방법 (상세)</p>
 <blockquote>
-<p>⚠️ 현재 저장소는 **비공개(private)**입니다. 본인 GitHub 계정에
-<strong>접근 권한이 있을 때만</strong> 설치됩니다.</p>
+<p>⚠️ 현재 저장소는 <strong>비공개(private)</strong>입니다. 본인 GitHub
+계정에 <strong>접근 권한이 있을 때만</strong> 설치됩니다.</p>
 </blockquote>
-<p><strong>Claude Code:</strong></p>
-<ol type="1">
-<li>마켓플레이스(가게) 등록 — 입력칸에 그대로 붙여넣고 Enter:
-<pre><code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code></pre>
-→ "추가됨 / sodam" 비슷한 메시지가 보이면 성공.
-<blockquote>
-<p>🖼️ <em>(스크린샷 자리 — 실제 화면 캡처는 사람이 라이브 테스트 시 추가
-예정)</em></p>
-</blockquote></li>
-<li>설치:
-<pre><code>/plugin install sodam-agentic@sodam</code></pre>
-→ "installed / 설치됨" 이 보이면 성공.</li>
-<li>확인: <code>/sodam-agentic</code> 까지 입력 → 명령
-4개(<code>-start</code>, <code>-plan</code>, <code>-review</code>,
-<code>-log</code>)가 뜨면 완료.
-<blockquote>
-<p>🖼️ <em>(스크린샷 자리)</em></p>
-</blockquote></li>
-</ol>
+<p><strong>Claude Code:</strong> 1. 마켓플레이스(가게) 등록 — 입력칸에
+그대로 붙여넣고 Enter:
+<code>/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng</code>
+→ “추가됨 / sodam” 비슷한 메시지가 보이면 성공. &gt; 🖼️ <em>(스크린샷
+자리 — 실제 화면 캡처는 사람이 라이브 테스트 시 추가 예정)</em> 2. 설치:
+<code>/plugin install sodam-agentic@sodam</code> → “installed / 설치됨”
+이 보이면 성공. 3. 확인: <code>/sodam-agentic:</code> 까지 입력 → 명령
+4개(<code>start</code>, <code>plan</code>, <code>review</code>,
+<code>log</code>)가 뜨면 완료. &gt; 🖼️ <em>(스크린샷 자리)</em></p>
 <p><strong>(개발자 본인 로컬 테스트용)</strong> 인터넷 대신 내 컴퓨터
 폴더로도 설치 가능:</p>
 <pre><code>/plugin marketplace add D:/AI_Dev_Work/2026y/26y_06m_26d_SoDam-Agentic-Eng
 /plugin install sodam-agentic@sodam</code></pre>
-<p><strong>Codex 사용자:</strong></p>
-<ol type="1">
-<li>저장소를 클론:
-<code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code></li>
-<li>내 프로젝트 폴더에서:
-<code>node C:\경로\SoDam-Agentic-Eng\codex\install.mjs</code></li>
-<li>완료: 스킬이 내 프로젝트의 <code>.agents/skills/</code>에
-복사됨.</li>
-</ol>
-<blockquote>
-<p>⚠️ Codex에도 <strong>같은 안전장치(F4·F6)가 등록됩니다</strong>(F7,
-2026-07-15). 다만 Codex에서 "확인(ask)" 창이 실제로 뜨는지·설정 로드
+<p><strong>Codex 사용자:</strong> 1. 저장소를 클론:
+<code>git clone https://github.com/sodam-ai/SoDam-Agentic-Eng</code> 2.
+내 프로젝트 폴더에서:
+<code>node C:\경로\SoDam-Agentic-Eng\codex\install.mjs</code> 3. 완료:
+스킬이 내 프로젝트의 <code>.agents/skills/</code>에 복사됨. &gt; ⚠️
+Codex에도 <strong>같은 안전장치(F4·F6)가 등록됩니다</strong>(F7,
+2026-07-15). 다만 Codex에서 “확인(ask)” 창이 실제로 뜨는지·설정 로드
 위치가 정확한지는 아직 사람이 실제 Codex로 직접 확인하지 않았습니다 — <a
 href="#security-data-flow">§10 보안·데이터 흐름</a> 참고.</p>
-</blockquote>
 <hr />
-<p><a id="usage"></a></p>
-<h2 id="5-실행사용작동-방법-단계별">5. 실행·사용·작동 방법 (단계별)</h2>
+<p><a id="usage"></a> ## 5. 실행·사용·작동 방법 (단계별)</p>
 <ol type="1">
-<li><strong><code>/sodam-agentic-start</code></strong> 입력 → "AI에게 일
-시키는 4단계" 온보딩을 읽습니다.</li>
+<li><strong><code>/sodam-agentic:start</code></strong> 입력 → “AI에게 일
+시키는 4단계” 온보딩을 읽습니다.</li>
 <li>(권장) <strong><code>/init</code></strong> 을 한 번 실행 → AI가 현재
 폴더(프로젝트)를 인식합니다. <em>초보자가 가장 잘 건너뜁니다.</em></li>
-<li><strong>자연어로 시키기:</strong> 예) "메모장 웹페이지 만들어줘".
+<li><strong>자연어로 시키기:</strong> 예) “메모장 웹페이지 만들어줘”.
 (확인·진단 명령부터 앞세울 필요 없습니다 — 그냥 시키는 게
 먼저입니다.)</li>
-<li><strong>계획 확인:</strong> AI가 코드 전에 "①무엇을 ②왜 ③완성기준"
-계획을 보여주면, 읽고 <strong>"네/진행"</strong> 으로 승인.</li>
-<li><strong>검토:</strong> 작업이 끝나면 "무엇을·왜 바꿨고 위험은?"
+<li><strong>계획 확인:</strong> AI가 코드 전에 “①무엇을 ②왜 ③완성기준”
+계획을 보여주면, 읽고 <strong>“네/진행”</strong> 으로 승인.</li>
+<li><strong>검토:</strong> 작업이 끝나면 “무엇을·왜 바꿨고 위험은?”
 요약을 읽고 판단.</li>
 <li><strong>안전:</strong> 위험한 명령(폴더 통째 삭제 등)을 시키면
-자동으로 막거나 "확인할까요?" 묻습니다.</li>
+자동으로 막거나 “확인할까요?” 묻습니다.</li>
 </ol>
 <hr />
-<p><a id="commands"></a></p>
-<h2 id="6-명령어-목록">6. 명령어 목록</h2>
+<p><a id="commands"></a> ## 6. 명령어 목록</p>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>명령어</th>
@@ -548,32 +531,33 @@ href="#security-data-flow">§10 보안·데이터 흐름</a> 참고.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>/sodam-agentic-start</code></td>
+<td><code>/sodam-agentic:start</code></td>
 <td>처음 시작·온보딩 안내</td>
 </tr>
 <tr>
-<td><code>/sodam-agentic-plan</code></td>
-<td>"계획 먼저" 기능 (보통 자동 발동)</td>
+<td><code>/sodam-agentic:plan</code></td>
+<td>“계획 먼저” 기능 (보통 자동 발동)</td>
 </tr>
 <tr>
-<td><code>/sodam-agentic-review</code></td>
-<td>"변경점 검토" 기능 (보통 자동 발동)</td>
+<td><code>/sodam-agentic:review</code></td>
+<td>“변경점 검토” 기능 (보통 자동 발동)</td>
 </tr>
 <tr>
-<td><code>/sodam-agentic-log</code></td>
+<td><code>/sodam-agentic:log</code></td>
 <td>막히거나(deny) 확인받은(ask) 기록 조회 (F6, 2026-07-15 추가)</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>명령은 <code>/플러그인이름:명령</code>
-형식(<code>/sodam-agentic:sodam-agentic-start</code>)으로도
-작동합니다.</p>
+<p>형식은 <code>/플러그인이름:명령</code>입니다(2026-07-17부터 명령 이름
+자체를 짧게 정리 — 예전
+<code>/sodam-agentic:sodam-agentic-start</code>처럼 이름이 겹쳐 길어지던
+것을 <code>/sodam-agentic:start</code>로 줄였습니다). 새 대화창을 열고
+<code>/sodam-agentic:</code>까지만 입력해도 4개가 목록으로 뜹니다.</p>
 </blockquote>
 <hr />
-<p><a id="workflow"></a></p>
-<h2 id="7-워크플로우-작동-흐름">7. 워크플로우 (작동 흐름)</h2>
-<pre><code>[시작] /sodam-agentic-start  →  안전 켜짐 + 4단계 안내
+<p><a id="workflow"></a> ## 7. 워크플로우 (작동 흐름)</p>
+<pre><code>[시작] /sodam-agentic:start  →  안전 켜짐 + 4단계 안내
    │
    ▼
 [계획 먼저]  &quot;만들어줘&quot;  →  AI가 계획 제시  →  당신이 승인
@@ -583,17 +567,20 @@ href="#security-data-flow">§10 보안·데이터 흐름</a> 참고.</p>
    │
    ▼
 [검토]  무엇을·왜·위험  요약  →  당신이 판단  →  완료</code></pre>
-<p>핵심 원칙: <strong>"AI가 다 알아서"가 아니라, 사람이
+<p>핵심 원칙: <strong>“AI가 다 알아서”가 아니라, 사람이
 운전석.</strong></p>
 <hr />
-<p><a id="file-locations"></a></p>
-<h2 id="8-파일문서-위치">8. 파일·문서 위치</h2>
+<p><a id="file-locations"></a> ## 8. 파일·문서 위치</p>
 <p><strong>개발 폴더(원본):</strong>
 <code>D:\AI_Dev_Work\2026y\26y_06m_26d_SoDam-Agentic-Eng</code>
-<strong>GitHub(인터넷):</strong> <a
-href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai/SoDam-Agentic-Eng</a>
-(비공개, 브랜치 <code>init-mvp</code>)</p>
+<strong>GitHub(인터넷):</strong>
+https://github.com/sodam-ai/SoDam-Agentic-Eng (비공개, 브랜치
+<code>init-mvp</code>)</p>
 <table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr>
 <th>무엇</th>
@@ -608,16 +595,18 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 </tr>
 <tr>
 <td>온보딩 명령</td>
-<td><code>commands/sodam-agentic-start.md</code></td>
+<td><code>commands/start.md</code>
+(<code>/sodam-agentic:start</code>)</td>
 </tr>
 <tr>
 <td>안전 기록 조회 명령</td>
-<td><code>commands/sodam-agentic-log.md</code> (F6)</td>
+<td><code>commands/log.md</code> (<code>/sodam-agentic:log</code>,
+F6)</td>
 </tr>
 <tr>
 <td>계획·검토 기능</td>
-<td><code>skills/sodam-agentic-plan/</code>,
-<code>skills/sodam-agentic-review/</code></td>
+<td><code>skills/plan/</code> (<code>/sodam-agentic:plan</code>),
+<code>skills/review/</code> (<code>/sodam-agentic:review</code>)</td>
 </tr>
 <tr>
 <td>검토 보조 AI</td>
@@ -682,11 +671,15 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 </tbody>
 </table>
 <hr />
-<p><a id="architecture"></a></p>
-<h2 id="9-아키텍처">9. 아키텍처</h2>
+<p><a id="architecture"></a> ## 9. 아키텍처</p>
 <p>이 플러그인은 서버·DB·로그인이 <strong>없는, 순수 로컬
 도구</strong>입니다. 구성요소는 이렇습니다:</p>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>구성요소</th>
@@ -699,18 +692,21 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 <td>매니페스트</td>
 <td><code>.claude-plugin/plugin.json</code>,
 <code>marketplace.json</code></td>
-<td>Claude Code에 "이 폴더가 플러그인"이라고 알려주는 설명서</td>
+<td>Claude Code에 “이 폴더가 플러그인”이라고 알려주는 설명서</td>
 </tr>
 <tr>
 <td>온보딩 (F1)</td>
-<td><code>commands/sodam-agentic-start.md</code></td>
-<td><code>/sodam-agentic-start</code> 슬래시 명령 정의</td>
+<td><code>commands/start.md</code></td>
+<td><code>/sodam-agentic:start</code> 슬래시 명령 정의</td>
 </tr>
 <tr>
 <td>계획·검토 (F2·F3)</td>
-<td><code>skills/sodam-agentic-plan/</code>,
-<code>skills/sodam-agentic-review/</code></td>
-<td>새 작업 요청·변경 완료 시 자동 발동하는 안내 규칙</td>
+<td><code>skills/plan/</code>·<code>skills/review/</code>(자동 발동) +
+<code>commands/plan.md</code>·<code>commands/review.md</code>(수동
+<code>/sodam-agentic:plan</code>·<code>:review</code>)</td>
+<td>새 작업 요청·변경 완료 시 자동 발동 + 직접 호출도 가능(2026-07-18,
+Claude Code가 skills/만으로는 수동 슬래시 호출을 지원 안 해 command 파일
+추가)</td>
 </tr>
 <tr>
 <td>검토 보조 에이전트</td>
@@ -733,7 +729,7 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 <tr>
 <td>안전 기록 (F6)</td>
 <td><code>hooks/guard.mjs</code>의 <code>decide()</code> 내부 로직 +
-<code>commands/sodam-agentic-log.md</code></td>
+<code>commands/log.md</code></td>
 <td>확인(ask)·차단(deny) 판정마다
 <code>~/.sodamagentic/safety-log.jsonl</code>에 기록, 명령으로 조회</td>
 </tr>
@@ -765,7 +761,7 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 <ul>
 <li><code>hooks/delegate.mjs</code>의 <code>isHarnessAlive()</code>가
 형제 플러그인 <strong>SoDamHarness</strong>의 존재를 확인합니다.</li>
-<li>Harness가 있으면 "겹치는" 위험(재귀 삭제·민감 경로 등)은 Harness에
+<li>Harness가 있으면 “겹치는” 위험(재귀 삭제·민감 경로 등)은 Harness에
 넘겨 확인창이 두 번 뜨지 않게 합니다(Harness는 자동 백업·되돌리기까지
 더해줍니다).</li>
 <li><strong>단, 되돌릴 수 없는 치명 명령(디스크 초기화급)은 Harness 설치
@@ -775,11 +771,10 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 <code>~/.sodamagentic/safety-log.jsonl</code>에 자동
 기록됩니다</strong>(안전하게 통과한 작업은 기록 안 함, 비밀값은 저장 전
 자동으로 가려짐). 조회는 <a
-href="#commands"><code>/sodam-agentic-log</code></a>.</li>
+href="#commands"><code>/sodam-agentic:log</code></a>.</li>
 </ul>
 <hr />
-<p><a id="security-data-flow"></a></p>
-<h2 id="10-보안데이터-흐름">10. 보안·데이터 흐름</h2>
+<p><a id="security-data-flow"></a> ## 10. 보안·데이터 흐름</p>
 <ul>
 <li><strong>이 플러그인이 읽는 것:</strong> Claude Code가 실행하려는
 도구 이름과 인자(예: 실행할 명령어 문자열, 쓰려는 파일 경로)뿐입니다. 이
@@ -799,10 +794,15 @@ href="#commands"><code>/sodam-agentic-log</code></a>.</li>
 커지는 것 방지). 이 기록은 외부로 전송되지 않고 내 컴퓨터에만 남으며,
 기록 자체가 실패해도(예: 디스크 문제) 안전 판정(차단/확인)에는 영향을
 주지 않습니다. 조회는 <a
-href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
+href="#commands"><code>/sodam-agentic:log</code></a> 명령입니다.</li>
 </ul>
 <h3 id="실제-판정-3단계-예시">실제 판정 3단계 예시</h3>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>단계</th>
@@ -820,38 +820,38 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 <td>❓ 확인(ask)</td>
 <td>파일 하나 삭제, <code>.claude/settings.json</code> 수정, 작업폴더 밖
 쓰기</td>
-<td>"[소담 에이전틱] 되돌리기 어려운 작업이에요… 정말 진행할까요?"</td>
+<td>“[소담 에이전틱] 되돌리기 어려운 작업이에요… 정말 진행할까요?”</td>
 </tr>
 <tr>
 <td>⛔ 차단(deny)</td>
 <td>API 키 노출 시도</td>
-<td>"[소담 에이전틱] API 키·비밀값이 노출될 수 있는 작업이라
-막았어요…"</td>
+<td>“[소담 에이전틱] API 키·비밀값이 노출될 수 있는 작업이라
+막았어요…”</td>
 </tr>
 <tr>
 <td>⛔ 차단(deny)</td>
 <td>폴더 통째 삭제</td>
-<td>"[소담 에이전틱] 폴더를 통째로 지우는 작업은 안전하게
-막았어요…"</td>
+<td>“[소담 에이전틱] 폴더를 통째로 지우는 작업은 안전하게
+막았어요…”</td>
 </tr>
 <tr>
 <td>⛔ 차단(항상, 치명)</td>
-<td>디스크 초기화급 명령, <code>curl 주소 | bash</code>(인터넷 코드 확인
-없이 바로 실행)</td>
-<td>"[소담 에이전틱] 되돌릴 수 없는 위험한 명령이라 막았어요…"</td>
+<td>디스크 초기화급 명령, <code>curl 주소 \| bash</code>(인터넷 코드
+확인 없이 바로 실행)</td>
+<td>“[소담 에이전틱] 되돌릴 수 없는 위험한 명령이라 막았어요…”</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
 <p>이 표는 이 저장소의 실제 코드(<code>hooks/guard.mjs</code>)에 있는
 문구를 그대로 옮긴 것입니다 — 과장 없이, 실제 동작 그대로입니다.
-**<code>[소담 에이전틱]</code> 접두사(2026-07-16 추가)**는 SoDamHarness
-등 형제 플러그인과 동시 설치돼 훅이 함께 발동해도 어느 플러그인이
-막았는지 바로 구분되도록 붙인 출처 표시입니다.</p>
+<strong><code>[소담 에이전틱]</code> 접두사(2026-07-16 추가)</strong>는
+SoDamHarness 등 형제 플러그인과 동시 설치돼 훅이 함께 발동해도 어느
+플러그인이 막았는지 바로 구분되도록 붙인 출처 표시입니다.</p>
 </blockquote>
 <blockquote>
-<p><strong>일관성 보강(2026-07-12):</strong> "AI에게 직접 명령어로
-시켜서" 같은 방식으로도 위 판정을 피해 갈 수 없습니다 — 자연어로
+<p><strong>일관성 보강(2026-07-12):</strong> “AI에게 직접 명령어로
+시켜서” 같은 방식으로도 위 판정을 피해 갈 수 없습니다 — 자연어로
 부탁하든, 명령어를 직접 지정하든 동일한 기준으로 검사합니다.</p>
 </blockquote>
 <blockquote>
@@ -861,21 +861,14 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 ✅안전(통과)은 기록되지 않습니다.</p>
 </blockquote>
 <hr />
-<p><a id="uninstall"></a></p>
-<h2 id="11-제거-방법-uninstall">11. 제거 방법 (Uninstall)</h2>
-<p><strong>Claude Code:</strong></p>
-<ol type="1">
-<li>입력칸에 <code>/plugin uninstall sodam-agentic</code> (또는
-마켓플레이스 화면에서 제거 선택).</li>
-<li>확인: <code>/sodam-agentic</code> 를 쳐도 명령이 더는 안 뜨면 제거
-완료.</li>
-</ol>
-<p><strong>Codex:</strong></p>
-<ul>
-<li>설치가 "파일 복사" 방식이므로, 내 프로젝트의
-<code>.agents/skills/</code> 폴더에서 소담 관련 스킬 폴더를 직접
-삭제하면 됩니다.</li>
-</ul>
+<p><a id="uninstall"></a> ## 11. 제거 방법 (Uninstall)</p>
+<p><strong>Claude Code:</strong> 1. 입력칸에
+<code>/plugin uninstall sodam-agentic</code> (또는 마켓플레이스 화면에서
+제거 선택). 2. 확인: <code>/sodam-agentic</code> 를 쳐도 명령이 더는 안
+뜨면 제거 완료.</p>
+<p><strong>Codex:</strong> - 설치가 “파일 복사” 방식이므로, 내
+프로젝트의 <code>.agents/skills/</code> 폴더에서 소담 관련 스킬 폴더를
+직접 삭제하면 됩니다.</p>
 <p><strong>남는 데이터(2026-07-15 갱신 — F6 반영):</strong> 플러그인을
 제거해도 안전 기록 파일 <code>~/.sodamagentic/safety-log.jsonl</code>은
 <strong>자동으로 지워지지 않습니다</strong>(플러그인 폴더 밖, 사용자 홈
@@ -885,9 +878,13 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 남으므로, 지우려면 해당 JSON의 <code>PreToolUse</code> 항목을 직접
 삭제하면 됩니다.</p>
 <hr />
-<p><a id="troubleshooting"></a></p>
-<h2 id="12-문제오류-대처">12. 문제·오류 대처</h2>
+<p><a id="troubleshooting"></a> ## 12. 문제·오류 대처</p>
 <table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr>
 <th>증상 (이렇게 보임)</th>
@@ -899,7 +896,7 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 <tr>
 <td>깔았는데 아무 일도 안 일어남</td>
 <td><code>/init</code> 안 함 / 온보딩 안 읽음</td>
-<td><code>/sodam-agentic-start</code> 로 상태부터 확인</td>
+<td><code>/sodam-agentic:start</code> 로 상태부터 확인</td>
 </tr>
 <tr>
 <td><code>/sodam-agentic</code> 쳐도 안 뜸</td>
@@ -907,12 +904,12 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 <td><code>/plugin install sodam-agentic@sodam</code> 다시</td>
 </tr>
 <tr>
-<td>설치할 때 "권한 없음/접근 불가"</td>
+<td>설치할 때 “권한 없음/접근 불가”</td>
 <td>비공개 저장소 권한 없음</td>
 <td>본인 GitHub 계정 로그인·접근 권한 확인</td>
 </tr>
 <tr>
-<td>"Node가 없다"고 나옴</td>
+<td>“Node가 없다”고 나옴</td>
 <td>Node.js 미설치</td>
 <td><a href="#install-programs">§2</a> 따라 Node.js 18+ 설치 후
 재시도</td>
@@ -924,7 +921,7 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 </tr>
 <tr>
 <td>계획 없이 바로 코드부터 짬</td>
-<td>다른 스킬에 밀림(F2는 "부탁"이라 강제 아님)</td>
+<td>다른 스킬에 밀림(F2는 “부탁”이라 강제 아님)</td>
 <td>정상일 수 있음 — 알려주시면 보강(Phase 2에서 강제화 예정)</td>
 </tr>
 <tr>
@@ -939,8 +936,11 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 </tr>
 <tr>
 <td>명령어가 옛 이름으로 보임</td>
-<td>설치본 캐시</td>
-<td><code>/plugin marketplace update sodam</code> → 재설치</td>
+<td>설치본 캐시가 최신이 아님(<code>marketplace update</code>만으로는
+캐시가 안 바뀝니다 — 실측 확인됨)</td>
+<td><code>/plugin uninstall sodam-agentic</code> →
+<code>/plugin install sodam-agentic@sodam</code> →
+<code>/reload-plugins</code> (반드시 이 순서로)</td>
 </tr>
 <tr>
 <td>비밀번호·API 키를 넣어도 되나요?</td>
@@ -956,7 +956,7 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 <tr>
 <td>지난번에 뭐가 막혔는지 기억이 안 남</td>
 <td>—</td>
-<td><code>/sodam-agentic-log</code> 명령으로 조회(막힘·확인만 기록,
+<td><code>/sodam-agentic:log</code> 명령으로 조회(막힘·확인만 기록,
 안전하게 통과한 작업은 기록 안 됨)</td>
 </tr>
 <tr>
@@ -968,34 +968,32 @@ href="#commands"><code>/sodam-agentic-log</code></a> 명령입니다.</li>
 </tbody>
 </table>
 <hr />
-<p><a id="safety-notes"></a></p>
-<h2 id="13-안전-주의사항-꼭-지키기">13. 안전 주의사항 (꼭 지키기)</h2>
+<p><a id="safety-notes"></a> ## 13. 안전 주의사항 (꼭 지키기)</p>
 <ul>
 <li><strong>비밀번호·API 키·<code>.env</code> 같은 비밀정보를
 코드·문서·채팅 어디에도 넣지 마세요.</strong></li>
-<li>안전장치는 <strong>"되돌릴 수 없는 위험은 막고, 나머지는
-확인받는"</strong> 방식입니다. <strong>"100% 안전"이 아닙니다</strong> —
+<li>안전장치는 <strong>“되돌릴 수 없는 위험은 막고, 나머지는
+확인받는”</strong> 방식입니다. <strong>“100% 안전”이 아닙니다</strong> —
 마지막 판단은 사람이 합니다.</li>
 <li>새로 받은 외부 파일·도구를 AI가 자동 실행하지 않게 주의하세요.</li>
 <li>화면 아래 <strong>자동 승인(auto-accept/bypass permissions)</strong>
 모드가 켜져 있으면 확인창이 조용히 통과됩니다 — 안전하게 쓰려면
-<code>Shift+Tab</code>으로 "매번 물어봄" 모드를 권장합니다.</li>
+<code>Shift+Tab</code>으로 “매번 물어봄” 모드를 권장합니다.</li>
 </ul>
 <hr />
-<p><a id="license-legal"></a></p>
-<h2 id="14-라이선스--저작권--상업적-용도-중요--꼭-읽어주세요">14.
-라이선스 · 저작권 · 상업적 용도 (중요 — 꼭 읽어주세요)</h2>
+<p><a id="license-legal"></a> ## 14. 라이선스 · 저작권 · 상업적 용도
+(중요 — 꼭 읽어주세요)</p>
 <blockquote>
 <p>⚠️ <strong>이 문서는 법률 자문이 아닙니다.</strong> 아래는 일반
 안내이며, 실제 배포·상업 사용 전에는 <strong>본인 책임으로</strong>
 확인하시기 바랍니다.</p>
 </blockquote>
 <ul>
-<li><strong>현재 배포 상태(중요):</strong> 이 저장소는 **비공개(private,
-PRIVATE)**이며 아직 일반 대중에게 공개 배포되지 않았습니다(개발자 본인의
-개인용 도구로 사용 중, 2026-07-15 확정). 아래 라이선스 조건은
-<strong>향후 공개·배포하는 경우를 대비해 미리 명시</strong>해 둔
-것입니다.</li>
+<li><strong>현재 배포 상태(중요):</strong> 이 저장소는
+<strong>비공개(private, PRIVATE)</strong>이며 아직 일반 대중에게 공개
+배포되지 않았습니다(개발자 본인의 개인용 도구로 사용 중, 2026-07-15
+확정). 아래 라이선스 조건은 <strong>향후 공개·배포하는 경우를 대비해
+미리 명시</strong>해 둔 것입니다.</li>
 <li><strong>라이선스(확정):</strong> <strong>Apache License 2.0</strong>
 · 저작권자 <strong>SoDam AI Studio</strong> · 2026. 전문은 저장소 루트
 <code>LICENSE</code> 파일, 고지는 <code>NOTICE</code> 파일에
@@ -1004,21 +1002,30 @@ PRIVATE)**이며 아직 일반 대중에게 공개 배포되지 않았습니다(
 재배포 ✅ / 상업적 사용 ✅ / 판매 ✅ / 서비스 운영 ✅ / 교육 ✅ /
 회사·고객사 납품 ✅.</li>
 <li><strong>파생물 표시 의무(Apache-2.0 §4 요건):</strong> 이 코드를
-수정해서 재배포할 경우, <strong>수정한 파일에 "원본에서 변경했다"는
+수정해서 재배포할 경우, <strong>수정한 파일에 “원본에서 변경했다”는
 표시</strong>를 남겨야 하고, 원본
 <code>LICENSE</code>·<code>NOTICE</code> 사본을 함께 배포해야
 합니다.</li>
 <li><strong>보증·책임 제한(Apache-2.0 §7·§8 요건):</strong> 이
-소프트웨어는 <strong>"있는 그대로(AS IS)" 제공</strong>되며
+소프트웨어는 <strong>“있는 그대로(AS IS)” 제공</strong>되며
 <strong>어떠한 보증도 하지 않습니다.</strong> 저작권자·기여자는 이
 소프트웨어 사용으로 발생하는 어떠한 직접·간접 손해(데이터 손실·영업
 손실·업무 중단 등 포함)에도 <strong>법이 허용하는 한도 내에서 책임지지
 않습니다.</strong> 사용 결과는 <strong>사용자 책임</strong>입니다.</li>
 <li><strong>AI 모델 사용료·약관은 별도:</strong> 이 키트는
-**무료(Apache-2.0)**지만, <strong>AI 모델(Claude/Codex)의 사용료·약관은
-Anthropic·OpenAI를 따릅니다.</strong> 이 도구의 라이선스와는
-무관합니다.</li>
-<li><strong>타사 상표:</strong> "Claude·Anthropic·Codex·OpenAI"는 각사의
+<strong>무료(Apache-2.0)</strong>지만, <strong>AI 모델(Claude/Codex)의
+사용료·약관은 Anthropic·OpenAI를 따릅니다.</strong> 이 도구의
+라이선스와는 무관합니다.</li>
+<li><strong>AI 지원 개발 고지(투명성, 엄격 기준):</strong> 이 프로젝트의
+코드·문서 중 상당 부분은 AI 코딩 도구(Claude Code)의 도움을 받아
+작성되었습니다. AI가 작성에 관여한 콘텐츠의 저작권·특허 관련 법리는
+국가·시점에 따라 아직 확립되지 않은 부분이 있습니다 —
+<strong>재배포·상업적 활용을 계획한다면 이 점도 별도로 확인하시기
+바랍니다.</strong> 안전장치(F4) 등 핵심 로직은 반복적인 실사용 테스트로
+검증했지만, AI가 작성한 코드가 사람이 작성한 코드와 동일한 수준의
+완전성·정확성을 자동으로 보증하는 것은 아닙니다 — 프로덕션·상업 환경에
+적용하기 전 <strong>자체 코드 검토를 권장</strong>합니다.</li>
+<li><strong>타사 상표:</strong> “Claude·Anthropic·Codex·OpenAI”는 각사의
 상표입니다. <strong>설명적(호환·대상) 표기로만</strong> 사용하며,
 <strong>공식 제휴·보증으로 오인하게 하지 않습니다.</strong></li>
 <li><strong>무단 포함 금지:</strong> 타인의
@@ -1033,47 +1040,39 @@ Anthropic·OpenAI를 따릅니다.</strong> 이 도구의 라이선스와는
 <li><strong>재배포·공개 전 최소 체크리스트:</strong> ①
 <code>LICENSE</code> 전문 포함 ② <code>NOTICE</code> 파일 포함(저작권
 고지 보존) ③ 수정한 파일에 변경 사실 표시 ④
-"Claude/Codex/Anthropic/OpenAI" 등 상표를 보증·제휴로 오인시키는
-방식으로 쓰지 않기 ⑤ 아래 "아직 확인 중인 것" 항목을 먼저 해소.</li>
+“Claude/Codex/Anthropic/OpenAI” 등 상표를 보증·제휴로 오인시키는
+방식으로 쓰지 않기 ⑤ 아래 “아직 확인 중인 것” 항목을 먼저 해소.</li>
 <li>⚠️ <strong>아직 확인 중인 것(법무 검토 대기, 공개 배포 전까지는 필수
-아님):</strong> 제품명·"에이전틱 엔지니어링" 표현의 상표 충돌 여부,
+아님):</strong> 제품명·“에이전틱 엔지니어링” 표현의 상표 충돌 여부,
 참고한 외부 코드의 정확한 라이선스 재확인. 확정되는 대로 이 절을
 갱신합니다.</li>
 </ul>
 <hr />
-<p><a id="changelog"></a></p>
-<h2 id="15-업데이트-내용-요약">15. 업데이트 내용 요약</h2>
+<p><a id="changelog"></a> ## 15. 업데이트 내용 요약</p>
 <details>
-<summary><b>📦 [0.1.0] — 2026-06-28 (최초 배포, Phase 1 MVP)</b> — 클릭하면 펼쳐집니다</summary>
-
-<p><strong>추가된 기능</strong></p>
-<ul>
-<li>F1 온보딩 — 한국어 4단계 안내 (Codex 공유 포함)</li>
-<li>F2 계획 먼저 — 코드 전 "무엇을·왜·완성기준" 승인</li>
-<li>F3 변경점 검토 — 쉬운 말 요약 + 위임 에이전트</li>
-<li>F4 안전 훅 — 최소 폴백 4종 차단, Harness 위임, fail-closed</li>
-<li>F5 두 도구(Claude Code + Codex) 설치 지원</li>
-</ul>
-<p><strong>추가된 문서·검증 도구</strong></p>
-<ul>
-<li>README(한/영)·가이드(한/영)·6형제 협업
-문서(<code>family-synergy.md</code>)</li>
-<li>구조 검증기(<code>validate.mjs</code>)·6형제 헬스체크·안전훅
-자가검증(<code>_selftest.mjs</code>)</li>
-<li><code>LICENSE</code>(Apache-2.0)·<code>NOTICE</code></li>
-</ul>
-<p><strong>알려진 한계</strong></p>
-<ul>
-<li>F2/F3는 "부탁"이라 강제 안 됨(다른 스킬에 밀릴 수 있음) — Phase
-2에서 강제화 예정</li>
-<li>Codex에서는 F4 안전이 Claude Code보다 약함 — Phase 2에서 동등화
-예정</li>
-</ul>
+<summary>
+<b>📦 [0.1.0] — 2026-06-28 (최초 배포, Phase 1 MVP)</b> — 클릭하면
+펼쳐집니다
+</summary>
+<p><strong>추가된 기능</strong> - F1 온보딩 — 한국어 4단계 안내 (Codex
+공유 포함) - F2 계획 먼저 — 코드 전 “무엇을·왜·완성기준” 승인 - F3
+변경점 검토 — 쉬운 말 요약 + 위임 에이전트 - F4 안전 훅 — 최소 폴백 4종
+차단, Harness 위임, fail-closed - F5 두 도구(Claude Code + Codex) 설치
+지원</p>
+<p><strong>추가된 문서·검증 도구</strong> -
+README(한/영)·가이드(한/영)·6형제 협업
+문서(<code>family-synergy.md</code>) - 구조
+검증기(<code>validate.mjs</code>)·6형제 헬스체크·안전훅
+자가검증(<code>_selftest.mjs</code>) -
+<code>LICENSE</code>(Apache-2.0)·<code>NOTICE</code></p>
+<p><strong>알려진 한계</strong> - F2/F3는 “부탁”이라 강제 안 됨(다른
+스킬에 밀릴 수 있음) — Phase 2에서 강제화 예정 - Codex에서는 F4 안전이
+Claude Code보다 약함 — Phase 2에서 동등화 예정</p>
 </details>
-
 <details>
-<summary><b>🔧 2026-07-07 안전 강화 (같은 버전 내 패치)</b> — 클릭하면 펼쳐집니다</summary>
-
+<summary>
+<b>🔧 2026-07-07 안전 강화 (같은 버전 내 패치)</b> — 클릭하면 펼쳐집니다
+</summary>
 <ul>
 <li>안전 폴백(F4)이 특정 조건에서 잠들어 있을 수 있던 결함을 찾아 수정 —
 이제 설치되면 항상 켜집니다.</li>
@@ -1085,18 +1084,19 @@ Anthropic·OpenAI를 따릅니다.</strong> 이 도구의 라이선스와는
 수정, 아키텍처·보안·FAQ·제거방법 절 추가.</li>
 </ul>
 </details>
-
 <details>
-<summary><b>✅ 2026-07-11 라이브 검증 + 버그 수정 (같은 버전 내 패치)</b> — 클릭하면 펼쳐집니다</summary>
-
+<summary>
+<b>✅ 2026-07-11 라이브 검증 + 버그 수정 (같은 버전 내 패치)</b> —
+클릭하면 펼쳐집니다
+</summary>
 <ul>
 <li><strong>안전 훅(F4)이 실제 사용 화면에서 진짜로 작동함을
 확인했습니다.</strong> 지금까지는 자체 검사(코드 시뮬레이션)만 통과한
 상태였는데, 이번에 실제로 위험해 보이는 명령을 시도해 정말로 막히는지
 눈으로 확인했습니다.</li>
 <li>그 과정에서 실제 문제 하나를 발견해 바로 고쳤습니다: 여러 작업을 한
-번에 이어서 시키면(예: "폴더 이동하고 파일 만들어줘"), 전혀 위험하지
-않은 평범한 작업까지 "위험하다"며 잘못 막는 경우가 있었습니다. 지금은
+번에 이어서 시키면(예: “폴더 이동하고 파일 만들어줘”), 전혀 위험하지
+않은 평범한 작업까지 “위험하다”며 잘못 막는 경우가 있었습니다. 지금은
 고쳐졌고, 고친 뒤에도 진짜 위험한 명령은 여전히 잘 막힌다는 것까지 다시
 확인했습니다.</li>
 <li>Codex 설치 안내 문구 중 일부가 서로 다르게 적혀 있던 것(설치 시작
@@ -1106,89 +1106,152 @@ Anthropic·OpenAI를 따릅니다.</strong> 이 도구의 라이선스와는
 적용됩니다(<a href="#troubleshooting">§12 문제·오류 대처</a> 참고).</li>
 </ul>
 </details>
-
 <details>
-<summary><b>🛡️ 2026-07-12·13 안전 강화 — 실제 버그 5건 발견·수정 + 보안감사 완료</b> — 클릭하면 펼쳐집니다</summary>
-
-<p><strong>실사용 검증(라이브 테스트)으로 찾아 고친 것</strong></p>
-<ul>
-<li>안전장치에 아주 드문 입력값(예: 잘못된 형식의 신호)이 들어오면
-프로그램이 멈추던 문제를 찾아 고쳤습니다.</li>
-<li><strong>"작업폴더 밖에 쓰지 못하게 막는" 규칙이 일부 상황에서
-빠져있던 것</strong>을 찾아 보강했습니다.</li>
-<li>바로가기(심볼릭 링크)를 새로 만드는 명령 자체를 확인받도록
-추가했습니다.</li>
-<li><strong>(가장 중요) "AI에게 명령어로 직접" 시키는 경우, 위 작업폴더
-규칙이 통째로 건너뛰어지던 심각한 구멍을 찾아 막았습니다.</strong>
-자연어로 부탁하든 명령어로 직접 시키든 이제 똑같이 검사됩니다.</li>
-<li><strong>인터넷에서 받은 코드를 확인 없이 바로 실행하는
+<summary>
+<b>🛡️ 2026-07-12·13 안전 강화 — 실제 버그 5건 발견·수정 + 보안감사
+완료</b> — 클릭하면 펼쳐집니다
+</summary>
+<p><strong>실사용 검증(라이브 테스트)으로 찾아 고친 것</strong> -
+안전장치에 아주 드문 입력값(예: 잘못된 형식의 신호)이 들어오면
+프로그램이 멈추던 문제를 찾아 고쳤습니다. - <strong>“작업폴더 밖에 쓰지
+못하게 막는” 규칙이 일부 상황에서 빠져있던 것</strong>을 찾아
+보강했습니다. - 바로가기(심볼릭 링크)를 새로 만드는 명령 자체를
+확인받도록 추가했습니다. - <strong>(가장 중요) “AI에게 명령어로 직접”
+시키는 경우, 위 작업폴더 규칙이 통째로 건너뛰어지던 심각한 구멍을 찾아
+막았습니다.</strong> 자연어로 부탁하든 명령어로 직접 시키든 이제 똑같이
+검사됩니다. - <strong>인터넷에서 받은 코드를 확인 없이 바로 실행하는
 것</strong>(<code>curl 주소 | bash</code> 같은 흔한 해킹 수법)을 막는
 안전장치를 새로 추가했습니다 — 지금까지 이 부분은 아예 검사하지 않고
-있었습니다.</li>
-<li>변경점 검토(F3) 기능이 더 잘 뜨도록 문구를 보강했습니다.
+있었습니다. - 변경점 검토(F3) 기능이 더 잘 뜨도록 문구를 보강했습니다.
 <strong>다만 효과가 확실히 좋아졌는지는 아직 확인 중입니다</strong> —
-과장하지 않고 정직하게 남깁니다.</li>
-</ul>
-<p><strong>보안 점검(OWASP 기준) 별도 수행</strong></p>
-<ul>
-<li>비밀정보 노출·설정 파일 보호·오류 메시지 정보노출·의존성 등 국제
-보안 점검 기준(OWASP ASVS)의 필수 항목을 전부 다시 확인했고,
-통과했습니다.</li>
-<li>저장소에 실수로 남은 시크릿(비밀 값)이 있는지 전체 파일을 다시 스캔
-— 0건.</li>
-</ul>
+과장하지 않고 정직하게 남깁니다.</p>
+<p><strong>보안 점검(OWASP 기준) 별도 수행</strong> - 비밀정보 노출·설정
+파일 보호·오류 메시지 정보노출·의존성 등 국제 보안 점검 기준(OWASP
+ASVS)의 필수 항목을 전부 다시 확인했고, 통과했습니다. - 저장소에 실수로
+남은 시크릿(비밀 값)이 있는지 전체 파일을 다시 스캔 — 0건.</p>
 <p><strong>회귀 테스트</strong>: 안전장치 자체 검사 22건 →
 <strong>42건</strong>으로 늘렸고, 전부 통과 확인.</p>
 </details>
-
 <details>
-<summary><b>✅ 2026-07-15 — F6 안전 기록 + F7 Codex 안전 패리티 구현 완료</b> — 클릭하면 펼쳐집니다</summary>
-
-<p><strong>F6. 안전 기록</strong></p>
-<ul>
-<li>안전장치가 확인(ask)·차단(deny) 판정을 내릴 때마다 내 컴퓨터의
+<summary>
+<b>✅ 2026-07-15 — F6 안전 기록 + F7 Codex 안전 패리티 구현 완료</b> —
+클릭하면 펼쳐집니다
+</summary>
+<p><strong>F6. 안전 기록</strong> - 안전장치가 확인(ask)·차단(deny)
+판정을 내릴 때마다 내 컴퓨터의
 <code>~/.sodamagentic/safety-log.jsonl</code>에 기록을 남기도록
-했습니다(안전하게 통과한 작업은 기록 안 함).</li>
-<li>기록에 비밀값(API 키 등)이 그대로 남지 않도록 자동으로
-가립니다(<code>[REDACTED]</code>).</li>
-<li>새 명령 **<code>/sodam-agentic-log</code>**로 "최근에 무엇이
-막혔는지·확인받았는지"를 쉬운 한국어로 조회할 수 있습니다.</li>
-<li>기록이 실패해도(예: 디스크 문제) 안전 판정 자체는 절대 영향받지
-않도록 만들었습니다.</li>
-</ul>
-<p><strong>F7. Codex 안전 패리티</strong></p>
-<ul>
-<li>Codex의 안전 훅 방식이 Claude Code와 사실상 같다는 것을 실제 Codex
-공식 문서로 확인했습니다.</li>
-<li>그래서 새 안전 로직을 따로 만들지 않고, Claude Code에서 쓰던
+했습니다(안전하게 통과한 작업은 기록 안 함). - 기록에 비밀값(API 키
+등)이 그대로 남지 않도록 자동으로 가립니다(<code>[REDACTED]</code>). -
+새 명령 <strong><code>/sodam-agentic:log</code></strong>로 “최근에
+무엇이 막혔는지·확인받았는지”를 쉬운 한국어로 조회할 수 있습니다. -
+기록이 실패해도(예: 디스크 문제) 안전 판정 자체는 절대 영향받지 않도록
+만들었습니다.</p>
+<p><strong>F7. Codex 안전 패리티</strong> - Codex의 안전 훅 방식이
+Claude Code와 사실상 같다는 것을 실제 Codex 공식 문서로 확인했습니다. -
+그래서 새 안전 로직을 따로 만들지 않고, Claude Code에서 쓰던
 <strong>같은 안전장치(<code>hooks/guard.mjs</code>)를 Codex에도 그대로
 등록</strong>하도록 설치 과정을
 확장했습니다(<code>.codex/hooks.json</code>에 등록, 기존 설정이 있으면
-덮어쓰지 않고 합침).</li>
-<li>⚠️ <strong>정직한 한계:</strong> Codex에서 "확인(ask)" 창이 실제로
-화면에 뜨는지, 설정 파일을 Codex가 정확히 이 위치에서 읽는지는 아직
-사람이 실제 Codex로 직접 써보며 확인하지 않았습니다. 등록까지는 자동
-검사로 확인했지만, 마지막 확인은 사람 몫으로 남아 있습니다.</li>
-</ul>
+덮어쓰지 않고 합침). - ⚠️ <strong>정직한 한계:</strong> Codex에서
+“확인(ask)” 창이 실제로 화면에 뜨는지, 설정 파일을 Codex가 정확히 이
+위치에서 읽는지는 아직 사람이 실제 Codex로 직접 써보며 확인하지
+않았습니다. 등록까지는 자동 검사로 확인했지만, 마지막 확인은 사람 몫으로
+남아 있습니다.</p>
 <p><strong>검증</strong>: 안전장치 자체 검사 42건 →
 <strong>54건</strong>으로 늘렸고, 전부 통과 확인. 구조 검증도 이상
 없음.</p>
 </details>
-
 <details>
-<summary><b>🗓️ 여전히 예정된 것 (착수 여부 미결정)</b> — 클릭하면 펼쳐집니다</summary>
-
+<summary>
+<b>🔧 2026-07-16 — 안전 메시지 출처 표시 + 진단 도구 2건 개선 (같은 버전
+내 패치)</b> — 클릭하면 펼쳐집니다
+</summary>
+<ul>
+<li><strong>막힘/확인 메시지에 <code>[소담 에이전틱]</code> 표시
+추가.</strong> 형제 플러그인(SoDamHarness 등)과 함께 설치했을 때 두
+안전장치가 동시에 발동하면 어느 쪽이 막았는지 구분이 안 되던 문제를 해결
+— 이제 화면 메시지와 <code>/sodam-agentic:log</code> 기록 모두에 출처가
+표시됩니다.</li>
+<li><strong><code>family-health.mjs</code>(형제 상태 진단 도구)가 오래된
+메모를 최신 사실처럼 보여주던 문제 수정.</strong> “완료됨” 같은 서술은
+전부 작성일을 표시하도록 바꾸고, 실시간 확인 가능한 항목(파일 존재 여부
+등)과 명확히 구분했습니다.</li>
+<li><strong><code>validate.mjs</code>(구조 검증 도구)에 “설치 캐시가
+최신인지” 자동 확인 기능 추가.</strong> 그 결과 실제로 설치된 캐시가
+며칠 지난 상태였다는 것을 스스로 잡아냈습니다(바로 아래 07-17·07-18
+항목이 이 발견에서 이어집니다).</li>
+</ul>
+</details>
+<details>
+<summary>
+<b>🛡️ 2026-07-17 — 실사용 검증 중 실제 안전 관련 버그 2건 발견·수정</b>
+— 클릭하면 펼쳐집니다
+</summary>
+<ul>
+<li><strong>형제 플러그인(SoDamHarness) 감지 로직이 일부 컴퓨터 환경에서
+항상 실패하던 문제를 발견·수정.</strong> 경로를 확인하는 코드가 실제
+설치 위치와 다른 곳을 보고 있어서, Harness가 진짜로 설치돼 있어도
+“없다”고 잘못 판단하고 있었습니다. 위험한 방향은 아니었지만(오히려 항상
+더 엄격하게 검사하는 쪽으로 어긋났습니다), 형제 플러그인과 같이 쓸 때
+확인창이 필요 이상으로 두 번 뜰 수 있는 원인이었습니다. 수정 후
+해소됐습니다.</li>
+<li><strong>(중요) “지금 작업 중인 폴더 밖에 조용히 파일이 만들어지는”
+안전 구멍을 실제 사용 중 발견·수정.</strong> 원인을 파고들어 보니, 함께
+설치된 형제 플러그인(SoDamHarness)이 애초에 “작업폴더 밖 쓰기”를
+확인받는 기능 자체를 갖고 있지 않다는 것을 발견했습니다(형제 쪽의 의도된
+설계였습니다). 이 플러그인이 형제에게 검사를 위임하는 방식이라, 형제가
+그 기능을 안 갖고 있으면 검사 자체가 조용히 빠지는 셈이었습니다.
+<strong>이제 이 항목만은 형제 플러그인 설치 여부와 무관하게 이
+플러그인이 항상 직접 확인하도록 고쳤습니다.</strong></li>
+<li>회귀 테스트(자체 안전장치 검사) 54건 그대로 전부 통과 확인.</li>
+<li>⚠️ <strong>정직한 한계:</strong> 이 수정이 실제 설치된 화면에서 다시
+재현 테스트됐는지는 이 문서 작성 시점 기준으로 아직 사람이 다시 확인하지
+않았습니다(코드 수정과 자동 검사까지는 완료).</li>
+</ul>
+</details>
+<details>
+<summary>
+<b>✅ 2026-07-18 — 슬래시 명령 짧은형 전환 완료 (자동완성이
+<code>/sodam-agentic:start</code> 형태로 정확히 표시)</b> — 클릭하면
+펼쳐집니다
+</summary>
+<ul>
+<li><strong>명령 이름을 짧게 정리.</strong> 예전엔
+<code>/sodam-agentic:sodam-agentic-start</code>처럼 플러그인 이름이 두
+번 겹쳐 길었던 것을 <code>/sodam-agentic:start</code>로 줄였습니다(4개
+명령 전부:
+<code>start</code>·<code>plan</code>·<code>review</code>·<code>log</code>).</li>
+<li><strong>“계획 먼저”·“검토” 기능을 직접 명령으로도 부를 수 있게
+보강.</strong> 원래 이 두 기능은 자동으로만 발동했는데, Claude Code
+자체의 한계(자동발동 전용 구성요소는 사람이 직접 <code>/</code>로
+타이핑해 부를 수 없다는 것, 공식 이슈로 확인됨)를 발견해, 자동발동은
+그대로 두고 직접 호출용 명령을 새로 추가했습니다. 이제
+<code>/sodam-agentic:plan</code>·<code>/sodam-agentic:review</code>도
+직접 칠 수 있습니다.</li>
+<li><strong>자동완성 표시 형식을 원하는 완전한 형태로 조정.</strong>
+처음엔 자동완성에 <code>/log (sodam-agentic)</code>처럼 명령 이름만 짧게
+보이는 형태로 떴는데, 원하는 표시는 <code>/sodam-agentic:log</code>처럼
+<strong>플러그인 이름까지 항상 함께 보이는 형태</strong>였습니다. 내부
+설정 방식을 조정해 이제 새 대화창에서 <code>/sodam-agentic</code>까지만
+입력해도 4개 명령이 전부 <code>sodam-agentic:이름</code> 형태로
+표시됩니다 — 실제 화면에서 확인 완료.</li>
+<li>구조 검증(<code>validate.mjs</code>) · 안전장치 자체
+검사(<code>_selftest.mjs</code>, 54건) 모두 통과 확인.</li>
+</ul>
+</details>
+<details>
+<summary>
+<b>🗓️ 여전히 예정된 것 (착수 여부 미결정)</b> — 클릭하면 펼쳐집니다
+</summary>
 <ul>
 <li>F2/F3를 스킬이 아닌 강제 훅으로 승격(자동 발동 보장) — 아직 착수
 여부가 결정되지 않았습니다.</li>
 </ul>
 </details>
-
 <hr />
-<p><a id="faq"></a></p>
-<h2 id="16-faq-자주-묻는-질문">16. FAQ (자주 묻는 질문)</h2>
-<p><strong>Q. 이거 정말 안전한가요?</strong> A. 아니요, "100% 안전"은
-아닙니다. "되돌릴 수 없는 위험은 막고, 나머지는 확인받는" 정도입니다.
+<p><a id="faq"></a> ## 16. FAQ (자주 묻는 질문)</p>
+<p><strong>Q. 이거 정말 안전한가요?</strong> A. 아니요, “100% 안전”은
+아닙니다. “되돌릴 수 없는 위험은 막고, 나머지는 확인받는” 정도입니다.
 최종 판단은 항상 사람이 합니다.</p>
 <p><strong>Q. 돈이 드나요?</strong> A. 이 플러그인 자체는
 무료(Apache-2.0)입니다. 다만 Claude/Codex를 쓰는 비용(모델 사용료)은
@@ -1196,19 +1259,19 @@ Anthropic·OpenAI 약관을 따로 따릅니다.</p>
 <p><strong>Q. Codex에서도 Claude Code와 똑같이 안전한가요?</strong> A.
 이제 <strong>같은 안전장치가 Codex에도 등록됩니다</strong>(F7,
 2026-07-15). 계획(F2)·검토(F3)·차단·안전 기록(F6)까지 같은 로직을
-씁니다. 다만 <strong>Codex에서 "확인해도 될까요?" 창이 실제로 뜨는지,
+씁니다. 다만 <strong>Codex에서 “확인해도 될까요?” 창이 실제로 뜨는지,
 설정 로드 위치가 정확한지는 아직 사람이 직접 확인하지
 않았습니다</strong> — 100% 동등하다고 단정하지 않고 정직하게
 남겨둡니다.</p>
 <p><strong>Q. 막히거나 확인받은 기록을 나중에 다시 볼 수
-있나요?</strong> A. 됩니다. <code>/sodam-agentic-log</code> 명령으로
+있나요?</strong> A. 됩니다. <code>/sodam-agentic:log</code> 명령으로
 최근 기록을 쉬운 한국어로 볼 수 있습니다. 단, <strong>안전하게 통과한
 작업은 기록되지 않고, 막히거나(deny) 확인받은(ask) 것만</strong>
 남습니다. 기록은 내
 컴퓨터(<code>~/.sodamagentic/safety-log.jsonl</code>)에만 저장되고
 어디로도 전송되지 않습니다.</p>
 <p><strong>Q. SoDamHarness 없이 써도 되나요?</strong> A. 됩니다.
-Harness가 없으면 이 플러그인의 "최소 안전 폴백"이 전체 모드로
+Harness가 없으면 이 플러그인의 “최소 안전 폴백”이 전체 모드로
 작동합니다. 다만 자동 백업·되돌리기 같은 더 강한 기능은 Harness가 있어야
 합니다.</p>
 <p><strong>Q. 상업적으로 써도 되나요?</strong> A. 이 플러그인 자체는
@@ -1217,7 +1280,7 @@ Apache-2.0이라 상업 사용·재배포·서비스 운영 모두 가능합니�
 확인하세요.</p>
 <p><strong>Q. 다른 5개 형제 플러그인도 꼭 설치해야 하나요?</strong> A.
 아니요. 이 플러그인 혼자서도 최소 안전으로 작동합니다. 다만
-SoDamHarness와 같이 쓰면 더 강력해집니다(README의 "소담 패밀리" 표
+SoDamHarness와 같이 쓰면 더 강력해집니다(README의 “소담 패밀리” 표
 참고).</p>
 <p><strong>Q. 제가 시킨 작업 내용이 어딘가로 전송되나요?</strong> A. 이
 플러그인 자체는 네트워크 요청을 보내지 않습니다(<a
@@ -1226,8 +1289,7 @@ Code/Codex 자체가 AI 모델과 통신하는 것과는 별개입니다. (안�
 전송이 아니라 <strong>내 컴퓨터 파일에 저장</strong>하는 것입니다 — 바로
 위 질문 참고.)</p>
 <hr />
-<p><a id="dev-status"></a></p>
-<h2 id="17-현재-개발-상태-정직하게">17. 현재 개발 상태 (정직하게)</h2>
+<p><a id="dev-status"></a> ## 17. 현재 개발 상태 (정직하게)</p>
 <ul>
 <li>✅ <strong>검증됨:</strong> 설치·한글 표시·명령
 일관성·<strong>온보딩(F1) 실제 작동</strong>.</li>
@@ -1237,25 +1299,34 @@ Code/Codex 자체가 AI 모델과 통신하는 것과는 별개입니다. (안�
 안전 패리티(F7) 구현 완료(2026-07-15).</strong> 자체 자가검증 54개
 테스트 전부 통과.</li>
 <li>✅ <strong>라이브 검증 여러 차례 진행(2026-07-11~13):</strong> 실제
-사용 화면에서 반복 테스트하며 실제 버그 5건을 찾아 고쳤고(위 "업데이트
-내용 요약" 참고), 국제 보안 점검 기준(OWASP)의 필수 항목도 전부
+사용 화면에서 반복 테스트하며 실제 버그 5건을 찾아 고쳤고(위 “업데이트
+내용 요약” 참고), 국제 보안 점검 기준(OWASP)의 필수 항목도 전부
 재확인했습니다.</li>
+<li>✅ <strong>슬래시 명령 짧은형 전환·자동완성 표시 형식이 실제
+화면에서 확인 완료(2026-07-18):</strong>
+<code>/sodam-agentic:start</code>·<code>:plan</code>·<code>:review</code>·<code>:log</code>
+4개 전부 원하는 형태(플러그인 이름 포함)로 자동완성에 뜨는 것을 실제
+화면 캡처로 확인했습니다.</li>
 <li>⚠️ <strong>아직 확실하지 않은 것 — 정직하게 밝힙니다:</strong>
-변경점 검토(F3)가 "완전히 각본 없는" 실제 사용 상황에서도 항상 자동으로
+변경점 검토(F3)가 “완전히 각본 없는” 실제 사용 상황에서도 항상 자동으로
 뜨는지는 여러 번 테스트해도 아직 결론이 안 났습니다. Codex에서
 F7(확인창·기록)이 실제로 작동하는지도 아직 사람이 라이브로 확인하지
 않았습니다.</li>
-<li>⬜ <strong>아직 사람이 직접 확인해야 하는 것:</strong> ① Codex에서
-F7(안전 확인창·설정 로드 경로)이 실제로 작동하는지 라이브 확인 ② (공개
-배포를 고려할 때만 필요) 비개발자 베타 테스트·법무 최종 확인.</li>
+<li>⬜ <strong>아직 사람이 직접 확인해야 하는 것:</strong> ① “작업폴더
+밖 쓰기 확인창”이 2026-07-17 수정 이후 실제 설치 화면에서도 정확히
+뜨는지 재확인(코드 수정·자동 검사는 완료, 재현 확인만 남음) ② 안전
+기록(F6)이 실제 설치 경로를 통해서도 정상적으로 쌓이는지 확인(지금까지는
+개발 폴더에서 직접 실행한 검사만 있었음) ③ Codex에서 F7(안전 확인창·설정
+로드 경로)이 실제로 작동하는지 라이브 확인 ④ (공개 배포를 고려할 때만
+필요) 비개발자 베타 테스트·법무 최종 확인.</li>
 <li><strong>개인용 확정(2026-07-15):</strong> 이 도구는 개발자 본인이
-직접 실제 사용하려고 만든 개인용 도구입니다. 위 ②(베타·법무)는
+직접 실제 사용하려고 만든 개인용 도구입니다. 위 ④(베타·법무)는
 <strong>지금 당장은 필수 전제조건이 아니며</strong>, 추후 공개 공유를
 고려할 때 다시 필요해집니다. 거친 부분이 있을 수 있고, 실사용 중
 찾아내는 것이 목표입니다. 과장하지 않고 있는 그대로 안내합니다.</li>
 </ul>
 <hr />
-<p><em>문서 버전 기준일: 2026-07-15 · 이 가이드는 "지금까지 실제로
-구현·검증된 기능" 기준으로 작성되었습니다.</em></p>
+<p><em>문서 버전 기준일: 2026-07-18 · 이 가이드는 “지금까지 실제로
+구현·검증된 기능” 기준으로 작성되었습니다.</em></p>
 </body>
 </html>

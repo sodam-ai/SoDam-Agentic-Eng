@@ -85,7 +85,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
    /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
    /plugin install sodam-agentic@sodam
    ```
-2. **Start:** `/sodam-agentic-start` → onboarding appears.
+2. **Start:** `/sodam-agentic:start` → onboarding appears.
 3. **Ask it to do something:** "make ○○" → if a **plan** appears first, approve with "yes" → work happens → check the **review summary**.
 
 → A "this works" moment in about 5 minutes.
@@ -109,7 +109,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
    /plugin install sodam-agentic@sodam
    ```
    → Success looks like "installed."
-3. Verify: type `/sodam-agentic` — four commands (`-start`, `-plan`, `-review`, `-log`) should appear.
+3. Verify: type `/sodam-agentic:` — four commands (`start`, `plan`, `review`, `log`) should appear.
    > 🖼️ *(screenshot placeholder)*
 
 **(For the developer's own local testing)** you can install from a local folder instead of the internet:
@@ -129,7 +129,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 <a id="usage"></a>
 ## 5. Run / use / how it works (step by step)
 
-1. Type **`/sodam-agentic-start`** → read the "4 steps to direct an AI" onboarding.
+1. Type **`/sodam-agentic:start`** → read the "4 steps to direct an AI" onboarding.
 2. (Recommended) Run **`/init`** once → the AI recognizes your current project folder. *Beginners skip this most often.*
 3. **Ask in plain language:** e.g. "build me a notepad web page." (You don't need to run a check/diagnostic command first — just asking is the natural first step.)
 4. **Check the plan:** before writing code, the AI should show a "① what ② why ③ done-criteria" plan — read it and approve with **"yes/proceed."**
@@ -143,12 +143,12 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 
 | Command | When to use it |
 |---|---|
-| `/sodam-agentic-start` | First start / onboarding |
-| `/sodam-agentic-plan` | "Plan first" feature (usually auto-triggers) |
-| `/sodam-agentic-review` | "Change review" feature (usually auto-triggers) |
-| `/sodam-agentic-log` | View block(deny)/ask history (F6, added 2026-07-15) |
+| `/sodam-agentic:start` | First start / onboarding |
+| `/sodam-agentic:plan` | "Plan first" feature (usually auto-triggers) |
+| `/sodam-agentic:review` | "Change review" feature (usually auto-triggers) |
+| `/sodam-agentic:log` | View block(deny)/ask history (F6, added 2026-07-15) |
 
-> Commands also work in `/plugin-name:command` form (`/sodam-agentic:sodam-agentic-start`).
+> The form is `/plugin-name:command` (as of 2026-07-17 the command names themselves were shortened — the old form repeated the plugin name twice, e.g. `/sodam-agentic:sodam-agentic-start`; it's now `/sodam-agentic:start`). Type `/sodam-agentic:` in a new session and all 4 should appear in the list.
 
 ---
 
@@ -156,7 +156,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 ## 7. Workflow (how it operates)
 
 ```
-[Start] /sodam-agentic-start  →  safety on + 4-step onboarding
+[Start] /sodam-agentic:start  →  safety on + 4-step onboarding
    │
    ▼
 [Plan First]  "build me X"  →  AI proposes a plan  →  you approve
@@ -180,9 +180,9 @@ Core principle: **"Not the AI running the show" — the human stays in the drive
 | What | Location |
 |---|---|
 | Plugin manifest | `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` |
-| Onboarding command | `commands/sodam-agentic-start.md` |
-| Safety-log viewer command | `commands/sodam-agentic-log.md` (F6) |
-| Plan / review features | `skills/sodam-agentic-plan/`, `skills/sodam-agentic-review/` |
+| Onboarding command | `commands/start.md` (`/sodam-agentic:start`) |
+| Safety-log viewer command | `commands/log.md` (`/sodam-agentic:log`, F6) |
+| Plan / review features | `skills/plan/` (`/sodam-agentic:plan`), `skills/review/` (`/sodam-agentic:review`) |
 | Review sub-agent | `agents/easy-reviewer.md` |
 | Safety hooks | `hooks/hooks.json`, `hooks/guard.mjs`, `hooks/delegate.mjs` |
 | Safety rules (data) | `data/agentic-rules.json` |
@@ -207,12 +207,12 @@ This plugin is a **purely local tool — no server, no database, no login.** Its
 | Component | File | Role |
 |---|---|---|
 | Manifest | `.claude-plugin/plugin.json`, `marketplace.json` | Tells Claude Code "this folder is a plugin" |
-| Onboarding (F1) | `commands/sodam-agentic-start.md` | Defines the `/sodam-agentic-start` slash command |
-| Plan / Review (F2·F3) | `skills/sodam-agentic-plan/`, `skills/sodam-agentic-review/` | Guidance that auto-triggers on new requests / after changes |
+| Onboarding (F1) | `commands/start.md` | Defines the `/sodam-agentic:start` slash command |
+| Plan / Review (F2·F3) | `skills/plan/`·`skills/review/` (auto-trigger) + `commands/plan.md`·`commands/review.md` (manual `/sodam-agentic:plan`·`:review`) | Auto-triggers on new requests / after changes, and can also be invoked directly (added 2026-07-18 — Claude Code plugin skills alone don't support manual slash invocation, so command files were added) |
 | Review sub-agent | `agents/easy-reviewer.md` | A **read-only** sub-AI that F3 delegates to when there are many changes |
 | Safety hooks (F4) | `hooks/hooks.json` (wiring) + `hooks/guard.mjs` (decision logic) + `hooks/delegate.mjs` (sibling detection) | Steps in **right before** every Bash/PowerShell/Write/Edit |
 | Safety rules data | `data/agentic-rules.json` | Adjustable rule values without touching code |
-| Safety log (F6) | Logic inside `hooks/guard.mjs`'s `decide()` + `commands/sodam-agentic-log.md` | Records every ask/deny decision to `~/.sodamagentic/safety-log.jsonl`; view via the command |
+| Safety log (F6) | Logic inside `hooks/guard.mjs`'s `decide()` + `commands/log.md` | Records every ask/deny decision to `~/.sodamagentic/safety-log.jsonl`; view via the command |
 | Codex support (F5) | `codex/install.mjs` | A separate installer for Codex (which has no marketplace) — copies skill files |
 | Codex safety parity (F7) | `codex/install.mjs` registers into `.codex/hooks.json` | No new safety logic — **the same `hooks/guard.mjs` is registered into Codex too** (merges with any existing config) |
 
@@ -233,7 +233,7 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 - `isHarnessAlive()` in `hooks/delegate.mjs` detects whether the sibling plugin **SoDamHarness** is present.
 - If Harness is present, "overlapping" risks (recursive delete, sensitive paths, etc.) are delegated to it so you don't get asked twice — Harness also adds automatic backup/undo.
 - **But irreversible, catastrophic commands (disk-wipe-grade) are always blocked by this plugin too, regardless of Harness** — a defense-in-depth safeguard for when a sibling is missing or broken.
-- **Ask/deny decisions are automatically logged by F6** to `~/.sodamagentic/safety-log.jsonl` (safe pass-throughs are not logged; secrets are automatically masked before saving). View with [`/sodam-agentic-log`](#commands).
+- **Ask/deny decisions are automatically logged by F6** to `~/.sodamagentic/safety-log.jsonl` (safe pass-throughs are not logged; secrets are automatically masked before saving). View with [`/sodam-agentic:log`](#commands).
 
 ---
 
@@ -242,7 +242,7 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 
 - **What this plugin reads:** only the tool name and its arguments that Claude Code is about to run (e.g. the command string, or the file path being written) — delivered to the hook via standard input (stdin). It does not otherwise inspect your file contents or conversation.
 - **What it never does:** make its own network requests (send anything to an external server) · store or log API keys/passwords/tokens · auto-execute external code. (Self-security self-test result: 0 findings — `hooks/_selftest.mjs`)
-- **Persistent data (updated 2026-07-15 — F6):** the safety hook writes one line to `~/.sodamagentic/safety-log.jsonl` (in your computer's user folder, outside the plugin's development folder) **only when it decides ask or deny.** Each entry is `{decision, target, reason, timestamp}`; if the target text matches a secret pattern (e.g. an API key), it is automatically masked to `[REDACTED]` before being saved. **Safely-passed actions are never logged** (to keep the log from growing without bound). This log is never sent anywhere — it stays on your computer — and if writing to it ever fails (e.g. a disk issue), that never affects the actual safety decision (block/ask). View it with the [`/sodam-agentic-log`](#commands) command.
+- **Persistent data (updated 2026-07-15 — F6):** the safety hook writes one line to `~/.sodamagentic/safety-log.jsonl` (in your computer's user folder, outside the plugin's development folder) **only when it decides ask or deny.** Each entry is `{decision, target, reason, timestamp}`; if the target text matches a secret pattern (e.g. an API key), it is automatically masked to `[REDACTED]` before being saved. **Safely-passed actions are never logged** (to keep the log from growing without bound). This log is never sent anywhere — it stays on your computer — and if writing to it ever fails (e.g. a disk issue), that never affects the actual safety decision (block/ask). View it with the [`/sodam-agentic:log`](#commands) command.
 
 ### The 3 real decision levels
 
@@ -281,7 +281,7 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 
 | Symptom (what you see) | Why (cause) | Fix |
 |---|---|---|
-| Installed, but nothing seems to happen | Didn't run `/init` / skipped onboarding | Start with `/sodam-agentic-start` to check status |
+| Installed, but nothing seems to happen | Didn't run `/init` / skipped onboarding | Start with `/sodam-agentic:start` to check status |
 | `/sodam-agentic` doesn't show anything | Not installed | Reinstall: `/plugin install sodam-agentic@sodam` |
 | "No access / permission denied" during install | No access to the private repo | Confirm you're logged into the right GitHub account with access |
 | "Node not found" | Node.js not installed | Install Node.js 18+ per [§2](#install-programs) and retry |
@@ -289,10 +289,10 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 | Code gets written without a plan first | Another skill won out (F2 is a "request," not enforced) | May be expected — report it; enforcement is planned for Phase 2 |
 | A risky command wasn't blocked | Safety hook not running | Capture and report (check Node.js and install status) |
 | Confirmation prompts appear too often | Multiple safety layers overlapping | Can be tuned to only ask on real risk — let us know |
-| Commands show old names | Cached install | `/plugin marketplace update sodam` → reinstall |
+| Commands show old names | Cached install is stale (`marketplace update` alone does not refresh the cache — confirmed by testing) | `/plugin uninstall sodam-agentic` → `/plugin install sodam-agentic@sodam` → `/reload-plugins` (in this exact order) |
 | Can I put in a password/API key? | — | **Never.** Keep secrets only in your own environment (e.g. `.env`) |
 | I want to remove it / it's acting odd after an update | Uninstall / update conflict | See [§11 Uninstall](#uninstall) |
-| I can't remember what got blocked earlier | — | Use `/sodam-agentic-log` (only block/ask events are logged — safe pass-throughs aren't) |
+| I can't remember what got blocked earlier | — | Use `/sodam-agentic:log` (only block/ask events are logged — safe pass-throughs aren't) |
 | The Codex "ask" confirmation doesn't seem to appear | Not yet live-verified (F7, 2026-07-15) | First check registration with Codex's own `/hooks` command, then report it |
 
 ---
@@ -318,6 +318,7 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 - **Derivative-work marking obligation (Apache-2.0 §4):** if you modify and redistribute this code, you must **mark the modified files as changed from the original** and include copies of the original `LICENSE` and `NOTICE`.
 - **Warranty & liability limitation (Apache-2.0 §7–8):** this software is provided **"AS IS," with no warranty of any kind.** To the extent permitted by law, the copyright holder and contributors **are not liable for any direct or indirect damages** (including data loss, lost business, or business interruption) arising from its use. Outcomes from using it are **your responsibility**.
 - **AI model fees/terms are separate:** this kit is **free (Apache-2.0)**, but **the usage fees and terms for the AI models (Claude/Codex) follow Anthropic's and OpenAI's own terms** — unrelated to this tool's license.
+- **AI-assisted development disclosure (transparency, strict standard):** a substantial portion of this project's code and documentation was written with the help of an AI coding tool (Claude Code). The copyright/patent law around AI-assisted content is still not fully settled in every jurisdiction — **if you plan to redistribute this or use it commercially, check this separately.** Core logic such as the safety hooks (F4) has been verified through repeated real-world testing, but AI-written code does not automatically carry the same guarantee of completeness/correctness as human-written code — **an independent code review is recommended** before using this in production or commercial settings.
 - **Third-party trademarks:** "Claude, Anthropic, Codex, OpenAI" are trademarks of their respective owners. Used only in a **descriptive (compatibility/target) sense** — never implying official partnership or endorsement.
 - **No unauthorized inclusion:** no third-party works, trademarks, logos, personal data, client information, or secrets are included (zero in this repository too — repeatedly confirmed by `_selftest.mjs` self-checks).
 - **Adding external assets:** if you add fonts, images, or icons, **check each asset's own license for commercial-use permission** separately.
@@ -396,7 +397,7 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 **F6. Safety history**
 - The safety hook now writes a record to your computer's `~/.sodamagentic/safety-log.jsonl` every time it decides ask or deny (safely-passed actions are not logged).
 - Secrets (like API keys) are automatically masked (`[REDACTED]`) before being saved, so they never sit in the log as-is.
-- A new command, **`/sodam-agentic-log`**, lets you review "what was recently blocked or asked about" in plain language.
+- A new command, **`/sodam-agentic:log`**, lets you review "what was recently blocked or asked about" in plain language.
 - Even if logging itself fails (e.g. a disk issue), it never affects the actual safety decision.
 
 **F7. Codex safety parity**
@@ -405,6 +406,35 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 - ⚠️ **Honest limitation:** whether the "ask" confirmation prompt actually appears on screen in Codex, and whether Codex reads its config from exactly this path, has not yet been confirmed by a human actually using Codex. Registration itself was verified by automated tests, but the final live check is still a human task.
 
 **Verification**: the safety hook's own test suite grew from 42 to **54 checks**, all passing. Structure validation also clean.
+
+</details>
+
+<details>
+<summary><b>🔧 2026-07-16 — Safety-message source tag + 2 diagnostic-tool improvements (patch within the same version)</b> — click to expand</summary>
+
+- **Added a `[SoDam Agentic]` tag to block/ask messages.** When installed alongside a sibling plugin (like SoDamHarness) and both safety layers fire, it used to be impossible to tell which one had acted — now both the on-screen message and the `/sodam-agentic:log` history show the source.
+- **Fixed `family-health.mjs` (the sibling-status diagnostic tool) presenting stale notes as if they were current facts.** Every "completed"-style note now shows the date it was written, clearly separated from anything checked live (like whether a file exists).
+- **Added an "is the installed cache up to date?" check to `validate.mjs` (the structure validator).** This immediately caught the fact that the actually-installed cache was several days out of date (the entries below for 07-17 and 07-18 follow directly from this discovery).
+
+</details>
+
+<details>
+<summary><b>🛡️ 2026-07-17 — 2 real safety-related bugs found and fixed during live verification</b> — click to expand</summary>
+
+- **Found and fixed a bug where sibling-plugin (SoDamHarness) detection always failed on some machine setups.** The path-checking code was looking in the wrong location, so even when Harness was genuinely installed, it was wrongly treated as "not present." This wasn't dangerous in itself (it only skewed toward stricter checking), but it could cause confirmation prompts to appear twice when used alongside the sibling plugin. This is now resolved.
+- **(Important) Found and fixed a real gap where a file could be silently created outside the current working folder.** Tracing the cause led to discovering that the sibling plugin (SoDamHarness) simply does not have an "ask before writing outside the working folder" feature at all (a deliberate design choice on the sibling's side). Since this plugin delegates that check to the sibling when present, the check itself was silently skipped whenever the sibling lacked it. **This one check is now always performed by this plugin directly, regardless of whether the sibling is installed.**
+- The safety hook's own regression test suite (54 checks) still passes in full.
+- ⚠️ **Honest limitation:** as of this document, a human has not yet re-confirmed this fix on an actual installed screen (the code fix and automated checks are done; live re-confirmation is still pending).
+
+</details>
+
+<details>
+<summary><b>✅ 2026-07-18 — Short-form slash commands complete (autocomplete now correctly shows `/sodam-agentic:start`)</b> — click to expand</summary>
+
+- **Shortened the command names.** What used to repeat the plugin name twice (`/sodam-agentic:sodam-agentic-start`) is now `/sodam-agentic:start` (across all 4 commands: `start`, `plan`, `review`, `log`).
+- **Made "Plan First" and "Review" callable as direct commands too.** These two features used to only auto-trigger. We discovered a Claude Code platform limitation (confirmed via an official issue tracker report) that auto-trigger-only components cannot be typed directly with `/` — so we kept the auto-trigger behavior and added dedicated command files for direct invocation. `/sodam-agentic:plan` and `/sodam-agentic:review` can now be typed directly too.
+- **Adjusted the autocomplete display format to the fully-qualified form that was actually wanted.** It initially showed up as a short form like `/log (sodam-agentic)`, but the intended display was the **fully-qualified `/sodam-agentic:log` form, with the plugin name always shown.** After adjusting an internal configuration detail, typing just `/sodam-agentic` in a new session now lists all 4 commands in the `sodam-agentic:name` form — confirmed on an actual screen.
+- Both structure validation (`validate.mjs`) and the safety hook's self-test suite (`_selftest.mjs`, 54 checks) pass.
 
 </details>
 
@@ -430,7 +460,7 @@ A. The plugin itself is free (Apache-2.0). Using Claude/Codex (model usage fees)
 A. **The same safety hook is now registered in Codex too** (F7, 2026-07-15) — Plan (F2), Review (F3), blocking, and safety logging (F6) all use the same logic. However, **whether the "are you sure?" confirmation prompt actually appears in Codex, and whether the config is loaded from the exact right path, has not yet been confirmed by a human** — we're not claiming 100% parity, we're stating this honestly.
 
 **Q. Can I look back at what got blocked or asked about?**
-A. Yes — the `/sodam-agentic-log` command shows recent history in plain language. Note that **only blocked (deny) or asked-about (ask) actions are logged; safely-passed actions are not.** The log stays on your computer (`~/.sodamagentic/safety-log.jsonl`) and is never sent anywhere.
+A. Yes — the `/sodam-agentic:log` command shows recent history in plain language. Note that **only blocked (deny) or asked-about (ask) actions are logged; safely-passed actions are not.** The log stays on your computer (`~/.sodamagentic/safety-log.jsonl`) and is never sent anywhere.
 
 **Q. Can I use it without SoDamHarness installed?**
 A. Yes. Without Harness, this plugin's "minimal safety fallback" runs in full mode. Stronger features like automatic backup/undo require Harness, though.
@@ -452,10 +482,11 @@ A. This plugin itself makes no network requests (see [§10 Security & data flow]
 - ✅ **Verified:** install, Korean rendering, command consistency, **onboarding (F1) actually works**.
 - ✅ **Code complete + self-test passing:** the safety hook (F4) now always turns on, catastrophic commands are always blocked regardless of a sibling plugin, and the auto-accept-mode limitation is documented in onboarding. **Safety history (F6) and Codex safety parity (F7) implemented (2026-07-15).** All 54 self-tests pass.
 - ✅ **Multiple rounds of live verification (2026-07-11~13):** repeated real-usage testing found and fixed 5 real bugs (see "Changelog summary" above), and every required item on the international OWASP security checklist was re-confirmed.
+- ✅ **Short-form slash commands and the autocomplete display format confirmed live (2026-07-18):** `/sodam-agentic:start`, `:plan`, `:review`, `:log` were confirmed, via an actual screen capture, to all appear in autocomplete in the intended fully-qualified form.
 - ⚠️ **Still uncertain — stated honestly:** whether Review (F3) reliably auto-triggers in a fully unscripted, real-world usage session has not been conclusively confirmed even after repeated testing. Whether F7 (Codex confirmation prompt/logging) actually works has also not been live-verified by a human yet.
-- ⬜ **Still needs a human to confirm directly:** ① whether F7 (safety confirmation prompt, config load path) actually works live in Codex ② (only needed if considering a public release) a non-developer beta test and final legal review.
-- **Confirmed personal-use scope (2026-07-15):** this tool is built for the developer's own direct, real-world use. Item ② above is **not a required precondition right now** — it would matter again if a public release is considered later. There may be rough edges, and finding them through real use is the current goal. No exaggeration — this is the honest, current state.
+- ⬜ **Still needs a human to confirm directly:** ① whether the "ask before writing outside the working folder" prompt still fires correctly on an actual installed screen after the 2026-07-17 fix (the code fix and automated checks are done — only live re-confirmation is left) ② whether the safety log (F6) is written correctly through the actual installed path too (verification so far has only run directly from the development folder) ③ whether F7 (safety confirmation prompt, config load path) actually works live in Codex ④ (only needed if considering a public release) a non-developer beta test and final legal review.
+- **Confirmed personal-use scope (2026-07-15):** this tool is built for the developer's own direct, real-world use. Item ④ above is **not a required precondition right now** — it would matter again if a public release is considered later. There may be rough edges, and finding them through real use is the current goal. No exaggeration — this is the honest, current state.
 
 ---
 
-*Document version date: 2026-07-15 · This guide is written to match "what is actually implemented and verified so far."*
+*Document version date: 2026-07-18 · This guide is written to match "what is actually implemented and verified so far."*
