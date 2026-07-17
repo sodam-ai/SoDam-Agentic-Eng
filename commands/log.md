@@ -1,6 +1,5 @@
 ---
-name: sodam-agentic-log
-description: SoDamAgentic 안전 기록 조회(F6). 사용자가 /sodam-agentic-log 로 실행하면, 지금까지 안전장치가 막거나 확인받은 내역을 쉬운 한국어로 요약해 보여준다.
+description: SoDamAgentic 안전 기록 조회(F6). 사용자가 /sodam-agentic:log 로 실행하면, 지금까지 안전장치가 막거나 확인받은 내역을 쉬운 한국어로 요약해 보여준다.
 ---
 
 # 소담 안전 기록 — 지금까지 뭘 막았나

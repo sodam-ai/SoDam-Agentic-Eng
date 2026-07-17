@@ -156,9 +156,9 @@ if (hooksCopied) {
 // ─── 결과 요약 ───────────────────────────────────────────────────────────────
 console.log(`\n설치 완료: ${installed}개 스킬 → ${DEST_SKILLS}\n`);
 console.log('Codex에서 활성화되는 스킬:');
-console.log('  sodam-agentic-start  — 온보딩 시작 안내 (F1)');
-console.log('  sodam-agentic-plan   — 새 작업 전 계획 먼저 (F2)');
-console.log('  sodam-agentic-review — 작업 후 변경점 검토 (F3)');
+console.log('  start  (/sodam-agentic:start)  — 온보딩 시작 안내 (F1)');
+console.log('  plan   (/sodam-agentic:plan)   — 새 작업 전 계획 먼저 (F2)');
+console.log('  review (/sodam-agentic:review) — 작업 후 변경점 검토 (F3)');
 console.log('');
 if (hooksCopied) {
   console.log(GREEN('✅ 안전 훅(F4)·안전 기록(F6)도 함께 설치됐습니다.'));

@@ -81,12 +81,14 @@ function checkComponents(dir, kind) {
   for (const { file, dirName } of items) {
     const fm = frontmatter(file);
     if (!fm) { FAIL(rel(file) + " : frontmatter(---) 없음"); continue; }
-    if (!fm.name) FAIL(rel(file) + " : name 없음 (★설치 시 이름=버전해시 버그)");
-    else if (kind === "skill" && !KEBAB.test(fm.name)) FAIL(rel(file) + " : name kebab-case 아님(" + fm.name + ")");
+    // command는 name 생략 허용(2026-07-18 실측: Harness의 commands/*.md가 name 없이도
+    // 파일명 그대로 정상 등록됨). skill은 여전히 name 필수(★버전해시 버그 실사례 있음).
+    if (!fm.name && kind === "skill") FAIL(rel(file) + " : name 없음 (★설치 시 이름=버전해시 버그)");
+    else if (kind === "skill" && fm.name && !KEBAB.test(fm.name)) FAIL(rel(file) + " : name kebab-case 아님(" + fm.name + ")");
     if (!fm.description) FAIL(rel(file) + " : description 없음");
     if (fm.description && fm.description.length > 1536) WARN(rel(file) + " : description 1536자 초과(" + fm.description.length + ")");
     if (kind === "skill" && fm.name && fm.name !== dirName) WARN(rel(file) + " : name(" + fm.name + ")≠폴더(" + dirName + ")");
-    if (fm.name && fm.description) OK(rel(file) + " name=" + fm.name);
+    if (fm.description) OK(rel(file) + (fm.name ? " name=" + fm.name : " (name 생략, 파일명=" + dirName + ")"));
   }
 }
 checkComponents("commands", "command");

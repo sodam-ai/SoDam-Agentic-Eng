@@ -68,10 +68,10 @@ const FAMILY = [
       '.claude-plugin/plugin.json',
       'hooks/guard.mjs',
       'hooks/hooks.json',
-      'skills/sodam-agentic-plan/SKILL.md',
-      'skills/sodam-agentic-review/SKILL.md',
+      'skills/plan/SKILL.md',
+      'skills/review/SKILL.md',
     ],
-    note: 'Phase 1 완료 ✅',
+    note: 'Phase 1 완료 ✅ (2026-07-17: 슬래시 명령 짧은형 /sodam-agentic:* 로 개편)',
   },
   {
     name: 'SoDamPrompt',
