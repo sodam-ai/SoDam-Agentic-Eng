@@ -164,4 +164,11 @@
 - **회귀 발견·수정**: 수정 직후 기존 테스트 1건이 실제 사용자 홈(`homedir()`)에 의존하고 있어 결과가 기기마다 흔들리는 잠재 결함이 표면화됨 → 격리된 임시 HOME으로 결정적으로 만들어 해결.
 - **검증**: `hooks/_selftest.mjs`에 회귀방지 테스트 2건 추가 — 76 PASS → **78 PASS / 0 FAIL**.
 
+### 2026-07-27 패치 — `.mcp.json`(진짜 MCP 서버 정의 파일) 전면 무방비 상태 발견·수정 (보안, `07_SECURITY.md §1` MUST)
+
+> 배경: 실사용 테스트 중 `.claude/settings.json`에 `mcpServers`를 추가하는 시도가 Claude Code 자체 스키마 검증으로 거부됨 → 공식문서로 확인한 결과 `mcpServers`는 `.claude/settings.json`엔 존재하지 않는 필드이고 `.mcp.json`에만 존재. 즉 지금까지 `SETTINGS_SENSITIVE_KEYS`의 `mcpServers` 검사는 애초에 존재하지 않는 위치만 감시하고 있었고, **실제로 MCP 서버(=자동 실행될 명령)가 정의되는 `.mcp.json`은 이 훅이 전혀 감시하지 않았음**(deny는커녕 ask도 없음).
+
+- **`hooks/guard.mjs`**: `isMcpConfigFile()` 신설(`.mcp.json` 경로 판정) + Write/Edit/MultiEdit·Bash 리다이렉트 양쪽 경로 모두에서 `.mcp.json`을 항상 `deny`(파일 전체가 "무엇을 실행할지" 정의라 안전한 내용이 없어 부분 판정 불필요). 기존 `mcpServers`를 `SETTINGS_SENSITIVE_KEYS`에서 빼지는 않음(settings.json에 잘못 들어와도 막는 게 안전 쪽으로 무해).
+- **검증**: `hooks/_selftest.mjs`에 `.mcp.json` deny 테스트 3건(Write·Edit·Bash 리다이렉트) 추가 — 78 PASS → **81 PASS / 0 FAIL**.
+
 ## 다음 예정 (Planned)

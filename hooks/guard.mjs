@@ -370,6 +370,16 @@ function anyMatch(list, s) { for (const re of list) if (re.test(s)) return true;
 function isSettingsFile(p) {
   return /\.claude[\\/]+settings(\.local)?\.json$/i.test(String(p).replace(/\\/g, "/").replace(/\//g, "/"));
 }
+
+// .mcp.json — 실제로 mcpServers(=Claude Code가 자동 실행할 명령)가 정의되는 파일. 공식문서로 확인
+// (2026-07-27, 실사용 테스트 중 발견): mcpServers는 .claude/settings.json엔 존재조차 안 하는
+// 필드고 .mcp.json에만 있다. 그동안 SETTINGS_SENSITIVE_KEYS의 "mcpServers"는 settings.json에서만
+// 검사해 진짜 위험 파일(.mcp.json)은 완전히 무방비였다 — 이 파일 자체가 "무엇을 실행할지" 정의이므로
+// 안전한 내용이 없어(전체가 위험 대상), 부분 판정 없이 파일 전체를 deny한다.
+function isMcpConfigFile(p) {
+  return /(^|[\\/])\.mcp\.json$/i.test(String(p).replace(/\\/g, "/"));
+}
+const MCP_CONFIG_DENY_MSG = "이 파일(.mcp.json)은 Claude Code가 자동으로 실행할 MCP 서버를 정의하는 곳이라, AI가 여기를 바꾸면 다음에 이 폴더를 열 때 낯선 프로그램이 자동 실행될 수 있어요. 되돌리기 어려운 위험이라 막았어요. 정말 필요하면 편집기를 열어 사용자가 직접 바꿔주세요.";
 // ── ④ settings '민감 변경' 판정(07_SECURITY §1/§5 MUST — 이 항목들은 ask가 아니라 deny) ──
 // mcpServers/enableAllProjectMcpServers(임의 MCP 활성)·permissions(권한 상승)·hooks(안전훅 자체 우회)는
 // 전부 AI 안전장치를 무력화하는 데 악용 가능해 "그냥 확인창"(93% 무조건 승인, 06 A2)만으론 부족하다고
@@ -435,6 +445,10 @@ function main() {
         decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?", ap);
         return;
       }
+      if (isMcpConfigFile(ap)) {
+        decide("deny", MCP_CONFIG_DENY_MSG, ap);
+        return;
+      }
       if (!harness && isSensitive(ap)) {
         decide("deny", "시스템·홈 등 민감한 위치를 건드리는 위험한 작업이라 막았어요. 안전을 위해 작업용 폴더 안에서만 진행해 주세요.", ap);
         return;
@@ -478,6 +492,10 @@ function main() {
   const targets = writeTargets(ti);
   for (const t of targets) {
     const abs = resolveLoose(cwd, t);
+    if (isMcpConfigFile(abs)) { // ⑤
+      decide("deny", MCP_CONFIG_DENY_MSG, abs);
+      return;
+    }
     if (isSettingsFile(abs)) { // ④
       // 추가/수정뿐 아니라 "삭제"(기존 보호 규칙을 지워서 무력화)도 같은 위험이라 함께 본다.
       const before = toolName === "Write" ? [existingFileContent(abs)] : oldContents(ti);
