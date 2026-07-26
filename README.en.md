@@ -36,7 +36,7 @@
    ```
 2. Install:
    ```
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
 3. Verify: type `/sodam-agentic:` — four commands should appear.
 
@@ -93,7 +93,7 @@
 ## Troubleshooting
 | Symptom | Fix |
 |---|---|
-| `/sodam-agentic` doesn't show | Reinstall (`/plugin install sodam-agentic@sodam`) |
+| `/sodam-agentic` doesn't show | Reinstall (`/plugin install sodam-agentic@sodam-agentic`) |
 | Korean text is garbled | Capture the screen and report |
 | Code without a plan | Skill lost to another feature — to be enforced in Phase 2 |
 | "Node not found" | Install Node.js 18+ and retry |

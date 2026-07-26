@@ -36,7 +36,7 @@
    ```
 2. 설치:
    ```
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
 3. 확인: `/sodam-agentic:` 까지 입력 → 명령 4개가 뜨면 성공.
 
@@ -93,7 +93,7 @@
 ## 오류 대처
 | 증상 | 해결 |
 |---|---|
-| `/sodam-agentic` 안 뜸 | 설치 다시 (`/plugin install sodam-agentic@sodam`) |
+| `/sodam-agentic` 안 뜸 | 설치 다시 (`/plugin install sodam-agentic@sodam-agentic`) |
 | 한글이 깨짐 | 화면을 캡처해 문의 |
 | 계획 없이 코드부터 짬 | 초기 버전 한계 — 보강 예정 |
 | `Node가 없다`고 나옴 | Node.js 18+ 설치 후 재시도 |

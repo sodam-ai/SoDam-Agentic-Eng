@@ -221,7 +221,7 @@ After the installation complete message appears:
 
 ```
 /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
-/plugin install sodam-agentic@sodam
+/plugin install sodam-agentic@sodam-agentic
 ```
 
 **Verify installation:**

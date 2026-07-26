@@ -223,7 +223,7 @@ Claude Code를 열고 아래 명령어를 입력하세요.
 
 ```
 /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
-/plugin install sodam-agentic@sodam
+/plugin install sodam-agentic@sodam-agentic
 ```
 
 **설치 확인:**

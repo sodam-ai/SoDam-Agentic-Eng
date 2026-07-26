@@ -147,4 +147,13 @@
 - **의도적으로 범위를 좁힌 부분:** 셸 명령 경유(`cat`·리다이렉트 등)는 대상에서 제외하고 기존 `ask`를 유지. 임의 문자열이라 내용을 안전하게 판정할 수 없고, 이 경로까지 deny로 올리면 `cat .claude/settings.json` 같은 단순 조회까지 막는 과잉차단이 되기 때문(코드를 읽고 확인 후 애초 제안보다 범위를 좁힘).
 - **검증:** `hooks/_selftest.mjs`에 신규 케이스 9건 편입(민감 키 4종 개별 deny 확인 + 벤치성 오탐 없음 확인 + Bash 경로 미변경 확인) — 67 PASS → **76 PASS / 0 FAIL**. `scripts/validate.mjs`는 "설치 캐시 최신성"만 예상대로 FAIL(방금 고친 코드가 아직 재설치 전이라 당연한 결과, `/reload-plugins` 필요).
 
+### 2026-07-27 패치 — 마켓플레이스 이름 충돌로 실사용 테스트 전면 불가 상태였던 것 발견·수정 (치명, `CHECKPOINT.md §0-32`)
+
+> 배경: `D:\Test_Dev\test3`에서 실사용 테스트 시 `/sodam-agentic:start` 자체가 "없는 명령어"로 뜸. `claude plugin list`로 실측한 결과 `sodam-agentic@sodam`이 `failed to load`(marketplace sodam에서 sodam-agentic을 못 찾음) 상태였고, `claude plugin marketplace list` 확인 결과 마켓플레이스 이름 `"sodam"`이 형제 플러그인 SoDam-Design-Kit(`.claude-plugin/marketplace.json`도 동일하게 `"name": "sodam"`)에 선점되어 있었음. 지금까지 반복 관찰된 "설치 캐시 낡음"(validate.mjs FAIL)은 이 사건의 결과였고, "재설치하면 해결"이라는 이전 안내는 근본 원인을 몰랐을 때의 불완전한 진단이었음.
+
+- **`.claude-plugin/marketplace.json`**: 마켓플레이스 이름을 `"sodam"` → **`"sodam-agentic"`**으로 변경(다른 형제들처럼 프로젝트 고유 이름 사용, Design-Kit은 전혀 건드리지 않음).
+- **설치 명령 전면 갱신**: `sodam-agentic@sodam` → `sodam-agentic@sodam-agentic`(GUIDE.md·GUIDE.en.md·README.md·README.en.md·LIVE_TEST_GUIDE.md·docs/F4-라이브검증-런북.md·docs/왕초보-테스트-가이드.md·docs/SUITE-README.ko/en.md의 SoDamAgentic 항목).
+- **검증**: `validate.mjs`의 "설치 캐시 최신성"이 FAIL(낡은 캐시 발견)→WARN(새 이름 경로에 캐시 없음, 재설치 전이라 정상)으로 전환. PASS 12건 유지.
+- **남은 것(사람 전용)**: `/plugin marketplace add` + `/plugin install sodam-agentic@sodam-agentic`을 새 세션에서 실행해야 실제로 반영됨.
+
 ## 다음 예정 (Planned)

@@ -83,7 +83,7 @@
 1. **설치:** Claude Code 입력칸에
    ```
    /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
 2. **시작:** `/sodam-agentic:start` → 한국어 안내가 뜸.
 3. **시키기:** "○○ 만들어줘"라고 부탁 → **계획**이 먼저 뜨면 "네" → 작업 → **검토 요약** 확인.
@@ -106,7 +106,7 @@
    > 🖼️ *(스크린샷 자리 — 실제 화면 캡처는 사람이 라이브 테스트 시 추가 예정)*
 2. 설치:
    ```
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
    → "installed / 설치됨" 이 보이면 성공.
 3. 확인: `/sodam-agentic:` 까지 입력 → 명령 4개(`start`, `plan`, `review`, `log`)가 뜨면 완료.
@@ -115,7 +115,7 @@
 **(개발자 본인 로컬 테스트용)** 인터넷 대신 내 컴퓨터 폴더로도 설치 가능:
 ```
 /plugin marketplace add D:/AI_Dev_Work/2026y/26y_06m_26d_SoDam-Agentic-Eng
-/plugin install sodam-agentic@sodam
+/plugin install sodam-agentic@sodam-agentic
 ```
 
 **Codex 사용자:**
@@ -284,14 +284,14 @@ Claude Code가 도구(Bash·Write·Edit 등)를 실행하려는 순간
 | 증상 (이렇게 보임) | 왜 (원인) | 이렇게 (해결) |
 |---|---|---|
 | 깔았는데 아무 일도 안 일어남 | `/init` 안 함 / 온보딩 안 읽음 | `/sodam-agentic:start` 로 상태부터 확인 |
-| `/sodam-agentic` 쳐도 안 뜸 | 설치 안 됨 | `/plugin install sodam-agentic@sodam` 다시 |
+| `/sodam-agentic` 쳐도 안 뜸 | 설치 안 됨 | `/plugin install sodam-agentic@sodam-agentic` 다시 |
 | 설치할 때 "권한 없음/접근 불가" | 비공개 저장소 권한 없음 | 본인 GitHub 계정 로그인·접근 권한 확인 |
 | "Node가 없다"고 나옴 | Node.js 미설치 | [§2](#install-programs) 따라 Node.js 18+ 설치 후 재시도 |
 | 한글이 `□□□`로 깨짐 | 글자 표시 문제 | 화면 캡처해서 문의 (영문 버전 안내 가능) |
 | 계획 없이 바로 코드부터 짬 | 다른 스킬에 밀림(F2는 "부탁"이라 강제 아님) | 정상일 수 있음 — 알려주시면 보강(Phase 2에서 강제화 예정) |
 | 위험 명령이 안 막힘 | 안전 훅 미작동 | 캡처해서 문의 (Node·설치 상태 점검) |
 | 확인창이 너무 자주 뜸 | 여러 안전장치가 겹침 | 정말 위험한 것만 뜨도록 조정 가능 — 알려주시면 조정 |
-| 명령어가 옛 이름으로 보임 | 설치본 캐시가 최신이 아님(`marketplace update`만으로는 캐시가 안 바뀝니다 — 실측 확인됨) | `/plugin uninstall sodam-agentic` → `/plugin install sodam-agentic@sodam` → `/reload-plugins` (반드시 이 순서로) |
+| 명령어가 옛 이름으로 보임 | 설치본 캐시가 최신이 아님(`marketplace update`만으로는 캐시가 안 바뀝니다 — 실측 확인됨) | `/plugin uninstall sodam-agentic` → `/plugin install sodam-agentic@sodam-agentic` → `/reload-plugins` (반드시 이 순서로) |
 | 비밀번호·API 키를 넣어도 되나요? | — | **절대 넣지 마세요.** 본인 환경(`.env` 등)에만 보관 |
 | 지우고 싶어요 / 업데이트 후 이상해요 | 제거·업데이트 | [§11 제거 방법](#uninstall) 참고 |
 | 지난번에 뭐가 막혔는지 기억이 안 남 | — | `/sodam-agentic:log` 명령으로 조회(막힘·확인만 기록, 안전하게 통과한 작업은 기록 안 됨) |

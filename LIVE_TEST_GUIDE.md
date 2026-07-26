@@ -64,7 +64,7 @@
 ```
 → 완료되면 이어서:
 ```
-/plugin install sodam-agentic@sodam
+/plugin install sodam-agentic@sodam-agentic
 ```
 
 > ⚠️ **실제 확인된 함정(2026-07-17):** `marketplace update` 다음 바로 `install`만 하면 "이미 설치돼 있습니다"라는 메시지만 뜨고 **실제 파일은 새로고침 안 됩니다.** 반드시 중간에 `uninstall`을 한 번 거쳐야 합니다. 이 순서로도 안 되면 방법 A(완전 재시작)가 가장 확실합니다.

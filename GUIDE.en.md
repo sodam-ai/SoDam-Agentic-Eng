@@ -83,7 +83,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 1. **Install:** in the Claude Code input box:
    ```
    /plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
 2. **Start:** `/sodam-agentic:start` → onboarding appears.
 3. **Ask it to do something:** "make ○○" → if a **plan** appears first, approve with "yes" → work happens → check the **review summary**.
@@ -106,7 +106,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
    > 🖼️ *(screenshot placeholder — to be added after a human live test)*
 2. Install:
    ```
-   /plugin install sodam-agentic@sodam
+   /plugin install sodam-agentic@sodam-agentic
    ```
    → Success looks like "installed."
 3. Verify: type `/sodam-agentic:` — four commands (`start`, `plan`, `review`, `log`) should appear.
@@ -115,7 +115,7 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 **(For the developer's own local testing)** you can install from a local folder instead of the internet:
 ```
 /plugin marketplace add D:/AI_Dev_Work/2026y/26y_06m_26d_SoDam-Agentic-Eng
-/plugin install sodam-agentic@sodam
+/plugin install sodam-agentic@sodam-agentic
 ```
 
 **Codex users:**
@@ -284,14 +284,14 @@ The instant Claude Code is about to run a tool (Bash · Write · Edit, etc.)
 | Symptom (what you see) | Why (cause) | Fix |
 |---|---|---|
 | Installed, but nothing seems to happen | Didn't run `/init` / skipped onboarding | Start with `/sodam-agentic:start` to check status |
-| `/sodam-agentic` doesn't show anything | Not installed | Reinstall: `/plugin install sodam-agentic@sodam` |
+| `/sodam-agentic` doesn't show anything | Not installed | Reinstall: `/plugin install sodam-agentic@sodam-agentic` |
 | "No access / permission denied" during install | No access to the private repo | Confirm you're logged into the right GitHub account with access |
 | "Node not found" | Node.js not installed | Install Node.js 18+ per [§2](#install-programs) and retry |
 | Korean text shows as `□□□` | Rendering/encoding issue | Capture the screen and report (an English fallback can be provided) |
 | Code gets written without a plan first | Another skill won out (F2 is a "request," not enforced) | May be expected — report it; enforcement is planned for Phase 2 |
 | A risky command wasn't blocked | Safety hook not running | Capture and report (check Node.js and install status) |
 | Confirmation prompts appear too often | Multiple safety layers overlapping | Can be tuned to only ask on real risk — let us know |
-| Commands show old names | Cached install is stale (`marketplace update` alone does not refresh the cache — confirmed by testing) | `/plugin uninstall sodam-agentic` → `/plugin install sodam-agentic@sodam` → `/reload-plugins` (in this exact order) |
+| Commands show old names | Cached install is stale (`marketplace update` alone does not refresh the cache — confirmed by testing) | `/plugin uninstall sodam-agentic` → `/plugin install sodam-agentic@sodam-agentic` → `/reload-plugins` (in this exact order) |
 | Can I put in a password/API key? | — | **Never.** Keep secrets only in your own environment (e.g. `.env`) |
 | I want to remove it / it's acting odd after an update | Uninstall / update conflict | See [§11 Uninstall](#uninstall) |
 | I can't remember what got blocked earlier | — | Use `/sodam-agentic:log` (only block/ask events are logged — safe pass-throughs aren't) |
