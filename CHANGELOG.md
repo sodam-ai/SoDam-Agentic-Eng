@@ -156,4 +156,12 @@
 - **검증**: `validate.mjs`의 "설치 캐시 최신성"이 FAIL(낡은 캐시 발견)→WARN(새 이름 경로에 캐시 없음, 재설치 전이라 정상)으로 전환. PASS 12건 유지.
 - **남은 것(사람 전용)**: `/plugin marketplace add` + `/plugin install sodam-agentic@sodam-agentic`을 새 세션에서 실행해야 실제로 반영됨.
 
+### 2026-07-27 패치 — settings.json 민감 키 "삭제"도 deny로 잡도록 보강 (보안, `CHECKPOINT.md §0-33`)
+
+> 배경: 전면 기능 테스트 중 `.claude/settings.json`에서 기존 `permissions` 제한을 삭제하는 Edit이 `deny`가 아니라 `ask`만 뜨는 것을 실제 실행으로 재현. 지난 패치(07-27 앞선 항목)가 "새 내용에 민감 키가 있으면 deny"만 구현했고 "있던 민감 키를 지워서 무력화"하는 경우는 놓치고 있었음.
+
+- **`hooks/guard.mjs`**: `oldContents()`(Edit/MultiEdit old_string)·`existingFileContent()`(Write 직전 실제 파일 내용) 추가 — 새 내용·이전 내용 어느 쪽에 민감 키가 있어도 deny.
+- **회귀 발견·수정**: 수정 직후 기존 테스트 1건이 실제 사용자 홈(`homedir()`)에 의존하고 있어 결과가 기기마다 흔들리는 잠재 결함이 표면화됨 → 격리된 임시 HOME으로 결정적으로 만들어 해결.
+- **검증**: `hooks/_selftest.mjs`에 회귀방지 테스트 2건 추가 — 76 PASS → **78 PASS / 0 FAIL**.
+
 ## 다음 예정 (Planned)

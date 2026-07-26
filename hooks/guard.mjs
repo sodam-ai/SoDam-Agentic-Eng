@@ -224,6 +224,24 @@ function writeContents(ti) {
   return out;
 }
 
+// Edit/MultiEdit가 "지우는" 원본 조각(old_string). settings.json에서 민감 키를 삭제하는 것도
+// 추가·수정과 동일하게 위험(보호 규칙 제거)이라 이것도 감시 대상이다(2026-07-27, 실사용 검증 중 발견).
+function oldContents(ti) {
+  const out = [];
+  for (const key of ["old_string", "old_str"]) {
+    if (typeof ti[key] === "string" && ti[key]) out.push(ti[key]);
+  }
+  if (Array.isArray(ti.edits)) {
+    for (const e of ti.edits) if (e && typeof e.old_string === "string") out.push(e.old_string);
+  }
+  return out;
+}
+
+// Write는 old_string이 없다(파일 전체를 교체) — 덮어써지기 직전의 실제 파일 내용을 대신 읽는다.
+function existingFileContent(abs) {
+  try { return existsSync(abs) ? readFileSync(abs, "utf8") : ""; } catch { return ""; }
+}
+
 // ── 경로 정규화 (~ 확장 + Git Bash 드라이브 마운트 /c/ → c:\ 처리) ──
 function resolveLoose(cwd, p) {
   let s = String(p);
@@ -461,8 +479,10 @@ function main() {
   for (const t of targets) {
     const abs = resolveLoose(cwd, t);
     if (isSettingsFile(abs)) { // ④
-      if (touchesSensitiveSettingsKeys(writeContents(ti))) {
-        decide("deny", "이 파일(.claude/settings)에서 MCP 활성화·권한·훅 경로처럼 AI 안전장치 자체를 바꿀 수 있는 항목을 변경하려고 해요. 되돌리기 어려운 위험이라 막았어요. 정말 필요하면 편집기를 열어 사용자가 직접 바꿔주세요.", abs);
+      // 추가/수정뿐 아니라 "삭제"(기존 보호 규칙을 지워서 무력화)도 같은 위험이라 함께 본다.
+      const before = toolName === "Write" ? [existingFileContent(abs)] : oldContents(ti);
+      if (touchesSensitiveSettingsKeys(writeContents(ti)) || touchesSensitiveSettingsKeys(before)) {
+        decide("deny", "이 파일(.claude/settings)에서 MCP 활성화·권한·훅 경로처럼 AI 안전장치 자체를 바꿀 수 있는 항목을 변경(추가·수정·삭제 포함)하려고 해요. 되돌리기 어려운 위험이라 막았어요. 정말 필요하면 편집기를 열어 사용자가 직접 바꿔주세요.", abs);
         return;
       }
       decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?", abs);
