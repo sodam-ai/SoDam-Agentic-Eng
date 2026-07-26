@@ -169,6 +169,8 @@ Analogy: **the AI is a factory machine; you are the person designing the factory
 ```
 Core principle: **"Not the AI running the show" — the human stays in the driver's seat.**
 
+> **How to check it actually fired (added 2026-07-26):** when Plan First (F2) actually runs, the response starts with `🚀 SoDam — Plan First`; when Easy Review (F3) actually runs, it starts with `🔍 SoDam — Change Review`. If you don't see this marker, another skill won out and F2/F3 didn't fire — just ask directly, right there, with "show me the plan first" / "please review this."
+
 ---
 
 <a id="file-locations"></a>
@@ -483,10 +485,11 @@ A. This plugin itself makes no network requests (see [§10 Security & data flow]
 - ✅ **Code complete + self-test passing:** the safety hook (F4) now always turns on, catastrophic commands are always blocked regardless of a sibling plugin, and the auto-accept-mode limitation is documented in onboarding. **Safety history (F6) and Codex safety parity (F7) implemented (2026-07-15).** All 54 self-tests pass.
 - ✅ **Multiple rounds of live verification (2026-07-11~13):** repeated real-usage testing found and fixed 5 real bugs (see "Changelog summary" above), and every required item on the international OWASP security checklist was re-confirmed.
 - ✅ **Short-form slash commands and the autocomplete display format confirmed live (2026-07-18):** `/sodam-agentic:start`, `:plan`, `:review`, `:log` were confirmed, via an actual screen capture, to all appear in autocomplete in the intended fully-qualified form.
+- ✅ **`.claude/settings.json` protection hardened (2026-07-27):** items that can alter the AI's own safety controls — MCP enablement, permissions, hook paths — are now **blocked outright (deny)** instead of just asking (other, ordinary settings changes still just ask, as before). Also added an on-screen marker (🚀/🔍, see "Workflow" above) so you can immediately tell whether Plan First (F2) / Easy Review (F3) actually fired. The self-test suite grew from 67 to **76 checks**, all passing.
 - ⚠️ **Still uncertain — stated honestly:** whether Review (F3) reliably auto-triggers in a fully unscripted, real-world usage session has not been conclusively confirmed even after repeated testing. Whether F7 (Codex confirmation prompt/logging) actually works has also not been live-verified by a human yet.
 - ⬜ **Still needs a human to confirm directly:** ① whether the "ask before writing outside the working folder" prompt still fires correctly on an actual installed screen after the 2026-07-17 fix (the code fix and automated checks are done — only live re-confirmation is left) ② whether the safety log (F6) is written correctly through the actual installed path too (verification so far has only run directly from the development folder) ③ whether F7 (safety confirmation prompt, config load path) actually works live in Codex ④ (only needed if considering a public release) a non-developer beta test and final legal review.
 - **Confirmed personal-use scope (2026-07-15):** this tool is built for the developer's own direct, real-world use. Item ④ above is **not a required precondition right now** — it would matter again if a public release is considered later. There may be rough edges, and finding them through real use is the current goal. No exaggeration — this is the honest, current state.
 
 ---
 
-*Document version date: 2026-07-18 · This guide is written to match "what is actually implemented and verified so far."*
+*Document version date: 2026-07-27 · This guide is written to match "what is actually implemented and verified so far."*
