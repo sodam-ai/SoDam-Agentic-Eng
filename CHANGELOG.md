@@ -113,6 +113,26 @@
 - **캐시 내용을 직접 고치지 않았음(의도적):** 캐시는 Claude Code의 플러그인 관리 영역이라 파일을 수동으로 덮어쓰면 오히려 상태가 꼬일 위험이 있음(CHECKPOINT §0-3~§0-5 결론과 일치) — 검증기는 "감지"만 하고, 실제 갱신은 항상 `/reload-plugins`(사람 전용 명령)로 한다.
 - **검증(정직한 현재 상태):** 이 기능 추가 직후 실제로 실행한 결과 `PASS 10 / WARN 0 / FAIL 1` — 새로 추가한 검사가 **의도한 대로 실제 캐시 낡음을 잡아냈다.** 이 FAIL은 검증기의 결함이 아니라 실제 배포 격차를 정확히 반영한 것이며, `/reload-plugins` 실행 후 재검증하면 `PASS 11 / WARN 0 / FAIL 0`이 될 것으로 예상(아직 사람이 실행 전이라 확정 아님).
 
+### 2026-07-18 패치 — Harness 감지 경로 오탐 수정 + 작업폴더 밖 쓰기 보호 항상 적용 (보안, `34022b4`)
+
+> 배경: 라이브 검증 중 이 기기의 실제 Windows Claude Code 플러그인 캐시 경로(`%APPDATA%\claude-code\plugins\cache\...`)가 `delegate.mjs`가 보던 경로(`~/.claude/plugins`)와 달라, SoDamHarness가 실제로 설치돼 있어도 `isHarnessAlive()`가 항상 `false`를 반환하던 것을 발견(CHECKPOINT §0-18). 안전 구멍은 아니었으나(fail-closed 유지 방향으로만 어긋남), 곧이어 이 오탐을 고치자 진짜 안전 구멍이 하나 드러났다.
+
+- **`hooks/delegate.mjs` — Harness 감지 경로 수정.** 탐색 후보에 실제 Windows 캐시 경로를 추가하고, 탐색 깊이를 2단계→3단계로 확장(`<marketplace>/<plugin>/<version>/` 버전 폴더 인식). 수정 직후 `_selftest.mjs`가 39 PASS/15 FAIL로 회귀 — 원인은 테스트 헬퍼가 실제 Harness 감지 결과에 암묵 의존해온 것. `SODAM_AGENTIC_TEST_FORCE_NO_HARNESS` 테스트 전용 플래그 추가(보호를 항상 강제하는 방향이라 "테스트 백도어 없음" 원칙과 배치되지 않음)로 해소, 54 PASS 회복.
+- **`hooks/guard.mjs` — 🔴 실사용에서 발견된 진짜 안전 구멍 수정.** 위 수정으로 Harness 위임이 실제로 켜지자, `D:\Test_Dev\test3` 라이브 테스트에서 "작업폴더 밖에 새 파일 생성" 요청이 확인창 없이 조용히 통과되는 회귀가 관찰됨. 원인: SoDamHarness 실제 설치본(`guard.mjs`)을 직접 열어 확인한 결과 "작업폴더 밖 새 파일 쓰기" 검사 자체가 없었음(Harness 쪽 주석에 "과잉 차단이라 폐기"로 명시된 의도된 설계) — 위임했더니 위임 대상이 애초에 그 보호를 안 갖고 있어 조용히 사라진 것(`01_PRD.md` B1이 우려한 "위임 실패 시 무방비"의 변종). `isOutsideWorkdir()` 체크만 Harness 생존 여부와 무관하게 항상 자체 수행하도록 수정(다른 위임 항목은 유지 — 과잉 수정 안 함).
+- **검증:** `_selftest.mjs` 54 PASS/0 FAIL. 실제 harness=true 상태에서 합성 payload로 재현 → 수정 전 조용히 통과하던 것이 수정 후 `ask`로 정상 확인질문 발생 확인.
+- **정직한 한계:** 이 수정이 실제 설치 캐시를 통해 재현되는지(수동 `node` 호출이 아니라)는 아직 사람의 라이브 재검증 대기 중.
+
+### 2026-07-18 패치 — 슬래시 명령 짧은형 전환 + skills/commands 이중 구조 (`ccb7b31`, `35b7b22`)
+
+> 배경: 사용자가 `/sodam-agentic:sodam-agentic-start`처럼 플러그인명과 명령명이 겹쳐 길어지는 문제를 짧은 형태로 요청. 시도 과정에서 Claude Code 자체의 알려진 제한을 발견했다: `skills/*/SKILL.md`는 **자동 발동만 되고 사용자가 직접 타이핑하는 수동 슬래시 호출은 지원하지 않는다**([anthropics/claude-code#41842](https://github.com/anthropics/claude-code/issues/41842)). 처음 시도한 "skills 폴더만 rename"은 구조적으로는 맞았지만 이 플랫폼 한계 때문에 실제로는 작동할 수 없는 수정이었다(CHECKPOINT §0-21·§0-22).
+
+- **이름 단축:** `commands/sodam-agentic-start.md`→`start.md`, `sodam-agentic-log.md`→`log.md`, `skills/sodam-agentic-plan/`→`plan/`, `skills/sodam-agentic-review/`→`review/`, `skills/sodam-agentic-start/`→`start/`(파일명만 변경, 내용 동일).
+- **skills + commands 이중 구조 신설.** `commands/plan.md`·`commands/review.md` 신규 생성(수동 호출 담당) — 기존 `skills/plan/`·`skills/review/`는 자동 발동 담당으로 그대로 유지. F2·F3 둘 다 이제 "자동발동(skill) + 수동호출(command)" 두 경로를 가진다.
+- **`commands/*.md`의 frontmatter `name:` 필드 제거.** 형제 저장소 SoDam-Harness-Eng의 실제 동작 파일(`name:` 없이 `description:`만 존재)과 대조해 확인한 패턴 — `name:` 유무가 Claude Code autocomplete의 표시 형식(짧은형 vs `sodam-agentic:이름` 완전정규형)에 영향을 준다는 것을 재현으로 확인(단, 공식 문서 명시 동작은 아닌 내부 동작 추정). `scripts/validate.mjs`도 함께 수정: command는 `name` 생략 허용(파일명이 명령 이름으로 정상 등록됨), skill은 `name` 필수 유지(버전 해시 버그 실사례 있어 완화 안 함).
+- **문서 동기화:** README/GUIDE(한/영, md+html) 전체를 짧은 명령 형태로 갱신, `LIVE_TEST_GUIDE.md` 신규 작성(비개발자 대상 실사용 테스트 절차서), 캐시 새로고침 안내를 실측 확인된 "`uninstall`→`install`→`reload-plugins`" 순서로 정정(`marketplace update`만으론 불충분함을 실측 확인 — CHECKPOINT §0-19).
+- **검증:** `validate.mjs` PASS 13/WARN 0/FAIL 0, `_selftest.mjs` 54 PASS/0 FAIL. 재설치(`uninstall`→`install`→`reload-plugins`) 후 사용자가 새 세션에서 `/sodam-agentic` 입력 → `sodam-agentic:start`·`sodam-agentic:plan`·`sodam-agentic:review`·`sodam-agentic:log` 4개 전부 완전정규형으로 뜨는 것을 스크린샷으로 확인·보고.
+
 ## 다음 예정 (Planned)
 
-- F2/F3 PreToolUse hook 강제화 (스킬 경쟁 한계 근본 해결) — `03_PHASES.md` 공식 Phase 2 범위엔 없고 이전 세션 메모에만 있던 항목이라 착수 여부 별도 결정 필요.
+- **F2/F3 PreToolUse hook 강제화는 보류.** `03_PHASES.md` 공식 Phase 2 범위에 없고, PreToolUse 훅은 대화 내용을 볼 수 없어 "계획을 제시했는지" 자체를 판정할 방법이 없음(세션 상태로 추적하려면 CHECKPOINT가 명시적으로 금지한 R2 패턴 재도입 필요) + permission fatigue 실측(93% 무조건 승인, `06_RESEARCH_UPGRADES.md` A2) 역풍 위험 — 대신 아래 관측 가능성 확보를 먼저 진행.
+- F2/F3가 실제로 발동하는지 라이브 관찰이 계속 안 되던 문제(§0-6 "코드로는 구분 불가")를 해소하기 위해 스킬 본문에 발동 마커 도입 예정/진행 중.
