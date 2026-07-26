@@ -132,7 +132,19 @@
 - **문서 동기화:** README/GUIDE(한/영, md+html) 전체를 짧은 명령 형태로 갱신, `LIVE_TEST_GUIDE.md` 신규 작성(비개발자 대상 실사용 테스트 절차서), 캐시 새로고침 안내를 실측 확인된 "`uninstall`→`install`→`reload-plugins`" 순서로 정정(`marketplace update`만으론 불충분함을 실측 확인 — CHECKPOINT §0-19).
 - **검증:** `validate.mjs` PASS 13/WARN 0/FAIL 0, `_selftest.mjs` 54 PASS/0 FAIL. 재설치(`uninstall`→`install`→`reload-plugins`) 후 사용자가 새 세션에서 `/sodam-agentic` 입력 → `sodam-agentic:start`·`sodam-agentic:plan`·`sodam-agentic:review`·`sodam-agentic:log` 4개 전부 완전정규형으로 뜨는 것을 스크린샷으로 확인·보고.
 
-## 다음 예정 (Planned)
+### 2026-07-26 패치 — F2/F3 발동 마커 추가 (`bb2a89e`, `807b74e`)
 
-- **F2/F3 PreToolUse hook 강제화는 보류.** `03_PHASES.md` 공식 Phase 2 범위에 없고, PreToolUse 훅은 대화 내용을 볼 수 없어 "계획을 제시했는지" 자체를 판정할 방법이 없음(세션 상태로 추적하려면 CHECKPOINT가 명시적으로 금지한 R2 패턴 재도입 필요) + permission fatigue 실측(93% 무조건 승인, `06_RESEARCH_UPGRADES.md` A2) 역풍 위험 — 대신 아래 관측 가능성 확보를 먼저 진행.
-- F2/F3가 실제로 발동하는지 라이브 관찰이 계속 안 되던 문제(§0-6 "코드로는 구분 불가")를 해소하기 위해 스킬 본문에 발동 마커 도입 예정/진행 중.
+> 배경: F2/F3가 실제로 발동하는지 라이브 관찰이 계속 안 되던 문제(§0-6 "코드로는 구분 불가")를 해소하기 위해 스킬 본문에 발동 마커 도입.
+
+- `skills/plan/SKILL.md`·`skills/review/SKILL.md`에 발동 시 화면 맨 위에 `🚀 소담 — 계획 먼저` / `🔍 소담 — 변경점 검토`를 먼저 출력하도록 지시문 추가. 코드 로직 변경 없음(SKILL.md 지시문만 추가라 회귀 위험 없음).
+- `LIVE_TEST_GUIDE.md`·`GUIDE.md` 둘 다 이 마커 문구를 확인 기준으로 반영(`807b74e`, 2026-07-27 GUIDE.md 반영분 포함).
+
+### 2026-07-27 패치 — `.claude/settings.json` 민감 변경 deny-first (보안, `07_SECURITY.md §1/§5` MUST 충족)
+
+> 배경: PRD 재검증 중 `07_SECURITY.md`가 MUST(P1)로 못박은 "settings.json의 민감 변경(MCP 활성·권한·훅 경로)은 deny, 그 외는 ask"가 실제 `guard.mjs`엔 구현 안 돼 있었음을 발견(지금까지는 내용 무관 항상 ask). "ask는 93% 그냥 승인된다"(`06_RESEARCH_UPGRADES.md` A2)는 이 프로젝트 자신의 근거를 감안하면, AI 안전장치 자체를 무력화할 수 있는 가장 위험한 변경이 신뢰 못할 확인창 하나로만 방어되던 셈이었다.
+
+- **`hooks/guard.mjs`** — Write/Edit/MultiEdit로 `.claude/settings(.local).json`을 바꿀 때, 새 내용에 `mcpServers`·`enableAllProjectMcpServers`·`permissions`·`hooks` 키가 등장하면 `deny`, 그 외 내용(예: 모델명 변경)은 기존대로 `ask`.
+- **의도적으로 범위를 좁힌 부분:** 셸 명령 경유(`cat`·리다이렉트 등)는 대상에서 제외하고 기존 `ask`를 유지. 임의 문자열이라 내용을 안전하게 판정할 수 없고, 이 경로까지 deny로 올리면 `cat .claude/settings.json` 같은 단순 조회까지 막는 과잉차단이 되기 때문(코드를 읽고 확인 후 애초 제안보다 범위를 좁힘).
+- **검증:** `hooks/_selftest.mjs`에 신규 케이스 9건 편입(민감 키 4종 개별 deny 확인 + 벤치성 오탐 없음 확인 + Bash 경로 미변경 확인) — 67 PASS → **76 PASS / 0 FAIL**. `scripts/validate.mjs`는 "설치 캐시 최신성"만 예상대로 FAIL(방금 고친 코드가 아직 재설치 전이라 당연한 결과, `/reload-plugins` 필요).
+
+## 다음 예정 (Planned)

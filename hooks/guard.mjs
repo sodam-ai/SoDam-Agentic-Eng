@@ -18,7 +18,11 @@
 //   ① 위험·치명 명령(rm -rf·재귀삭제·format 등) → deny / 단일 파일 삭제 → ask(백업은 Harness 담당)
 //   ② API키·비밀값 노출(echo $KEY·.env 업로드·BASE_URL 변조·키 리터럴) → deny / .env 로컬 읽기 → ask
 //   ③ 작업폴더 밖 민감 위치(시스템·홈·자격증명 폴더) 쓰기 → deny / 그 외 작업폴더 밖 쓰기 → ask(2026-07-12, D1)
-//   ④ .claude/settings(.local).json 쓰기(주입 경로 CVE-2025-59536) → ask(확인)
+//   ④ .claude/settings(.local).json 쓰기(주입 경로 CVE-2025-59536)
+//      → Write/Edit/MultiEdit로 mcpServers·enableAllProjectMcpServers·permissions·hooks 등
+//        민감 항목을 바꾸면 deny(07_SECURITY §1/§5 MUST), 그 외 항목만 바꾸면 ask.
+//        셸 명령 경유(cat·리다이렉트 등)는 내용을 구조적으로 알 수 없어 ask 유지
+//        (deny로 올리면 단순 조회(cat)까지 막는 과잉차단이 되어 대상에서 제외, 2026-07-27).
 //
 // deny-first: 되돌릴 수 없는 건 deny, 되돌릴 수 있는 건 ask, 나머지는 조용히 통과(과잉 확인창 방지).
 // 정직한 한계: 위험 패턴은 "초안"이며 모든 위험을 100% 잡지 못한다(01_PRD §8.8).
@@ -348,6 +352,20 @@ function anyMatch(list, s) { for (const re of list) if (re.test(s)) return true;
 function isSettingsFile(p) {
   return /\.claude[\\/]+settings(\.local)?\.json$/i.test(String(p).replace(/\\/g, "/").replace(/\//g, "/"));
 }
+// ── ④ settings '민감 변경' 판정(07_SECURITY §1/§5 MUST — 이 항목들은 ask가 아니라 deny) ──
+// mcpServers/enableAllProjectMcpServers(임의 MCP 활성)·permissions(권한 상승)·hooks(안전훅 자체 우회)는
+// 전부 AI 안전장치를 무력화하는 데 악용 가능해 "그냥 확인창"(93% 무조건 승인, 06 A2)만으론 부족하다고
+// 스펙이 못박은 항목. Write/Edit/MultiEdit는 new content(writeContents)로 판정 가능하지만, 셸 리다이렉트는
+// 임의 문자열이라 안전하게 판정 못 해 이 함수의 대상에서 제외(그 경로는 기존 ask 그대로 유지).
+const SETTINGS_SENSITIVE_KEYS = ["mcpServers", "enableAllProjectMcpServers", "permissions", "hooks"];
+function touchesSensitiveSettingsKeys(strings) {
+  for (const s of strings) {
+    for (const key of SETTINGS_SENSITIVE_KEYS) {
+      if (new RegExp(`"${key}"\\s*:`).test(s)) return true;
+    }
+  }
+  return false;
+}
 
 // ── 메인 ──
 function main() {
@@ -443,6 +461,10 @@ function main() {
   for (const t of targets) {
     const abs = resolveLoose(cwd, t);
     if (isSettingsFile(abs)) { // ④
+      if (touchesSensitiveSettingsKeys(writeContents(ti))) {
+        decide("deny", "이 파일(.claude/settings)에서 MCP 활성화·권한·훅 경로처럼 AI 안전장치 자체를 바꿀 수 있는 항목을 변경하려고 해요. 되돌리기 어려운 위험이라 막았어요. 정말 필요하면 편집기를 열어 사용자가 직접 바꿔주세요.", abs);
+        return;
+      }
       decide("ask", "이 파일(.claude/settings)은 AI의 권한·안전 설정을 바꿀 수 있어 위험해요(주입 통로로 악용된 사례 있음). 정말 이 변경이 필요한가요?", abs);
       return;
     }
