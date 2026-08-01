@@ -381,17 +381,27 @@ function isMcpConfigFile(p) {
 }
 const MCP_CONFIG_DENY_MSG = "이 파일(.mcp.json)은 Claude Code가 자동으로 실행할 MCP 서버를 정의하는 곳이라, AI가 여기를 바꾸면 다음에 이 폴더를 열 때 낯선 프로그램이 자동 실행될 수 있어요. 되돌리기 어려운 위험이라 막았어요. 정말 필요하면 편집기를 열어 사용자가 직접 바꿔주세요.";
 // ── ④ settings '민감 변경' 판정(07_SECURITY §1/§5 MUST — 이 항목들은 ask가 아니라 deny) ──
-// mcpServers/enableAllProjectMcpServers(임의 MCP 활성)·permissions(권한 상승)·hooks(안전훅 자체 우회)는
-// 전부 AI 안전장치를 무력화하는 데 악용 가능해 "그냥 확인창"(93% 무조건 승인, 06 A2)만으론 부족하다고
+// mcpServers/enableAllProjectMcpServers(임의 MCP 활성)·permissions(권한 상승)·hooks(안전훅 관련)는
+// 전부 AI 안전장치를 약화시키는 데 악용될 수 있어 "그냥 확인창"(93% 무조건 승인, 06 A2)만으론 부족하다고
 // 스펙이 못박은 항목. Write/Edit/MultiEdit는 new content(writeContents)로 판정 가능하지만, 셸 리다이렉트는
 // 임의 문자열이라 안전하게 판정 못 해 이 함수의 대상에서 제외(그 경로는 기존 ask 그대로 유지).
-// 2026-07-27 실사용 테스트에서 발견·공식문서(code.claude.com/docs/en/mcp.md) 확인: 아래 4개
-// (enabledMcpjsonServers/disabledMcpjsonServers/enabledMcpServers/disabledMcpServers)가 .mcp.json
-// 프로젝트 서버의 승인·신뢰 여부를 실제로 결정하는 필드. settings.json에서 이걸 몰래 바꾸면 Claude Code
-// 자체의 "승인 대기" 안전장치를 우회해 악성 MCP 서버를 자동 승인시킬 수 있어 위 4개와 동급 위험.
+// 2026-07-27 실사용 테스트에서 발견·공식문서(code.claude.com/docs/en/mcp.md) 확인: enabledMcpjsonServers/
+// disabledMcpjsonServers가 .mcp.json 프로젝트 서버의 승인·신뢰 여부를 실제로 결정하는 필드.
+// ⚠️ 2026-08-02 정정(공식문서 code.claude.com/docs/en/mcp.md 재확인): enabledMcpServers/disabledMcpServers는
+// 이름은 비슷하지만 실제로는 .claude/settings.json이 아니라 ~/.claude.json(별도 파일, 내장 서버 on/off용)에
+// 저장된다 — isSettingsFile()이 그 경로를 매칭하지 않아 이 두 키는 이 파일 기준으로는 발동 조건이 성립하지
+// 않는다. ~/.claude.json은 Claude Code 자신이 MCP 승인 등으로 수시로 정상 쓰기하는 별도 신뢰 경계라, 지금
+// 함부로 감시 범위를 넓히면 정상 동작 오탐 위험이 커서 이번엔 손대지 않는다(별도 세션에서 신중히 설계,
+// 제거도 안 함 — 실제 settings.json에 이 키가 등장해도 막아주는 건 안전 쪽으로 무해하므로 목록엔 남긴다).
+// 2026-08-02 추가(공식문서 code.claude.com/docs/en/settings.md 확인): disableAllHooks(훅 전체를 끄는
+// 단일 스위치라 F4 보호 기능이 통째로 꺼질 수 있음)·env(모든 세션에 주입되는 환경변수 — ANTHROPIC_BASE_URL
+// 값을 다른 곳으로 바꾸면 API 통신 경로가 조용히 바뀌어 자격증명 안전에 영향, 07_SECURITY.md §6이 이미
+// SHOULD로 요구했으나 미구현 상태였음)·apiKeyHelper(인증 헤더를 만드는 명령 설정 자체를 다른 값으로 바꿀
+// 수 있음)도 동급 위험으로 확인돼 추가.
 const SETTINGS_SENSITIVE_KEYS = [
   "mcpServers", "enableAllProjectMcpServers", "permissions", "hooks",
   "enabledMcpjsonServers", "disabledMcpjsonServers", "enabledMcpServers", "disabledMcpServers",
+  "disableAllHooks", "env", "apiKeyHelper",
 ];
 function touchesSensitiveSettingsKeys(strings) {
   for (const s of strings) {

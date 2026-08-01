@@ -186,4 +186,13 @@
 - **`.gitignore`**: `.sodam-re/`(다른 소담 형제 플러그인의 로컬 산출물로 추정, 이 repo 소유 아님) 추가 — 커밋 이력에 섞여 들어가는 것을 사전 방지(§0-24 ①의 `.codex/` 사건과 동일 패턴 재발 방지).
 - **검증**: `hooks/_selftest.mjs`에 신규 4종 deny 테스트 4건 추가 — 85 PASS → **89 PASS / 0 FAIL**. `node --check` 2개 파일 OK. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음 — 방금 고친 코드라 당연한 정상 결과, `/reload-plugins` 필요).
 
+### 2026-08-02 패치 — settings.json 필드 3종 추가 deny + 직전 패치 정정(공식문서 재대조로 실제 위험 필드 확인)
+
+> 배경: 바로 위 패치가 "MCP 승인 필드 완전 방어"라 자칭했으나, 이를 의심하고 `code.claude.com/docs/en/settings.md`·`.../mcp.md` 전체 필드 목록을 다시 대조한 결과 (a) 방금 추가한 `enabledMcpServers`·`disabledMcpServers`가 실제로는 `.claude/settings.json`이 아니라 별도 파일 `~/.claude.json`에 저장되는 값이라 이 훅에서는 발동 조건이 성립하지 않는다는 것과 (b) 그보다 훨씬 위험한 필드 3개가 완전히 무방비였다는 것을 확인함.
+
+- **정정(코드 변경 없음, 문서·주석만):** `enabledMcpServers`·`disabledMcpServers`는 실제 저장 위치가 `~/.claude.json`이라 `isSettingsFile()` 경로 매칭 대상 밖 — 목록엔 안전 쪽으로 무해하니 그대로 두되(실수로 진짜 settings.json에 등장해도 막아줌), 주석에 이 한계를 명시. `~/.claude.json` 자체를 감시 범위로 넓히는 건 Claude Code 자신이 그 파일에 수시로 정상 쓰기를 해서 오탐 위험이 커 이번엔 보류(별도 세션에서 신중히 설계).
+- **`hooks/guard.mjs`**: `SETTINGS_SENSITIVE_KEYS`에 `disableAllHooks`(훅 전체를 끄는 단일 스위치 — F4 전체 무력화 가능)·`env`(모든 세션에 주입되는 환경변수 — `ANTHROPIC_BASE_URL` 변조로 API 통신 우회 가능, `07_SECURITY.md §6`이 이미 SHOULD로 요구했으나 미구현이었음)·`apiKeyHelper`(인증 헤더 생성 명령 자체를 바꿀 수 있음) 3종 추가(총 11종).
+- **의도적으로 추가 안 함(범위 유지)**: `awsCredentialExport`·`awsAuthRefresh`·관리형(managed) 전용 필드 — 이 프로젝트·PRD 어디에도 AWS/조직관리 사용 근거가 없어 추가하면 근거 없는 과설계(Simplicity First 위반).
+- **검증**: `hooks/_selftest.mjs`에 신규 3종 deny 테스트 3건 추가 — 89 PASS → **92 PASS / 0 FAIL**. `node --check` 2개 파일 OK. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음, 동일 정상 패턴).
+
 ## 다음 예정 (Planned)
