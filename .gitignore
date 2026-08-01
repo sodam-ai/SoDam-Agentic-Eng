@@ -18,6 +18,10 @@ node_modules/
 .agents/
 .codex/
 
+# 다른 소담 형제 플러그인(sodam-reverse 추정)의 로컬 산출물 — 이 repo 소유 아님, 소유 불명확이라
+# 커밋 대상에서만 제외(파일 자체는 건드리지 않음, 2026-08-02 발견)
+.sodam-re/
+
 # Claude Code 외부 도구 자동 생성 파일 (플러그인 메타 아님)
 .omc/
 .plugin-config/
