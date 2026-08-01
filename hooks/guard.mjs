@@ -385,7 +385,14 @@ const MCP_CONFIG_DENY_MSG = "이 파일(.mcp.json)은 Claude Code가 자동으�
 // 전부 AI 안전장치를 무력화하는 데 악용 가능해 "그냥 확인창"(93% 무조건 승인, 06 A2)만으론 부족하다고
 // 스펙이 못박은 항목. Write/Edit/MultiEdit는 new content(writeContents)로 판정 가능하지만, 셸 리다이렉트는
 // 임의 문자열이라 안전하게 판정 못 해 이 함수의 대상에서 제외(그 경로는 기존 ask 그대로 유지).
-const SETTINGS_SENSITIVE_KEYS = ["mcpServers", "enableAllProjectMcpServers", "permissions", "hooks"];
+// 2026-07-27 실사용 테스트에서 발견·공식문서(code.claude.com/docs/en/mcp.md) 확인: 아래 4개
+// (enabledMcpjsonServers/disabledMcpjsonServers/enabledMcpServers/disabledMcpServers)가 .mcp.json
+// 프로젝트 서버의 승인·신뢰 여부를 실제로 결정하는 필드. settings.json에서 이걸 몰래 바꾸면 Claude Code
+// 자체의 "승인 대기" 안전장치를 우회해 악성 MCP 서버를 자동 승인시킬 수 있어 위 4개와 동급 위험.
+const SETTINGS_SENSITIVE_KEYS = [
+  "mcpServers", "enableAllProjectMcpServers", "permissions", "hooks",
+  "enabledMcpjsonServers", "disabledMcpjsonServers", "enabledMcpServers", "disabledMcpServers",
+];
 function touchesSensitiveSettingsKeys(strings) {
   for (const s of strings) {
     for (const key of SETTINGS_SENSITIVE_KEYS) {

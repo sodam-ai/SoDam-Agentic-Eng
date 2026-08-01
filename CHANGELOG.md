@@ -171,4 +171,19 @@
 - **`hooks/guard.mjs`**: `isMcpConfigFile()` 신설(`.mcp.json` 경로 판정) + Write/Edit/MultiEdit·Bash 리다이렉트 양쪽 경로 모두에서 `.mcp.json`을 항상 `deny`(파일 전체가 "무엇을 실행할지" 정의라 안전한 내용이 없어 부분 판정 불필요). 기존 `mcpServers`를 `SETTINGS_SENSITIVE_KEYS`에서 빼지는 않음(settings.json에 잘못 들어와도 막는 게 안전 쪽으로 무해).
 - **검증**: `hooks/_selftest.mjs`에 `.mcp.json` deny 테스트 3건(Write·Edit·Bash 리다이렉트) 추가 — 78 PASS → **81 PASS / 0 FAIL**.
 
+### 2026-07-27 패치 — GUIDE.md/GUIDE.en.md(+html) 4종 제거, README로 통합 (문서 갭 소급 기록, 2026-08-02 발견)
+
+> 배경: 이 시점 커밋(`d5b73aa`·`01bb186`)이 CHANGELOG·CHECKPOINT 어디에도 기록 없이 진행됐던 것을 다음 세션이 발견해 소급 기록한다.
+
+- **`GUIDE.md`·`GUIDE.en.md`·`GUIDE.html`·`GUIDE.en.html` 4개 파일 삭제** — `README.md`·`README.en.md`(+html)를 설치·사용·보안·라이선스를 모두 담은 통합 상세 문서로 전면 확장(8파일, +3,441/-4,102줄)해 대체. `LIVE_TEST_GUIDE.md`의 `GUIDE.md` 링크도 `README.md`로 후속 정정.
+- **놓친 것(2026-08-02 발견·확인)**: `docs/SUITE-README.ko.md`·`.en.md`의 `GUIDE.md` 언급 2곳은 확인 결과 **SoDamHarness(다른 형제 플러그인) 자신의 GUIDE.md를 가리키는 것**이라 이 삭제와 무관 — 손대지 않음(형제 저장소 소관, 읽기전용 원칙).
+
+### 2026-08-02 패치 — settings.json MCP 승인 필드 4종 deny 확장 (보안, `CHECKPOINT.md §0-28` 적용) + `.gitignore` 갭 수정
+
+> 배경: `CHECKPOINT.md §0-28`이 "코드는 완성, 적용만 대기"로 남겨뒀던 수정 — 이를 막던 SoDamLoop 상태파일 오탐(`~/.sodam-loop/state-sl-sp2-test-20260629.json`의 `status:"running"`)이 그 사이 해소된 것을 이번 세션이 확인해 적용.
+
+- **`hooks/guard.mjs`**: `SETTINGS_SENSITIVE_KEYS`에 `enabledMcpjsonServers`·`disabledMcpjsonServers`·`enabledMcpServers`·`disabledMcpServers` 4종 추가(기존 `mcpServers`·`enableAllProjectMcpServers`·`permissions`·`hooks` 4종과 합쳐 총 8종). 공식문서(code.claude.com/docs/en/mcp.md) 확인: 이 4개가 `.mcp.json` 프로젝트 서버의 승인·신뢰 여부를 실제로 결정 — settings.json에서 몰래 바꾸면 Claude Code 자체 "승인 대기" 안전장치를 우회해 악성 MCP 서버를 자동 승인시킬 수 있음.
+- **`.gitignore`**: `.sodam-re/`(다른 소담 형제 플러그인의 로컬 산출물로 추정, 이 repo 소유 아님) 추가 — 커밋 이력에 섞여 들어가는 것을 사전 방지(§0-24 ①의 `.codex/` 사건과 동일 패턴 재발 방지).
+- **검증**: `hooks/_selftest.mjs`에 신규 4종 deny 테스트 4건 추가 — 85 PASS → **89 PASS / 0 FAIL**. `node --check` 2개 파일 OK. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음 — 방금 고친 코드라 당연한 정상 결과, `/reload-plugins` 필요).
+
 ## 다음 예정 (Planned)
