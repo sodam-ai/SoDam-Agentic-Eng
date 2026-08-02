@@ -234,4 +234,13 @@
 - **문서 오기 2건 정정(`.PRD/`, gitignored)**: `08_LICENSE_LEGAL.md`의 낡은 "[결정 필요]"(실물은 이미 Apache-2.0 확정) 정정, `01_PRD.md`·`03_PHASES.md`의 OWASP 감사 출처 오기재(실제 OWASP 요구사항은 `07_SECURITY.md`) 정정.
 - **이번에도 손대지 않음**: README 설치 스크린샷(사람의 실제 캡처 필요, AI가 대행 불가).
 
+### 2026-08-03 기록 — 🔴🔴 실측 발견: 설치 캐시가 7/27에 멈춰 이후 안전 수정 전부 미적용(코드 변경 없음, 조사 기록)
+
+> 배경: 안전 기록 로그 파일(`~/.sodamagentic/safety-log.jsonl`)이 오늘 아침까지 실시간으로 쌓이고 있는 걸 확인해 실제 설치 캐시를 직접 열어봤다.
+
+- 설치 캐시(`%APPDATA%\claude-code\plugins\cache\`) 2개 마켓플레이스 변형 전부 `hooks/guard.mjs`가 **2026-07-27** 시점 그대로임을 실물 파일로 확인.
+- 이후 커밋 전부(§0-39·§0-40의 settings 11종 확장, §0-44의 B2 Codex 위임 결함 수정, §0-45의 `${CLAUDE_PLUGIN_DATA}`)가 소스코드·git·테스트(98 PASS)에서는 존재하지만, **실제 실행 중인 플러그인엔 반영되지 않은 상태**임을 확인(`IS_CODEX_DEPLOY`·`resolveLogDir` 문자열 grep 0건, `SETTINGS_SENSITIVE_KEYS` 여전히 4개).
+- 상세 근거·영향 범위·재설치 절차는 `CHECKPOINT.md §0-46` 참조.
+- **코드 변경 없음** — 조사 결과만 기록. 캐시를 직접 수정하지 않음(정식 재설치 절차 우회 금지).
+
 ## 다음 예정 (Planned)
