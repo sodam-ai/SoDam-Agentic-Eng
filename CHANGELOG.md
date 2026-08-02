@@ -195,4 +195,12 @@
 - **의도적으로 추가 안 함(범위 유지)**: `awsCredentialExport`·`awsAuthRefresh`·관리형(managed) 전용 필드 — 이 프로젝트·PRD 어디에도 AWS/조직관리 사용 근거가 없어 추가하면 근거 없는 과설계(Simplicity First 위반).
 - **검증**: `hooks/_selftest.mjs`에 신규 3종 deny 테스트 3건 추가 — 89 PASS → **92 PASS / 0 FAIL**. `node --check` 2개 파일 OK. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음, 동일 정상 패턴).
 
+### 2026-08-02 패치 — `LIVE_TEST_GUIDE.md`에 `.mcp.json` 라이브 테스트 단계 신설 (문서, 코드 변경 없음)
+
+> 배경: 05_FAMILY_RISKS.md PART D("종이 위 분석은 바닥에 도달, 다음은 실제 실행")에 따라 코드 재감사 대신, 오늘 3세션(§0-36·§0-39·§0-40)에 걸쳐 늘어난 보안 항목이 실제 사람이 보는 `LIVE_TEST_GUIDE.md`에는 반영 안 됐음을 발견. CHECKPOINT.md §0-38 1순위가 "가장 시급"이라 못박은 `.mcp.json` deny 테스트가 이 문서엔 아예 없었음(CHECKPOINT는 AI용·gitignored라 사람이 실제로 펴 보는 문서가 아님).
+
+- **테스트 3-5 신설**: `.mcp.json`에 `mcpServers`를 추가하려는 시도가 확인 질문 없이 즉시 deny되는지 확인하는 단계(§0-38 1순위 재현 문구 그대로 사용). "이 문서의 다른 항목과 달리 아직 한 번도 실제 확인 안 됨"을 명시.
+- **테스트 3-4 보강**: "지키는 범위가 11개 항목으로 넓어졌다"는 한 줄만 추가(왕초보 대상 문서 원칙상 11개 전부 나열하지 않음, 궁금하면 CHANGELOG 참고로 안내).
+- **기준일 갱신**: 2026-07-27 → 2026-08-02.
+
 ## 다음 예정 (Planned)
