@@ -14,6 +14,15 @@
 //   백업 엔진을 재구현하지 않는다(Harness의 backup.mjs를 import 하지 않음).
 //   ※ 위임/전체폴백 전환(fail-closed)은 Task 3의 delegate.mjs가 담당. 현재 파일은 폴백을 항상 적용.
 //
+// ⚠️ B2 수정(2026-08-02, 05_AUDIT_AND_DECISIONS.md 결정 "Codex에선 위임 안 함, 전체 폴백 유지"):
+//   isHarnessAlive()는 Claude Code 전용 플러그인 경로만 보고 "지금 Codex 위에서 실행 중인지"는
+//   전혀 모른다. 같은 PC에 Claude Code+SoDamHarness가 설치돼 있으면(형제 플러그인 세트 전제상 흔함)
+//   Codex 위에서도 harness=true로 오판해 아래 isSensitive()·pathTraversesSymlink() 검사를 위임한다는
+//   이유로 건너뛰는데, codex/install.mjs는 Harness의 훅을 .codex/hooks.json에 등록하지 않아 그
+//   위임을 아무도 받지 않는 "허공 위임"이었다(실사용 코드 대조로 확인됨). 아래 IS_CODEX_DEPLOY가
+//   자신의 파일 경로로 Codex 배포본(codex/install.mjs의 고정 목적지 .agents/hooks/guard.mjs)임을
+//   스스로 감지하면 harness를 무조건 false로 강제해, Codex 쪽은 항상 "전체 폴백"을 쓰도록 만든다.
+//
 // 4종 화이트리스트(최소 폴백):
 //   ① 위험·치명 명령(rm -rf·재귀삭제·format 등) → deny / 단일 파일 삭제 → ask(백업은 Harness 담당)
 //   ② API키·비밀값 노출(echo $KEY·.env 업로드·BASE_URL 변조·키 리터럴) → deny / .env 로컬 읽기 → ask
@@ -45,6 +54,11 @@ import { isHarnessAlive } from "./delegate.mjs";
 
 const WIN = process.platform === "win32";
 const here = path.dirname(fileURLToPath(import.meta.url));
+// codex/install.mjs는 이 파일을 항상 <프로젝트>/.agents/hooks/guard.mjs로 복사한다(DEST_HOOKS 상수).
+// 이 경로(부모의 부모 폴더 이름이 ".agents")에서 실행 중이면 Codex 배포본으로 간주한다 — 실제
+// Claude Code 플러그인 설치 경로(~/.claude/plugins/... 또는 %APPDATA%\claude-code\plugins\cache\...)엔
+// ".agents"라는 폴더명이 등장하지 않아 오탐 없이 구분 가능.
+const IS_CODEX_DEPLOY = path.basename(path.dirname(here)) === ".agents";
 const RULES_PATH = path.join(here, "..", "data", "agentic-rules.json");
 // SODAM_AGENTIC_DATA 오버라이드는 _selftest.mjs가 실제 홈 디렉터리를 건드리지 않고
 // 격리된 임시 폴더에서 로그 기록을 검증하기 위함(운영 시에는 항상 홈 디렉터리 사용).
@@ -424,7 +438,8 @@ function main() {
   const ti = input.tool_input || {};
   const cwd = input.cwd || process.cwd();
   // Harness가 확실히 살아있으면(존재+최소버전+헬스체크) 겹치는 안전(위험명령·민감경로)은 위임 → 중복 프롬프트 방지
-  const harness = isHarnessAlive();
+  // Codex 배포본이면(IS_CODEX_DEPLOY) 위 B2 근거로 위임을 아예 시도하지 않고 항상 전체 폴백을 쓴다.
+  const harness = IS_CODEX_DEPLOY ? false : isHarnessAlive();
 
   const isWriteTool = ["Write", "Edit", "MultiEdit", "NotebookEdit"].includes(toolName);
   const isShellTool = !isWriteTool && typeof ti.command === "string" && ti.command.length > 0;

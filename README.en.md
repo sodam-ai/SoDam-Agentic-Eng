@@ -64,6 +64,7 @@ Analogy: **the AI is the machinery in a factory, and you are the person designin
 | **Node.js 18+** | The safety hook runs on this. Without it, the safety features don't turn on at all | **Required** |
 | **Claude Code** (or Codex) | The program SoDam installs into | **Required** (one of the two) |
 | **A GitHub account + access to this repository** | SoDam is fetched from GitHub. It is currently **private**, so you need access | **Required** |
+| **git** (command-line tool) | The Codex installer fetches the repo via `git clone` (the Claude Code marketplace install doesn't need git) | **Required (for Codex install)** |
 | **An internet connection** | Needed at install time (once installed, the plugin itself makes no network requests — [§10](#security-data-flow)) | **Required (install time only)** |
 
 > 💡 **How to check:** type `node -v` in a terminal (black window) → if it shows `v18.` or higher, you're good.

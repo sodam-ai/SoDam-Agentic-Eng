@@ -95,18 +95,22 @@ if (harness) passThrough();                               // 그 외 겹치는 �
 
 ---
 
-## 5. 단일 마켓플레이스 요건 (C2 — 의존 자동설치)
+## 5. 단일 마켓플레이스 요건 (C2 — 의존 자동설치) — ⚠️ 2026-08-02 정정
+
+> 아래 "해법"(형제마다 공용 `sodam` 이름 재사용)은 2026-07-27 `05_FAMILY_RISKS.md` addendum에서
+> **폐기됐다** — 정확히 이 패턴이 실제 이름 충돌 사고를 냈다(`CHECKPOINT.md §0-32` 참조). 현재
+> 표준은 **형제마다 고유한 마켓플레이스·플러그인 이름**이다(예: 이 저장소는 `sodam-agentic`). 아래
+> 원문은 그 사고가 나기 전 초안이라 참고만 하고, 실제 설치 명령은 각 형제 저장소의 README를 따를 것.
 
 Claude Code의 `plugin.json` 의존성 자동설치는 **같은 마켓플레이스에 등록된 플러그인만** 작동.
 
-**현재 상태**: 6개가 각자 별도 GitHub repo → 자동설치 불가
-**해법**: `sodam-ai` org 하위에 단일 마켓플레이스 등록, 또는 통합 설치 스크립트 1개
+**현재 상태**: 6개가 각자 별도 GitHub repo, 각자 고유 이름으로 등록됨(자동 의존성 설치는 여전히 안 됨 — 형제마다 개별 설치 필요, 아래는 이름 규칙 예시일 뿐)
 
 ```bash
-# 임시 해법 (Phase 1): 설치 순서대로 수동 설치
+# 형제마다 고유 이름으로 개별 설치(예시 — 실제 주소·이름은 각 저장소 README 확인)
 /plugin marketplace add https://github.com/sodam-ai/SoDam-Harness-Eng
-/plugin install sodam-harness@sodam
-# (반복)
+/plugin install sodam-harness@sodam-harness
+# (형제마다 반복, 마켓플레이스 이름은 형제별로 다름 — 공용 "@sodam" 금지)
 ```
 
 ---

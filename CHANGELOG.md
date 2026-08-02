@@ -213,4 +213,14 @@
 - **로드맵 요약 표**: Phase 3 상태 셀에 "게이트 3종 명문화됨·게이트 1 미통과" 반영.
 - **코드 변경 없음** — `.PRD/`는 gitignored라 이 패치는 로컬 문서에만 반영(커밋 대상 아님).
 
+### 2026-08-02 패치 — 🔴 F7(Codex 안전 패리티) "허공 위임" 결함 수정 + 문서 갭 2건 정정
+
+> 배경: "PRD에 적힌 것 전부 구현 준비"라는 요청을 받아, 이번엔 제 자신의 재검토가 아니라 PRD를 한 번도 본 적 없는 독립 서브에이전트 5개를 병렬로 띄워 14개 PRD 문서 전체를 코드와 처음부터 다시 대조했다. 그 결과 5라운드 연속 "갭 없음"이었던 이전 결론과 달리, 이미 "완료"로 표시돼 있던 F7(Codex 안전 패리티)에서 실제 안전 결함을 발견했다.
+
+- **🔴 안전 결함 수정 (`hooks/guard.mjs`)**: `05_AUDIT_AND_DECISIONS.md` 결정 B2("Codex에선 Harness 위임 안 하고 전체 폴백 유지")와 달리, `isHarnessAlive()`는 Claude Code 전용 플러그인 경로만 검사해 "지금 Codex 위에서 실행 중인지"를 전혀 몰랐다. 같은 PC에 Claude Code+SoDamHarness가 설치돼 있으면(형제 플러그인 세트 전제상 흔함) Codex 배포본도 `harness=true`로 오판해 `isSensitive()`(SSH·AWS·`.codex`·시스템폴더 보호)·`pathTraversesSymlink()` 검사와 단일파일삭제 확인을 건너뛰었는데, `codex/install.mjs`는 Harness의 훅을 `.codex/hooks.json`에 등록하지 않아 그 위임을 아무도 받지 않는 "허공 위임"이었다. **수정**: `guard.mjs`가 자신의 파일 경로(`.../.agents/hooks/guard.mjs` — `codex/install.mjs`의 고정 배포 위치)로 Codex 배포본임을 스스로 감지하면(`IS_CODEX_DEPLOY`) `harness`를 무조건 `false`로 강제해, Codex 쪽은 항상 원래 결정대로 "전체 폴백"을 쓰게 만들었다.
+- **검증**: `hooks/_selftest.mjs`에 이 결함을 재현하는 신규 테스트 3건 추가 — `.agents/hooks/`에 복사한 guard.mjs가 이 기기의 실제 Harness 설치 여부와 **무관하게** 시스템 폴더 쓰기를 deny, 단일파일 삭제를 ask 하는지 확인(기존 테스트는 전부 `SODAM_AGENTIC_TEST_FORCE_NO_HARNESS`로 harness를 강제 false시켜 결정론을 확보하는데, 그러면 이 버그 자체가 재현 안 됐던 게 92개 기존 테스트가 전부 통과하면서도 실제로는 이 결함이 존재했던 이유). 92 PASS → **95 PASS / 0 FAIL**. `node --check` 2개 파일 OK. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음, 방금 고친 코드라 당연한 정상 결과).
+- **문서 갭 정정 (`docs/family-synergy.md`)**: §5가 2026-07-27에 이미 폐기된 "형제마다 공용 `sodam` 마켓플레이스 이름" 계획을 예시 명령으로 그대로 안내 중이었다(정확히 그 이름 충돌 사고를 유발했던 패턴) — "형제마다 고유 이름" 현재 표준으로 정정 + 폐기 경위 각주 추가.
+- **문서 갭 정정 (`README.md`/`README.en.md`)**: §1 사전 준비물 표에 `git`(명령줄 도구)이 빠져 있었는데, §4 Codex 설치 단계는 실제로 `git clone`을 요구해 완전 초보자가 Codex 경로에서 막힐 수 있었다 — 준비물 행 추가(필수 조건: Codex 설치 시).
+- **이번엔 손대지 않음(별도 판단 필요)**: `${CLAUDE_PLUGIN_DATA}` 미사용(`CHECKPOINT.md §0-30`에 설계 완료·미검증 상태로 기록됨, 실제 적용 시 인자 전달 방식 실측 확인 필요), README 설치 스크린샷 자리 부재(개인용 도구라 우선순위 낮음).
+
 ## 다음 예정 (Planned)
