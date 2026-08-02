@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.mjs\" \"${CLAUDE_PLUGIN_DATA}\"",
             "timeout": 30
           }
         ]

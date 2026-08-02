@@ -61,8 +61,26 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const IS_CODEX_DEPLOY = path.basename(path.dirname(here)) === ".agents";
 const RULES_PATH = path.join(here, "..", "data", "agentic-rules.json");
 // SODAM_AGENTIC_DATA 오버라이드는 _selftest.mjs가 실제 홈 디렉터리를 건드리지 않고
-// 격리된 임시 폴더에서 로그 기록을 검증하기 위함(운영 시에는 항상 홈 디렉터리 사용).
-const LOG_DIR = process.env.SODAM_AGENTIC_DATA || path.join(homedir(), ".sodamagentic");
+// 격리된 임시 폴더에서 로그 기록을 검증하기 위함(운영 시에는 항상 아래 우선순위로 결정).
+//
+// 데이터 저장 위치 우선순위(2026-08-02, CHECKPOINT §0-30 설계를 방어적으로 적용):
+//   ① SODAM_AGENTIC_DATA(테스트 격리 전용, 최우선)
+//   ② process.argv[2] — hooks.json이 "${CLAUDE_PLUGIN_DATA}"를 인자로 넘기면 여기로 들어온다
+//      (공식 영구 데이터 경로, 업데이트·재설치 생존 + 제거 시 자동정리). 단 이 치환이 정말
+//      "command 문자열 안에서" 실제로 일어나는지는 아직 라이브 미검증이므로, 치환이 실패해
+//      리터럴 "${CLAUDE_PLUGIN_DATA}" 문자열이 그대로 들어오거나 절대경로가 아니면 무시한다.
+//   ③ (폴백) 기존 ~/.sodamagentic — ①②가 전부 실패해도(Codex처럼 애초에 인자를 안 주는 환경 포함)
+//      오늘까지의 동작과 완전히 동일하게 계속 작동한다(회귀 없음이 이 설계의 핵심).
+function resolveLogDir() {
+  if (process.env.SODAM_AGENTIC_DATA) return process.env.SODAM_AGENTIC_DATA;
+  const arg = process.argv[2];
+  if (typeof arg === "string") {
+    const trimmed = arg.trim();
+    if (trimmed && !trimmed.includes("${") && path.isAbsolute(trimmed)) return trimmed;
+  }
+  return path.join(homedir(), ".sodamagentic");
+}
+const LOG_DIR = resolveLogDir();
 const LOG_PATH = path.join(LOG_DIR, "safety-log.jsonl");
 
 // ── 규칙 로드 (데이터-주도 + fail-closed 내장 기본값) ──

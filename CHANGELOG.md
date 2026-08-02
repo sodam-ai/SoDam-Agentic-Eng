@@ -223,4 +223,15 @@
 - **문서 갭 정정 (`README.md`/`README.en.md`)**: §1 사전 준비물 표에 `git`(명령줄 도구)이 빠져 있었는데, §4 Codex 설치 단계는 실제로 `git clone`을 요구해 완전 초보자가 Codex 경로에서 막힐 수 있었다 — 준비물 행 추가(필수 조건: Codex 설치 시).
 - **이번엔 손대지 않음(별도 판단 필요)**: `${CLAUDE_PLUGIN_DATA}` 미사용(`CHECKPOINT.md §0-30`에 설계 완료·미검증 상태로 기록됨, 실제 적용 시 인자 전달 방식 실측 확인 필요), README 설치 스크린샷 자리 부재(개인용 도구라 우선순위 낮음).
 
+### 2026-08-02 패치 — `${CLAUDE_PLUGIN_DATA}` 안전 마이그레이션(폴백 유지) + 문서 오기 2건 정정
+
+> 배경: 직전 라운드에서 미뤄뒀던 `CHECKPOINT.md §0-30`의 설계(안전 기록 저장 위치를 `~/.sodamagentic` 하드코딩에서 공식 영구 데이터 경로 `${CLAUDE_PLUGIN_DATA}`로)를, "치환이 실제로 되는지 라이브 미검증"이라는 리스크를 폴백 설계로 흡수해 지금 적용했다.
+
+- **`hooks/hooks.json`**: `guard.mjs` 실행 command에 `"${CLAUDE_PLUGIN_DATA}"`를 두 번째 인자로 추가.
+- **`hooks/guard.mjs`**: `resolveLogDir()` 신설 — 데이터 저장 위치를 ① `SODAM_AGENTIC_DATA`(테스트 격리, 최우선) ② `process.argv[2]`(위 인자, 절대경로처럼 보일 때만 신뢰 — 치환 실패로 리터럴 `${...}` 문자열이 그대로 오면 무시) ③ 기존 `~/.sodamagentic`(폴백) 순으로 결정. 치환이 되면 업데이트·재설치 생존 + 제거 시 자동정리라는 공식 기능을 얻고, 안 되더라도(Codex 등 애초에 인자를 안 주는 환경 포함) 오늘까지와 완전히 동일하게 동작 — 회귀 위험을 설계로 0에 수렴시킴. 기존 로그(2,779줄 실측, §0-30) 자동 이관은 하지 않음(§0-30 결정 유지).
+- **`commands/log.md`**: `/sodam-agentic:log` 조회 시 새 위치(`~/.claude/plugins/data/sodam-agentic/`)와 예전 위치(`~/.sodamagentic/`)를 둘 다 확인해 합쳐서 보여주도록 안내 갱신(위치 전환 중 기록이 두 파일로 나뉠 수 있어서).
+- **검증**: `hooks/_selftest.mjs`에 3가지 시나리오(치환 성공/치환 실패/인자 자체 없음) 회귀 테스트 3건 추가 — 95 PASS → **98 PASS / 0 FAIL**. `node --check` 2개 파일 OK, `hooks.json` JSON 유효성 확인. `validate.mjs` PASS 12/WARN 0/FAIL 1(설치 캐시만 낡음, 방금 고친 코드라 당연한 정상 결과).
+- **문서 오기 2건 정정(`.PRD/`, gitignored)**: `08_LICENSE_LEGAL.md`의 낡은 "[결정 필요]"(실물은 이미 Apache-2.0 확정) 정정, `01_PRD.md`·`03_PHASES.md`의 OWASP 감사 출처 오기재(실제 OWASP 요구사항은 `07_SECURITY.md`) 정정.
+- **이번에도 손대지 않음**: README 설치 스크린샷(사람의 실제 캡처 필요, AI가 대행 불가).
+
 ## 다음 예정 (Planned)

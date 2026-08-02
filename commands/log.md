@@ -4,7 +4,13 @@ description: SoDamAgentic 안전 기록 조회(F6). 사용자가 /sodam-agentic:
 
 # 소담 안전 기록 — 지금까지 뭘 막았나
 
-사용자가 이 명령을 실행하면, `~/.sodamagentic/safety-log.jsonl` 파일을 Read 도구로 읽어(없으면 "아직 기록 없음") 아래를 **쉬운 한국어로, 비개발자 기준**으로 요약하세요.
+사용자가 이 명령을 실행하면, 안전 기록 파일(`safety-log.jsonl`)을 Read 도구로 읽어 아래를 **쉬운 한국어로, 비개발자 기준**으로 요약하세요.
+
+**파일 위치(2026-08-02부터, 두 곳 다 확인)**: 아래 순서로 둘 다 시도해 존재하는 파일을 읽으세요(둘 다 있으면 둘 다 읽어 시간순으로 합쳐서 보여주세요 — 위치가 바뀌면서 기록이 두 파일로 나뉠 수 있습니다).
+1. `~/.claude/plugins/data/sodam-agentic/safety-log.jsonl` (새 위치, 공식 영구 데이터 경로가 실제로 적용됐을 때)
+2. `~/.sodamagentic/safety-log.jsonl` (예전 위치, 여기만 있어도 정상 — 새 위치 적용 전 기록이거나 Codex 환경)
+
+둘 다 없으면 "아직 기록 없음"으로 안내하세요.
 
 ## 읽는 법
 - 파일은 JSONL(한 줄에 JSON 객체 하나)입니다. 각 줄: `{ id, action: "deny"|"ask", target, reason, created_at }`.
