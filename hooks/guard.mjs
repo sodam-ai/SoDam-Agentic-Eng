@@ -139,19 +139,38 @@ function maskSecrets(s) {
   return out;
 }
 // target: 차단/확인 대상(경로 또는 명령 원문). 로그 실패가 안전 판정을 절대 막지 않도록 best-effort.
-function logSafetyEvent(action, target, reason) {
+// 2026-08-03 실측 발견: 같은 로그 파일(~/.sodamagentic/safety-log.jsonl)에 여러 소담 형제
+// 프로젝트의 세션이 동시에 append하는 게 실사용 중 흔한데(라이브 테스트에서 목격), Windows는
+// POSIX와 달리 파일을 배타적으로 잠가서 동시 appendFileSync가 간헐적으로 EBUSY/EPERM을 던질 수
+// 있다(실측: 같은 세션의 deny 2건이 이 원인으로 추정되는 방식으로 기록 누락됨, CHECKPOINT §0-47).
+// 그 순간 이 함수의 try/catch가 실패를 조용히 삼켜버려 "차단은 됐는데 기록만 새는" 상황이 생겼다.
+// 아래 짧은 재시도(최대 3회, 회당 20ms)로 일시적 잠금 경합을 흡수한다. 그래도 실패하면 여전히
+// 조용히 포기한다 — 로그는 관측용 부가기능이라 실패가 안전 판정(decide 결과)을 막으면 안 된다.
+function sleepMs(ms) {
   try {
-    mkdirSync(LOG_DIR, { recursive: true });
-    const entry = {
-      id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      action,
-      target: maskSecrets(target == null ? "" : String(target)),
-      reason,
-      created_at: new Date().toISOString(),
-    };
-    appendFileSync(LOG_PATH, JSON.stringify(entry) + "\n", "utf8");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
   } catch {
-    // 로그는 관측용 부가기능 — 실패해도 안전 판정(decide 결과)에는 영향 없음
+    // 동기 대기 자체가 안 되는 플랫폼이어도 재시도 루프는 계속 진행(대기 없이 바로 재시도)
+  }
+}
+function logSafetyEvent(action, target, reason) {
+  const entry = {
+    id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    action,
+    target: maskSecrets(target == null ? "" : String(target)),
+    reason,
+    created_at: new Date().toISOString(),
+  };
+  const line = JSON.stringify(entry) + "\n";
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      mkdirSync(LOG_DIR, { recursive: true });
+      appendFileSync(LOG_PATH, line, "utf8");
+      return;
+    } catch {
+      if (attempt < 2) sleepMs(20);
+      // 마지막 시도까지 실패해도 삼킴 — 안전 판정에는 영향 없음(위 주석 참조)
+    }
   }
 }
 
