@@ -7,7 +7,7 @@
 > 🇰🇷 한국어 버전: [README.md](./README.md) (identical content, identical order)
 
 > ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) is complete, and Phase 2 (F6 safety log, F7 Codex safety parity) is also code-complete. However, a few items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
-> ⚠️ **This is a PRIVATE repository.** It has not been publicly released yet; it is a personal tool the developer built for their own use. The license terms below are stated in advance in case it is ever made public.
+> ⚠️ **This GitHub repository is PUBLIC.** That said, it is still a personal tool the developer built for their own use, and it is not offered as a formally supported release for the general public. The license terms below (Apache-2.0) reflect this public status as it actually stands.
 
 ---
 
@@ -52,7 +52,7 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 |---|---|---|
 | **Node.js 18 or newer** | The safety hook runs on this. Without it, the safety feature itself doesn't turn on | **Required** |
 | **Claude Code** (or Codex) | The program SoDam gets installed into | **Required** (one of the two) |
-| **A GitHub account + access to this repository** | SoDam is fetched from GitHub (an online code warehouse). It is currently **private**, so you need access rights to install it | **Required** |
+| **A GitHub account** | SoDam is fetched from GitHub (an online code warehouse). The repository is **public**, so anyone can install it without special access rights | **Optional** |
 | **git** (command-line tool) | Only needed for the **Codex** install path — Codex installation works by `git clone`-ing the whole repository and then running the install script. **The Claude Code marketplace install does not need git** | **Required (Codex install only)** |
 | **Internet connection** | Needed while installing (after installation, the plugin itself sends no network requests — see [§12](#security-data-flow)) | **Required (install time only)** |
 
@@ -96,7 +96,7 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 <a id="install-detail"></a>
 ## 5. Installation
 
-> ⚠️ This repository is currently **private**. The commands below only succeed if your GitHub account **has access**.
+> ⚠️ This repository is currently **public**. The commands below succeed without any special access rights.
 
 ### 5-1. Claude Code — Installation
 1. Register the marketplace (the plugin "store") — paste this and press Enter:
@@ -323,7 +323,7 @@ The local self-test suite grew from 67 to 85 tests, all passing.
 ## 9. File · Document Locations
 
 **Development folder (source):** `D:\AI_Dev_Work\2026y\26y_06m_26d_SoDam-Agentic-Eng`
-**GitHub (online):** https://github.com/sodam-ai/SoDam-Agentic-Eng (private)
+**GitHub (online):** https://github.com/sodam-ai/SoDam-Agentic-Eng (public)
 
 | What | Location |
 |---|---|
@@ -463,7 +463,7 @@ As the code comments in this repository state plainly, **"the dangerous-pattern 
 |---|---|---|
 | Installed it but nothing happens | Didn't run `/init` / didn't read the onboarding | Start with `/sodam-agentic:start` to check status |
 | `/sodam-agentic` shows no commands | Not installed, or a typo in the marketplace name | Re-run `/plugin install sodam-agentic@sodam-agentic` (must be `@sodam-agentic`) |
-| "No access / permission denied" during install | No access to the private repository | Confirm your GitHub account is logged in and has access |
+| "No access / permission denied" during install | Unlikely to be an access issue since the repository is public — more likely a network problem or a typo in the URL/name | Check your internet connection and double-check the `/plugin marketplace add https://github.com/sodam-ai/SoDam-Agentic-Eng` address |
 | "Node not found" | Node.js is not installed | Install Node.js 18+ following [§3](#install-programs), then retry |
 | Korean text shows as `□□□` | A font/character-display issue | Check your terminal/editor's UTF-8 settings; screenshot it and ask for help |
 | Code gets written without a plan first | Another skill took priority (F2 is a "request," not a hard enforcement) | This can happen normally — just ask directly, "show me the plan first" |
@@ -584,7 +584,7 @@ A significant portion of this project's code and documentation was **written wit
 <a id="contribute"></a>
 ## 17. Contributing / Contact
 
-This repository is currently run as a **private, personal-use tool**, so there isn't a public contribution (PR) process yet. If you have access to the repository, please leave questions or bug reports as a GitHub issue.
+This repository is **public**, but it is still run as the developer's **personal-use tool**, and there isn't a formal contribution (PR) process yet. Please leave questions or bug reports as a GitHub issue.
 
 ---
 
