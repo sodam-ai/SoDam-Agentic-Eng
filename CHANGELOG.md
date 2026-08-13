@@ -271,4 +271,13 @@
 - **의도적으로 하지 않은 것**: `.PRD/01_PRD.md:137`의 "PRIVATE로 유지" 문구는 2026-07-15 시점 결정을 기록한 역사적 서술이라 소급 수정 안 함(역사적 사실 소급 수정 금지 원칙, `CHECKPOINT.md §0-27`·`§0-32` 등 다수 선례와 동일). 저장소 공개 범위 자체(다시 비공개로 되돌릴지 여부)는 AI가 결정하지 않음 — 사용자 확인 사항으로 남김.
 - **검증**: pandoc으로 `README.html`·`README.en.html` 재생성. 코드 변경 없어 `_selftest.mjs`·`validate.mjs` 재실행 불필요.
 
+### 2026-08-13 패치 — `codex/install.mjs`가 `hooks/`의 로컬 도구 잔여물(dotfile)까지 함께 복사하던 결함 수정
+
+> 배경: "현재까지 구현된 기능이 제대로 작동하는지" 요청에 따라 `codex/install.mjs`를 빈 폴더에서 실제로 실행해보는 라이브 통합 테스트를 처음 수행했다. 결과물에 `guard.mjs`·`delegate.mjs`·`hooks.json` 외에 `.omc/`·`.plugin-config/`·`.complexity-log.md`·`.todos-report.md` 같은, 이 프로젝트와 무관한 로컬 Claude Code 하네스 세션 상태 파일들이 함께 복사돼 있는 것을 발견했다.
+
+- **원인**: 소스 `hooks/` 폴더 자체에 (다른 로컬 도구가 그 시점 작업 경로를 잘못 잡아 만든 것으로 추정되는) 위 잔여물이 실제로 존재했고, `install.mjs`의 복사 필터가 `_`로 시작하는 이름(`_selftest.mjs`)만 제외해 `.`으로 시작하는 로컬 잔여물은 걸러내지 못했다.
+- **먼저 확인한 것(심각도 판단)**: `git ls-files hooks/` 결과 실제 git 추적 파일은 `delegate.mjs`·`guard.mjs`·`hooks.json` 3개뿐이고, 위 잔여물은 `.gitignore`에 이미 패턴이 있어 **공개 저장소로는 노출되지 않았음**을 먼저 확인 — 보안 유출이 아니라 "설치기가 로컬 노이즈까지 함께 배포하는" 기능 결함으로 확정.
+- **수정**: `codex/install.mjs`의 제외 조건을 `name.startsWith('_')` → `name.startsWith('_') || name.startsWith('.')`로 1줄 확장.
+- **재검증**: `node hooks/_selftest.mjs` 98 PASS/0 FAIL 유지(회귀 없음, F7 설치 테스트 8건 포함) + 빈 폴더에서 재실행해 결과물이 3개 파일만 남는 것을 실제로 재확인.
+
 ## 다음 예정 (Planned)

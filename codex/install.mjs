@@ -104,7 +104,10 @@ try {
   mkdirSync(DEST_HOOKS, { recursive: true });
   mkdirSync(DEST_DATA, { recursive: true });
   for (const name of readdirSync(SRC_HOOKS)) {
-    if (name.startsWith('_')) continue; // _selftest.mjs 등 로컬 전용 파일은 배포 제외
+    // _selftest.mjs 등 로컬 전용 파일 + .omc·.plugin-config 등 로컬 도구가 hooks/ 안에 남긴
+    // 잔여물(dotfile/dot-directory)은 배포 대상이 아님 — 실사용 QA 중 발견: 이 필터가 '_'만
+    // 걸러 dotfile은 그대로 새 설치본마다 함께 복사되고 있었음(git-tracked 파일 3개와 무관한 로컬 노이즈).
+    if (name.startsWith('_') || name.startsWith('.')) continue;
     cpSync(join(SRC_HOOKS, name), join(DEST_HOOKS, name), { recursive: true, force: true });
   }
   if (existsSync(SRC_DATA)) {
