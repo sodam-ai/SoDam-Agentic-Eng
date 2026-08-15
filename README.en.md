@@ -6,7 +6,7 @@
 >
 > 🇰🇷 한국어 버전: [README.md](./README.md) (identical content, identical order)
 
-> ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) is complete, and Phase 2 (F6 safety log, F7 Codex safety parity) is also code-complete. However, a few items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
+> ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) and Phase 2 (F6 safety log, F7 Codex safety parity) are code-complete. **F8 (Easy Mode)**, the first Phase 3 feature, has also started as a minimal v1 — but its originally-planned starting condition (a live confirmation of the F2/F3 on-screen banners, Gate 1) hasn't finished yet. **The developer explicitly approved starting it anyway**, so this was started ahead of that gate, not after it closed (we state this honestly so it isn't mistaken for the gate being satisfied). A few other items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
 > ⚠️ **This GitHub repository is PUBLIC.** That said, it is still a personal tool the developer built for their own use, and it is not offered as a formally supported release for the general public. The license terms below (Apache-2.0) reflect this public status as it actually stands.
 
 ---
@@ -110,7 +110,7 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
    ```
    → success looks like "installed."
    > ⚠️ **Type the marketplace name exactly.** It must be `sodam-agentic@sodam-agentic`. The marketplace name must exactly match the `name` field in `.claude-plugin/marketplace.json` (shortening it to `@sodam` will fail).
-3. Verify: type just `/sodam-agentic:` → if 4 commands (`start`, `plan`, `review`, `log`) show up as autocomplete suggestions, you're done.
+3. Verify: type just `/sodam-agentic:` → if 5 commands (`start`, `plan`, `review`, `log`, `f8-easy`) show up as autocomplete suggestions, you're done.
 
 **(For local testing)** You can also register with a local folder path instead of an internet address:
 ```
@@ -146,6 +146,9 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 **One easy-to-miss step (recommended):**
 - Running `/init` once helps the AI better understand your current folder (project). This is the step beginners skip most often.
 
+**Still don't understand (F8):**
+- Say "this is too hard to understand" and a simpler explanation (F8, Easy Mode) appears automatically. To call it directly, use `/sodam-agentic:f8-easy`. Only the explanations get simpler — the safety steps (F2, F3, F4) work exactly the same regardless of this mode — see [§14 FAQ](#faq).
+
 **What happens automatically behind the scenes (nothing you need to do):**
 - Every single time the AI tries to write a file or run a command, SoDam's safety hook steps in first to decide whether it's safe, needs confirmation, or should be blocked (see the "decision flow" in [§11 Architecture](#architecture)). This always runs automatically without any action from you.
 
@@ -160,8 +163,9 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 | `/sodam-agentic:plan` | When you want to see the "plan first" feature again right now (normally it triggers automatically on a new task request) |
 | `/sodam-agentic:review` | When you want to see the "change review" again right now (normally it triggers automatically right after files change) |
 | `/sodam-agentic:log` | To check the record of what the safety system has blocked (deny) or asked about (ask) (F6) |
+| `/sodam-agentic:f8-easy` | When you need an even simpler explanation than the F1 onboarding, e.g. "this is too hard to understand" (F8, also auto-triggers from natural language) |
 
-> The format is `/plugin-name:command`. Opening a new chat and typing just `/sodam-agentic:` will list all 4 commands.
+> The format is `/plugin-name:command`. Opening a new chat and typing just `/sodam-agentic:` will list all 5 commands.
 
 ---
 
@@ -169,6 +173,18 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 ## 8. Update Summary
 
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
+
+<details>
+<summary><b>🆕 2026-08-13~15 — Redefined Gate 1, corrected the "primary user" record, and started F8 (Easy Mode) v1</b></summary>
+
+- **Gate 1 redefined:** item ④ (confirming live that the "ask" prompt appears in Codex) was reclassified as "conditionally deferred until Codex is actually being used" (right now usage is 100% Claude Code, so an unverified Codex path carries no real exposure). Gate 1 now effectively comes down to a single remaining item — ③ (a live confirmation of the F2/F3 on-screen banners) — which is still unconfirmed.
+- **"Primary user" record corrected:** an earlier note said "a few close friends are already using it heavily," which the developer personally corrected to "the primary — and effectively only — user is me." The plan to close Gate 1 item ③ by "asking a friend to confirm" was withdrawn, reverting to the original method (the developer observing it directly during their own normal use).
+- **F8 (Easy Mode) v1 started:** added `/sodam-agentic:f8-easy` — an **extra explanation layer**, one step simpler than the F1 onboarding, that re-explains "the 4 steps to make an AI work properly" using an even easier analogy. It does not replace or skip safety steps like plan-first (F2) or review (F3). This feature was originally supposed to wait until Gate 1 closed, but **the developer explicitly approved starting it now**, ahead of the gate closing.
+- **Made the safety code structurally unaware of F8:** `hooks/guard.mjs` and `hooks/delegate.mjs` (the code that actually blocks real danger) contain **not a single line** related to F8. Instead of "toggling a setting and checking the result," an automated test directly scans both files' source code to confirm no F8-related wording exists in them at all — since the safety code doesn't even know F8 exists, turning F8 on or off cannot affect the safety level.
+- **Tested unusual/invalid inputs:** fed the safety hook six kinds of malformed input directly — broken data, missing fields, a 50,000-character command string, and more. All of them were handled safely with no crashes (genuinely dangerous content was still caught correctly no matter how long it was, and everything else safely passed through).
+- **Verification:** all 100 automated tests passed (0 failures). Directly diffed the safety files (`hooks/guard.mjs`, `hooks/delegate.mjs`, `hooks/hooks.json`) and confirmed **not one character changed** as a result of this work.
+
+</details>
 
 <details>
 <summary><b>🔍 2026-08-04 — Current status check (Phase 3 entry-gate status, no code change)</b></summary>
@@ -331,6 +347,7 @@ The local self-test suite grew from 67 to 85 tests, all passing.
 | Onboarding command | `commands/start.md` (`/sodam-agentic:start`) |
 | Plan/review/log commands | `commands/plan.md`, `commands/review.md`, `commands/log.md` |
 | Auto-triggering skills | `skills/start/SKILL.md`, `skills/plan/SKILL.md`, `skills/review/SKILL.md` |
+| Easy Mode (F8) | `skills/f8-easy/SKILL.md` (auto-trigger), `commands/f8-easy.md` (manual `/sodam-agentic:f8-easy`) |
 | Read-only review helper agent | `agents/easy-reviewer.md` |
 | Safety hook | `hooks/hooks.json` (wiring), `hooks/guard.mjs` (decision logic), `hooks/delegate.mjs` (sibling detection) |
 | Safety rules (data) | `data/agentic-rules.json` |
@@ -381,6 +398,7 @@ This plugin is a **purely local tool with no server, no database, and no login.*
 | Manifest | `.claude-plugin/plugin.json`, `marketplace.json` | Tells Claude Code "this folder is a plugin" |
 | Onboarding (F1) | `commands/start.md`, `skills/start/SKILL.md` | `/sodam-agentic:start` — the 4-step guide |
 | Plan/review (F2·F3) | `skills/plan/`, `skills/review/` (auto-trigger) + `commands/plan.md`, `commands/review.md` (manual call) | Auto-triggers on a new task request / on completed changes, and can also be called directly |
+| Easy Mode (F8) | `skills/f8-easy/SKILL.md` (auto) + `commands/f8-easy.md` (manual) | One step simpler than F1's explanations. Designed to never reference `guard.mjs`/`delegate.mjs` at all (enforced by an automated source-word scan of both files) — never replaces or skips the F2/F3 safety steps |
 | Review helper agent | `agents/easy-reviewer.md` | A **read-only** sub-agent (only uses `Read`, `Grep`, `Glob`) that F3 delegates to when there are many changes |
 | Safety hook (F4) | `hooks/hooks.json` (wiring) + `hooks/guard.mjs` (decision logic) + `hooks/delegate.mjs` (sibling detection) | Always intervenes **right before** Bash, PowerShell, Write, Edit, MultiEdit, or NotebookEdit run |
 | Safety rule data | `data/agentic-rules.json` | Adjustable rule values (dangerous patterns, when to skip planning, etc.) with no code changes needed |
@@ -513,6 +531,9 @@ A. Just open that file yourself, directly, in a text editor. What this plugin bl
 **Q. Do the plan (F2) and review (F3) prompts show up every time?**
 A. There's no technical mechanism yet that forces them to appear every time (skills are "requests" the AI honors, and can lose out to other skills). If you don't see it, just ask directly: "show me the plan first" / "review the changes."
 
+**Q. What is F8 (Easy Mode)? Do I need it?**
+A. It's an **even simpler explanation layer** for when you've read the F1 onboarding once but still think "I don't understand any of this." Saying something like "this is too hard to understand" triggers it automatically, or you can call it directly with `/sodam-agentic:f8-easy`. It only makes the *explanations* simpler — safety steps like plan-first (F2) and review (F3) work exactly the same **whether this mode is on or off.**
+
 ---
 
 <a id="license-legal"></a>
@@ -588,4 +609,4 @@ This repository is **public**, but it is still run as the developer's **personal
 
 ---
 
-*Document version as of: 2026-08-04 · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-08-15 · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
