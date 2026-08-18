@@ -292,9 +292,30 @@
 - **검증**: `node hooks/_selftest.mjs` 100 PASS/0 FAIL, `node scripts/validate.mjs` 15 PASS/0 WARN/0 FAIL. `git status`로 `hooks/guard.mjs`·`hooks/delegate.mjs`·`hooks/hooks.json` 무변경 재확인(신규 파일은 `commands/f8-easy.md`·`skills/f8-easy/`뿐, `hooks/_selftest.mjs`는 애초에 `.gitignore` 대상이라 커밋 대상 아님 — 이전 기록의 "git-tracked" 표기는 오기였음, 이번에 정정).
 - **의도적으로 하지 않은 것**: 게이트 1 ③ 라이브 실측(사람이 새 세션에서 직접 관찰해야 함), 게이트 3(MCP 큐레이션) 착수, F8 자동발동 라이브 검증(자연어 판단 영역이라 AI 자체 검증 불가), `commands/f8-easy.md`·`skills/f8-easy/` git 커밋(아직 사용자 확인 전). 전부 `CHECKPOINT.md` §0-59에 남은 작업으로 기록.
 
+### 2026-08-17 패치 — 독립 QA에서 실제 안전 결함 2건 발견·수정 (보안, `git -C` 경로검사 우회 + git 파괴적 명령 무방비)
+
+> 배경: "직접 테스트/검증"(정상흐름·예외·경계값·실패 상황 포함) 요청에 따라, 기존 100건 자동테스트 재실행(불변 확인)에 그치지 않고 소스코드를 처음부터 직접 읽고 새 경계값을 독립적으로 프로빙했다. 두 건 모두 실제 child process 재현으로 확정 후 수정.
+
+- **발견 1(경로검사 우회)**: `commandPaths()`가 `git -C <경로>`와 `git -c <key=val>`을 대소문자 구분 없이 똑같이 "경로 후보 제외" 대상으로 취급하고 있었음. 그러나 git에서 `-C`(대문자)는 실제 작업 경로 지정이고 `-c`(소문자)는 설정값 문자열일 뿐이라 이 둘을 묶은 게 원인 — `git -C C:\Windows\System32 status`처럼 `-C` 뒤 경로가 민감위치·작업폴더 밖 검사를 전부 우회함을 재현 확인(수정 전: 무결정 통과 / 대조군인 `Write` 도구 직접 지정은 정상 deny).
+  - **수정(`hooks/guard.mjs`)**: 제외 조건을 `/^-[Cc]$/` → `/^-c$/`(소문자만)로 변경. `-C`의 값은 이제 다른 경로와 동일하게 검사됨.
+- **발견 2(위험 분류 누락)**: `git reset --hard`·`git push --force`/`-f`·`git clean -f*`·`git branch -D` 등 되돌리기 어려운 git 명령이 `CATASTROPHIC`/`RISKY_DELETE` 어느 목록에도 없어 완전 무방비(무결정 통과)였음. `rm -rf` 등은 막으면서 git으로 같은 성격의 손실(미커밋 변경·브랜치·원격 이력 소실)을 내는 경로는 놓치고 있던 빈틈.
+  - **수정(`hooks/guard.mjs`)**: `RISKY_DELETE`에 4개 패턴 추가(ask 등급, deny 아님 — Harness 위임 시 되돌리기 가능). 과잉차단 방지를 위해 안전한 형태(`--force-with-lease`·`git branch -d` 소문자·`git clean -n` dry-run)는 의도적으로 제외.
+- **검증**: 두 수정 다 child process로 직접 재현 후 반전 확인(수정 전 무결정 → 수정 후 정상 deny/ask). `hooks/_selftest.mjs`에 회귀방지 테스트 14건 신설(신규 발동 9건 + 오탐 방지 확인 5건) — **100 PASS → 114 PASS / 0 FAIL**, 자기보안 0 유지. `scripts/validate.mjs`는 "설치 캐시 최신성"만 예상대로 FAIL(방금 고친 코드가 재설치 전이라 당연한 결과, PASS 14/WARN 0).
+- **범위 밖(정직한 한계)**: `git checkout -- .`(작업트리 전체 되돌리기)·`git branch -D` 외 다른 강제삭제형 서브커맨드는 이번 라운드에 포함하지 않음 — 위험 패턴은 초안이며 모든 위험을 100% 잡지 못한다는 `01_PRD.md §8.8` 원칙과 동일 선상. 커밋·푸시는 사용자 확인 후 진행.
+
+### 2026-08-17 후속 패치 — 사람의 라이브 테스트에서 harness 위임 공백(git branch -D) 실제 발견·수정 (보안)
+
+> 배경: 위 QA 수정분을 사용자가 실제 새 세션에서 직접 눌러본 결과, `git reset --hard`·`git -C C:\Windows status` 모두 확인창 없이 실행됨. 노이즈 많은 라이브 세션 대신 동일 입력을 child process로 직접 재현해 원인을 규명했다.
+
+- **원인**: `guard.mjs`는 "risky" 등급 명령을 SoDamHarness(형제 플러그인)가 살아있으면 통째로 위임한다(중복 확인창 방지 목적의 기존 설계). 이 기기에는 SoDamHarness가 실제로 설치·활성 상태였고, 위 QA에서 추가한 git 패턴 4개도 전부 이 위임 대상이었음.
+- **대조 확인**: SoDamHarness 실제 설치본을 직접 실행해 보니 `git reset --hard`·`git push --force`·`git clean -f*` **3개는 Harness가 이미 독자적으로 잡고 있어 위임이 안전하게 작동 중**이었음(오판 아님). **`git branch -D`만 Harness 규칙에 전혀 없어 위임 시 완전 무방비**였던 것이 유일한 진짜 공백으로 확인됨.
+- **수정(`hooks/guard.mjs`)**: `git branch -D` 패턴을 `RISKY_DELETE`에서 분리해 `GIT_BRANCH_FORCE_DELETE`로 만들고, 기존 `isOutsideWorkdir` 검사와 같은 자리에서 **harness 유무와 무관하게 항상 자체 확인**하도록 변경. 나머지 3개 패턴은 Harness가 이미 커버함을 실측했으므로 기존 위임을 그대로 유지(불필요한 이중 확인창을 늘리지 않음).
+- **검증**: `hooks/_selftest.mjs`(강제 no-harness 모드) 114 PASS 유지·회귀 없음. 실제(강제 옵션 없는) harness-alive 상태로 직접 재현: `git branch -D` → 신규 ask 확인, `git branch -d`·`git status` → 과잉차단 없음 확인, `git reset --hard`·`git push --force` → 기존처럼 Harness에 안전하게 위임 유지.
+- **정직히 미확인**: 라이브 세션에서 `git -C C:\Windows status`·계획 안내(F2)까지 안 떴던 정확한 원인은 이번 조사로 확정하지 못함(코드 재현으로는 정상 동작 확인됨 — 그 세션 자체의 훅 환경 노이즈가 유력 가설이나 미확정).
+
 ## 다음 예정 (Planned)
 
-- 게이트 1 ③ — F2/F3 배너 실측(라이브, 사람이 새 세션에서 직접 관찰).
-- F8 자동발동 새 세션 라이브 검증 + 비개발자용 테스트 안내문 작성.
-- 게이트 3 — MCP 큐레이션 후보 3~5개 리서치 → 기존 4개 기준 대조 → 문서화.
+- 게이트 1 ③ — F2/F3 배너 실측(라이브, 사람이 새 세션에서 직접 관찰). *(2026-08-17: 비개발자용 안내문은 Artifact로 작성 완료, 라이브 관찰 자체는 여전히 사람 몫으로 대기 중 — `CHECKPOINT.md §0-61`)*
+- 게이트 3 — MCP 큐레이션 후보 3~5개 리서치 → 기존 4개 기준 대조 → 문서화(착수 여부 사용자 확인 필요).
 - `commands/f8-easy.md`·`skills/f8-easy/` 커밋·푸시 여부 결정.
+- 2026-08-17 QA 수정분(`hooks/guard.mjs`) 커밋·푸시 여부 결정.

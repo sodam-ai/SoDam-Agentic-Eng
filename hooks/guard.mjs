@@ -229,7 +229,12 @@ function commandPaths(cmd) {
     if (!t) continue;
 
     const prevQuoteStripped = i > 0 ? (toks[i - 1] || "").replace(/^["']+|["']+$/g, "") : "";
-    if (/^-[Cc]$/.test(prevQuoteStripped)) continue; // git -C <경로> / -c <key=val> 의 값 제외
+    // ⚠️ 2026-08-17 독립 QA에서 발견·수정: 기존엔 대소문자 구분 없이 [Cc] 둘 다 값을 경로후보에서
+    // 제외했는데, git에서 -C(대문자)는 "이 경로에서 실행"(진짜 경로, 검사 필요)이고 -c(소문자)는
+    // "설정값=key" 문자열(경로 아님, 오탐 방지 목적)로 서로 다른 뜻이다. 대소문자 구분 없이 묶은
+    // 게 원인이었고, 그 결과 `git -C C:\Windows 아무명령`처럼 -C 뒤 경로가 민감위치·작업폴더 밖
+    // 검사를 전부 우회했다(재현 확인됨). 이제 소문자 -c(설정값)만 제외하고 -C(경로)는 정상 검사한다.
+    if (/^-c$/.test(prevQuoteStripped)) continue; // git -c <key=val> 의 값만 제외(대문자 -C는 실경로라 검사 대상 유지)
 
     if (i === 0 || CMD_SEPARATORS.has(prevQuoteStripped)) {
       // 이 토큰은 (새) 명령어 이름 — 그 자체는 경로 후보 아님, 경로다루는명령인지만 기록
@@ -398,6 +403,24 @@ const RISKY_DELETE = [
   /\brm\b/i, /\b(del|erase)\b/i, /\b(rmdir|rd)\b/i, /\bunlink\b/i, /\bremove-item\b/i, /\b(ri|rd)\b\s/i,
   /\.(rmtree|removedirs)\s*\(/i, /\bos\.(remove|unlink|rmdir)\s*\(/i,
   /\bfs\.(rm|rmsync|unlink|unlinksync|rmdir|rmdirsync)\b/i, /\b(rmsync|unlinksync|rmdirsync)\s*\(/i,
+  // ⚠️ 2026-08-17 독립 QA에서 발견·추가: 아래 git 파괴적 명령들은 어떤 위험등급에도 안 걸려
+  // 완전 무방비(무결정 통과)였음이 실측 확인됨 — rm -rf 등은 막으면서 git으로 같은 결과(작업
+  // 중이던 변경/브랜치/원격 이력 손실)를 내는 명령은 놓치고 있었던 빈틈. 최소 폴백 화이트리스트
+  // (①위험명령) 취지에 부합해 ask 등급으로만 추가(deny 아님 — Harness가 있으면 되돌리기 가능,
+  // 과잉차단 방지 위해 안전한 형태는 제외: --force-with-lease·git branch -d(소문자, git이 이미
+  // 미병합시 자체 거부)·dry-run(git clean -n)은 의도적으로 안 잡음). git branch -D는 아래
+  // GIT_BRANCH_FORCE_DELETE로 분리(사유는 그 상수 옆 주석 참고).
+  /\bgit\s+reset\b[^;&|]*--hard\b/i,
+  /\bgit\s+push\b[^;&|]*(--force(?!-with-lease)\b|\s-f\b)/i,
+  /\bgit\s+clean\b[^;&|]*(-[a-z]*f[a-z]*(\s|$)|--force\b)/i,
+];
+// ⚠️ 2026-08-17 라이브 재현으로 발견: git branch -D는 위 3개와 달리 SoDamHarness 실제 설치본에
+// 전혀 없다(reset --hard·push --force·clean -f는 Harness가 자체적으로 이미 잡아서 위임이
+// 안전하지만, branch -D는 위임하면 완전 무방비 — 무결정 통과가 직접 재현으로 확인됨). 그래서
+// 이 패턴만은 harness 유무와 무관하게 항상 자체 확인한다(isOutsideWorkdir·CATASTROPHIC과
+// 동일한 이중 안전장치 원칙 — 형제가 그 보호를 갖고 있지 않을 때를 대비).
+const GIT_BRANCH_FORCE_DELETE = [
+  /\bgit\s+branch\b[^;&|]*-D\b/, // -D(대문자, 강제삭제)만 — -d(소문자, 안전삭제)는 제외(대소문자 구분 유지 위해 i 플래그 의도적으로 뺌)
 ];
 const RECURSIVE_DELETE = [
   /\brm\s+-[a-z]*r/i,
@@ -534,6 +557,14 @@ function main() {
         decide("ask", "지금 작업 중인 폴더 밖의 위치를 건드리려고 해요. 다른 폴더까지 손대는 게 맞나요? 확실하면 진행해도 돼요.", ap);
         return;
       }
+    }
+
+    // ⚠️ harness 유무와 무관하게 항상 실행(2026-08-17 라이브 검증 발견, 위 GIT_BRANCH_FORCE_DELETE
+    // 주석 참고). level 분류·harness 위임보다 먼저 검사해야, harness가 살아있어 아래 risky 분기가
+    // 통째로 위임(passThrough)되더라도 이 패턴만은 놓치지 않는다.
+    if (anyMatch(GIT_BRANCH_FORCE_DELETE, cmd)) {
+      decide("ask", "브랜치를 강제로 지우는 작업이에요(git branch -D). 아직 합쳐지지 않은 작업이 있으면 그대로 사라질 수 있어요. 정말 지울까요?", cmd);
+      return;
     }
 
     if (level === "safe") { passThrough(); return; }
