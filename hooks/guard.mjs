@@ -419,8 +419,13 @@ const RISKY_DELETE = [
 // 안전하지만, branch -D는 위임하면 완전 무방비 — 무결정 통과가 직접 재현으로 확인됨). 그래서
 // 이 패턴만은 harness 유무와 무관하게 항상 자체 확인한다(isOutsideWorkdir·CATASTROPHIC과
 // 동일한 이중 안전장치 원칙 — 형제가 그 보호를 갖고 있지 않을 때를 대비).
+// ⚠️ 2026-08-19 후속 QA에서 발견: git은 짧은 플래그를 묶어 쓸 수 있어서(`git branch -Df`처럼)
+// 기존 `-D\b` 단독 토큰 매칭이 결합 플래그를 놓쳤다(`git branch -Dh`로 실제 결합 파싱됨을 git
+// 자체 도움말 출력으로 재현 확인). 아래 패턴은 "-"로 시작하는 짧은 플래그 토큰 안에 대문자 D가
+// 있으면(-D·-Df·-fD 등) 전부 잡되, `--delete`(긴 옵션, force 없어 git이 자체 거부)나 브랜치
+// 이름에 우연히 "-D"가 포함된 경우(`feature-DEV` 등, 단위테스트로 오탐 없음 확인)는 여전히 제외.
 const GIT_BRANCH_FORCE_DELETE = [
-  /\bgit\s+branch\b[^;&|]*-D\b/, // -D(대문자, 강제삭제)만 — -d(소문자, 안전삭제)는 제외(대소문자 구분 유지 위해 i 플래그 의도적으로 뺌)
+  /\bgit\s+branch\b[^;&|]*(?:^|\s)-(?!-)[A-Za-z]*D[A-Za-z]*(?=\s|$)/,
 ];
 const RECURSIVE_DELETE = [
   /\brm\s+-[a-z]*r/i,
