@@ -424,8 +424,12 @@ const RISKY_DELETE = [
 // 자체 도움말 출력으로 재현 확인). 아래 패턴은 "-"로 시작하는 짧은 플래그 토큰 안에 대문자 D가
 // 있으면(-D·-Df·-fD 등) 전부 잡되, `--delete`(긴 옵션, force 없어 git이 자체 거부)나 브랜치
 // 이름에 우연히 "-D"가 포함된 경우(`feature-DEV` 등, 단위테스트로 오탐 없음 확인)는 여전히 제외.
+// ⚠️ 2026-08-19 3차 QA에서 발견: -D/-d 구분을 위해 이 패턴엔 i 플래그를 안 썼는데, 그 여파로
+// "git"·"branch" 자체도 의도치 않게 대소문자를 구분하게 돼 `Git branch -D`처럼 대문자로 시작하면
+// 완전히 우회됨을 재현 확인(Windows git은 실행파일명 대소문자를 구분하지 않아 실제로 통함).
+// git·branch만 문자클래스로 대소문자 허용하고, 위험 표식인 대문자 D는 그대로 고정해 구분 유지.
 const GIT_BRANCH_FORCE_DELETE = [
-  /\bgit\s+branch\b[^;&|]*(?:^|\s)-(?!-)[A-Za-z]*D[A-Za-z]*(?=\s|$)/,
+  /[gG][iI][tT]\s+[bB][rR][aA][nN][cC][hH]\b[^;&|]*(?:^|\s)-(?!-)[A-Za-z]*D[A-Za-z]*(?=\s|$)/,
 ];
 const RECURSIVE_DELETE = [
   /\brm\s+-[a-z]*r/i,
