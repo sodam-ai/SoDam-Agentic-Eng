@@ -151,6 +151,7 @@ Download</a></li>
 Use</a></li>
 <li><a href="#uninstall">Uninstall</a></li>
 <li><a href="#contribute">Contributing / Contact</a></li>
+<li><a href="#recommended-mcp">Recommended MCPs (Optional, Reference)</a></li>
 </ol>
 <hr />
 <p><a id="intro"></a></p>
@@ -1591,7 +1592,61 @@ the developer's <strong>personal-use tool</strong>, and there isn't a
 formal contribution (PR) process yet. Please leave questions or bug
 reports as a GitHub issue.</p>
 <hr />
-<p><em>Document version as of: 2026-08-15 · This document was written
+<p><a id="recommended-mcp"></a></p>
+<h2 id="18-recommended-mcps-optional-reference">18. Recommended MCPs
+(Optional, Reference)</h2>
+<p><strong>MCP</strong> (Model Context Protocol) lets AI connect to
+external tools/services. The 4 below are reference candidates SoDam
+Agentic reviewed against its own trust criteria (official repo? source
+public and directly reviewed? maintained by a well-known org/person?
+any known issue history? — needs 2+ of 4).</p>
+<blockquote>
+<p>⚠️ <strong>Honest note</strong>: This list is <strong>reference
+only</strong>. SoDam Agentic does not auto-install or enable any of
+these — if you decide you need one, install/connect it
+<strong>yourself</strong> (e.g. via the <code>/plugin</code>
+screen).</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>MCP</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Context7</strong> (Upstash)</td>
+<td>Lets AI look up current library/framework docs directly</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Playwright MCP</strong> (Microsoft)</td>
+<td>Lets AI open, click, and inspect web pages directly</td>
+<td>Prompt-injection risk (a page's hidden content tricking the AI) is
+a general limitation of this class of tool</td>
+</tr>
+<tr>
+<td><strong>Chrome DevTools MCP</strong> (Google)</td>
+<td>Lets AI open and inspect a running web app's screen/console/performance</td>
+<td><strong>Use version 1.1.0 or later</strong> (a security issue
+disclosed 2026-08-17 affected earlier versions and was fixed in
+1.1.0)</td>
+</tr>
+<tr>
+<td><strong>GitHub Official MCP Server</strong> (GitHub)</td>
+<td>Lets AI manage repos/issues/PRs directly</td>
+<td>No confirmed real-world use in the SoDam family yet, so listed as
+reference-only</td>
+</tr>
+</tbody>
+</table></div>
+<p>Full research/rationale is kept in
+<code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code> (developer reference,
+not included in this repo).</p>
+<hr />
+<p><em>Document version as of: 2026-08-20 · This document was written
 based on "code actually implemented and verified so far" — anything not
 directly executed and confirmed is honestly flagged in <a
 href="#changelog">§8</a>.</em></p>
