@@ -31,6 +31,7 @@
 15. [Legal · Copyright · License · Commercial Use](#license-legal)
 16. [Uninstall](#uninstall)
 17. [Contributing / Contact](#contribute)
+18. [Recommended MCPs (Optional, Reference)](#recommended-mcp)
 
 ---
 
@@ -609,4 +610,22 @@ This repository is **public**, but it is still run as the developer's **personal
 
 ---
 
-*Document version as of: 2026-08-15 · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+<a id="recommended-mcp"></a>
+## 18. Recommended MCPs (Optional, Reference)
+
+**MCP** (Model Context Protocol) lets AI connect to external tools/services. The 4 below are reference candidates SoDam Agentic reviewed against its own trust criteria (official repo? source public and directly reviewed? maintained by a well-known org/person? any known issue history? — needs 2+ of 4).
+
+> ⚠️ **Honest note**: This list is **reference only**. SoDam Agentic does not auto-install or enable any of these — if you decide you need one, install/connect it **yourself** (e.g. via the `/plugin` screen).
+
+| MCP | Purpose | Notes |
+|---|---|---|
+| **Context7** (Upstash) | Lets AI look up current library/framework docs directly | — |
+| **Playwright MCP** (Microsoft) | Lets AI open, click, and inspect web pages directly | Prompt-injection risk (a page's hidden content tricking the AI) is a general limitation of this class of tool |
+| **Chrome DevTools MCP** (Google) | Lets AI open and inspect a running web app's screen/console/performance | **Use version 1.1.0 or later** (a security issue disclosed 2026-08-17 affected earlier versions and was fixed in 1.1.0) |
+| **GitHub Official MCP Server** (GitHub) | Lets AI manage repos/issues/PRs directly | No confirmed real-world use in the SoDam family yet, so listed as reference-only |
+
+Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (developer reference, not included in this repo).
+
+---
+
+*Document version as of: 2026-08-20 · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
