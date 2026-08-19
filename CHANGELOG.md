@@ -330,6 +330,16 @@
 - **수정(`hooks/guard.mjs`)**: "git"·"branch" 부분만 문자클래스로 대소문자를 허용하고, 위험 표식인 대문자 `D`는 그대로 고정해 `-D`/`-d` 구분은 유지.
 - **검증**: `hooks/_selftest.mjs`에 4건 추가(발동 3 + 오탐방지 1) — **118 → 122 PASS/0 FAIL**. 실제 harness-alive 상태로도 재현 확인.
 - **오진 기록**: Fix1(`git -C` 경로검사)도 같은 문제가 있는지 의심해 재현했으나, 원인은 테스트 스크립트의 백슬래시 이스케이프 실수였음(guard.mjs 문제 아님) — `commandPaths()`가 명령어 이름을 이미 소문자로 정규화하고 있어 원래부터 대소문자에 안전했음을 재확인.
+- **✅ 2026-08-19 커밋(`8782ced`)+2026-08-20 push 완료**, 로컬·원격 동기화 확인됨.
+
+### 2026-08-20 4차 QA 패치 — `git filter-branch`(이력 재작성) 무방비 발견·수정 (보안)
+
+> 배경: "지금까지 구현된 기능 정상작동 테스트/검증" 4차 재요청. 8/19 후속 패치에서 "9개 미보호 명령 중 가장 위험도 높음"으로만 지목해두고 미뤘던 `git filter-branch`를 직접 재현·검증.
+
+- **발견**: `git filter-branch --prune-empty -- --all` 같은 일반적 형태는 어느 위험등급에도 없어 완전 무방비(무결정 통과)였음. 이전엔 `--tree-filter 'rm ...'`처럼 안에 우연히 "rm" 문구가 들어간 경우만 `RISKY_DELETE`의 범용 `\brm\b` 패턴에 우연히 걸려 막힌 것처럼 보였을 뿐 — rm이 없는 실사용 형태(`--tree-filter 'chmod -R go-rwx dir'`)는 그대로 통과함을 재현 확인. SoDamHarness 자체 guard.mjs에도 filter-branch 전용 패턴이 전혀 없음을 직접 실행해 확인.
+- **수정(`hooks/guard.mjs`)**: `GIT_HISTORY_REWRITE` 상수 신설, `GIT_BRANCH_FORCE_DELETE`와 동일하게 harness 유무와 무관하게 항상 자체 확인(ask). `-D`/`-d` 같은 대소문자 구분이 필요 없어 `/i` 플래그로 단순하게 구현.
+- **검증**: `hooks/_selftest.mjs`에 4건 추가(발동 2 — rm 있는 경우·없는 경우 각각 — + 오탐방지 2: `git log --grep=filter-branch`, 커밋 메시지에 "filter-branch" 텍스트만 있는 경우) — **122 → 126 PASS/0 FAIL**. 실제(강제옵션 없는) harness-alive 상태로 직접 재현해 반전 확인.
+- **범위 밖(정직한 한계, 유지)**: 나머지 8개 명령(`update-ref -d`·`tag -d`·`checkout -- .`·`checkout .`·`restore .`·`rm --cached`·`gc --prune=now --aggressive`·`reflog expire --expire=now --all`)은 이번에도 손대지 않음 — filter-branch만 예외로 다룬 이유는 이미 두 라운드 전부터 "최우선 항목"으로 명시 지목되어 있었고 이번에 재현으로 위험이 확정됐기 때문(`01_PRD.md §8.8` "패턴 무한확장 지양" 원칙 유지).
 - 커밋·푸시는 사용자 확인 후 진행.
 
 ## 다음 예정 (Planned)
@@ -339,5 +349,6 @@
 - ~~`commands/f8-easy.md`·`skills/f8-easy/` 커밋·푸시 여부 결정.~~ **정정: 2026-08-15 `95f9e18`로 이미 커밋·푸시 완료 상태였음**(이 목록이 갱신 안 돼 있던 낡은 기록, 2026-08-18 재확인 중 발견해 정정).
 - ~~2026-08-17 QA 수정분(`hooks/guard.mjs`) 커밋·push 여부 결정.~~ **2026-08-18 커밋(`1de2966`)·push(`18fb785`) 완료**, 로컬·원격 동기화 확인됨.
 - ~~2026-08-19 후속 패치(`git branch -Df` 수정)의 커밋·push 여부 결정.~~ **커밋(`909d32c`)·push 완료**, 로컬·원격 동기화 확인됨.
-- (선택, 낮은 우선순위) `git filter-branch` 등 9개 미보호 git 명령 대응 여부 — 착수 결정 필요 시에만.
-- 2026-08-19 3차 QA 패치(`Git branch -D` 대소문자 수정)의 커밋·push 여부 결정.
+- (선택, 낮은 우선순위) `git filter-branch` 제외 나머지 8개 미보호 git 명령 대응 여부 — 착수 결정 필요 시에만.
+- ~~2026-08-19 3차 QA 패치(`Git branch -D` 대소문자 수정)의 커밋·push 여부 결정.~~ **커밋(`8782ced`)·push 완료**, 로컬·원격 동기화 확인됨.
+- 2026-08-20 4차 QA 패치(`git filter-branch` 수정)의 커밋·push 여부 결정.

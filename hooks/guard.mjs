@@ -431,6 +431,16 @@ const RISKY_DELETE = [
 const GIT_BRANCH_FORCE_DELETE = [
   /[gG][iI][tT]\s+[bB][rR][aA][nN][cC][hH]\b[^;&|]*(?:^|\s)-(?!-)[A-Za-z]*D[A-Za-z]*(?=\s|$)/,
 ];
+// ⚠️ 2026-08-20 4차 QA에서 발견: git filter-branch(전체 이력 재작성, --force 등 별도 표식 없이도
+// 실행만 되면 항상 위험함)가 어느 위험등급에도 없어 완전 무방비였음(§0-67에서 "가장 위험도 높은
+// 잔여 항목"으로 이미 지목했던 것을 재현으로 확정). 이전엔 안에 우연히 "rm" 문구가 들어간 경우만
+// RISKY_DELETE의 범용 \brm\b에 우연히 걸려 막힌 것처럼 보였을 뿐(rm 없는 --tree-filter 'chmod ...'
+// 형태는 그대로 통과함을 재현 확인) — 이번엔 filter-branch 자체를 직접 인식하도록 전용 패턴 신설.
+// SoDamHarness 자체 guard.mjs에도 동일 패턴 없음(직접 실행해 확인) → GIT_BRANCH_FORCE_DELETE와
+// 동일하게 harness 유무와 무관하게 항상 자체 확인. -D/-d 같은 대소문자 구분 필요가 없어 /i 안전.
+// (알려진 사소한 과잉확인: `git filter-branch --help`도 걸림 — 실제 이력 재작성이 없어 안전하지만
+// 확인창 한 번 더 뜨는 정도의 불편이라 감수, git branch -Dh 때와 동일한 기존 관례)
+const GIT_HISTORY_REWRITE = [/\bgit\s+filter-branch\b/i];
 const RECURSIVE_DELETE = [
   /\brm\s+-[a-z]*r/i,
   /\bremove-item\b[^;&|]*-recurse/i,
@@ -573,6 +583,12 @@ function main() {
     // 통째로 위임(passThrough)되더라도 이 패턴만은 놓치지 않는다.
     if (anyMatch(GIT_BRANCH_FORCE_DELETE, cmd)) {
       decide("ask", "브랜치를 강제로 지우는 작업이에요(git branch -D). 아직 합쳐지지 않은 작업이 있으면 그대로 사라질 수 있어요. 정말 지울까요?", cmd);
+      return;
+    }
+
+    // ⚠️ harness 유무와 무관하게 항상 실행(2026-08-20, 위 GIT_HISTORY_REWRITE 주석 참고).
+    if (anyMatch(GIT_HISTORY_REWRITE, cmd)) {
+      decide("ask", "git 저장소 전체 이력을 다시 쓰는 작업이에요(git filter-branch). 모든 브랜치·태그에 영향을 줄 수 있고 되돌리기 어려워요. 정말 진행할까요?", cmd);
       return;
     }
 
