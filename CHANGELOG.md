@@ -454,3 +454,19 @@
 
 - **변경**: `.claude-plugin/plugin.json`·`package.json` `version` `0.2.2`→`0.2.3`.
 - **포함 내용**: `THIRD_PARTY_NOTICES.md` 신규, 차용 오픈소스 라이선스 실사 확인(위 항목 참고). 기능·동작 변경은 없으나, 플러그인 배포 패키지에 새 파일이 실제로 포함되므로 패치 버전으로 반영.
+
+### 2026-08-21 — `commands/start.md` 안전 경고 누락분 발견·수정 (F1)
+
+> 배경: `04_PROJECT_SPEC.md`의 "절대 하지 마" 체크리스트 전 항목을 `hooks/guard.mjs` 실제 코드와 한 줄씩 대조하는 전수 검증 중 발견. `skills/start/SKILL.md`(자연어 자동발동 경로)엔 "자동승인(bypass) 모드에서 안전 확인이 조용히 통과된다"는 경고 문단이 있는데, 거의 동일한 내용을 담은 `commands/start.md`(README 공식 설치 순서가 안내하는 `/sodam-agentic:start` 직접 실행 경로)엔 이 문단만 빠져 있었음.
+
+- **발견**: 두 파일이 F1 온보딩 내용을 대부분 그대로 복제하고 있는데, `commands/start.md`만 이 안전 경고 문단이 누락된 상태(다른 이유로 두 파일이 동기화되지 못한 드리프트로 추정, 원인 시점은 특정 불가).
+- **수정**: `skills/start/SKILL.md`의 문단을 그대로 `commands/start.md`에 추가.
+- **영향**: README가 안내하는 실제 설치 순서(`/plugin install` → `/init` → `/소담:시작`)를 그대로 따라온 사용자도 이제 이 안전 경고를 보게 됨. `07_SECURITY.md §1` MUST("bypassPermissions 감지 시 큰 경고") 요구사항이 두 진입 경로 모두에서 충족됨.
+- **검증**: `_selftest.mjs` 126 PASS/0 FAIL, `validate.mjs` PASS 14/WARN 1/FAIL 0 불변. 다른 명령↔스킬 쌍(`plan`·`review`·`f8-easy`)도 같은 방식으로 재대조해 동일 문제 없음을 확인.
+
+## [0.2.4] - 2026-08-21
+
+> 배경: 안전 경고 누락 수정은 사용자가 실제로 보는 F1 온보딩 내용을 바꾸는 변경이라, F8 콘텐츠 변경 때와 동일한 기준으로 패치 릴리스.
+
+- **변경**: `.claude-plugin/plugin.json`·`package.json` `version` `0.2.3`→`0.2.4`.
+- **포함 내용**: `commands/start.md` 안전 경고 문단 추가(위 항목 참고).
