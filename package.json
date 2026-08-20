@@ -1,6 +1,6 @@
 {
   "name": "sodam-agentic",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "초보 바이브코더를 위한 AI 진입점 — 계획 먼저·쉬운 검토·안전 기본 (Claude Code + Codex 플러그인)",
   "type": "module",
   "private": true,
