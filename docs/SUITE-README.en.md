@@ -1,6 +1,6 @@
 # SoDam Claude Code Plugin Suite — Complete Beginner's Guide
 
-> **Version** v0.1.0 · **License** Apache-2.0 · **Author** SoDam AI Studio · **Last Updated** 2026-06-29
+> **Version** v0.2.0 · **License** Apache-2.0 · **Author** SoDam AI Studio · **Last Updated** 2026-06-29
 
 ---
 
