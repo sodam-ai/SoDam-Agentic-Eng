@@ -357,7 +357,7 @@ The local self-test suite grew from 67 to 85 tests, all passing.
 | Shared AI instructions | `AGENTS.md` (shared by Claude Code and Codex), `CLAUDE.md` (pointer) |
 | Sibling-family collaboration doc | `docs/family-synergy.md` |
 | Live-test procedure guide | `LIVE_TEST_GUIDE.md` |
-| Legal documents | `LICENSE` (Apache-2.0 full text), `NOTICE` (copyright notice) |
+| Legal documents | `LICENSE` (Apache-2.0 full text), `NOTICE` (copyright notice), `THIRD_PARTY_NOTICES.md` (attribution for referenced open-source repos) |
 | Change history (source) | `CHANGELOG.md` |
 | **Safety log file (on your computer, F6)** | `~/.sodamagentic/safety-log.jsonl` (on Windows: `C:\Users\<you>\.sodamagentic\safety-log.jsonl`) — this is the **currently confirmed, actually-used location**. Code that moves this to the official permanent data path (`${CLAUDE_PLUGIN_DATA}`, documented as `~/.claude/plugins/data/sodam-agentic/safety-log.jsonl`) is already in place, but **whether that path is actually active has not been confirmed live yet** — `/sodam-agentic:log` checks both locations |
 | **Codex hook registration file** | `.codex/hooks.json` inside your project (auto-created/merged during install) |
@@ -581,7 +581,7 @@ This software is provided **"AS IS,"** with **no warranties of any kind, express
 
 ### 15-6. No unauthorized inclusion
 
-This repository does not contain anyone else's copyrighted work, trademarks, logos, personal information, client information, or confidential information. Strong copyleft licenses like GPL/AGPL were deliberately not borrowed from (because they risk propagating a source-disclosure obligation when delivered/sold commercially).
+This repository does not contain anyone else's copyrighted work, trademarks, logos, personal information, client information, or confidential information. Strong copyleft licenses like GPL/AGPL were deliberately not borrowed from (because they risk propagating a source-disclosure obligation when delivered/sold commercially) — we directly verified the actual licenses of the 4 reference repositories via the `gh` CLI (0 GPL/AGPL found), and their attribution notices are listed separately in [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md).
 
 ### 15-7. AI-assisted development disclosure (transparency)
 

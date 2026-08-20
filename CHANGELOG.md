@@ -437,3 +437,13 @@
 
 - **변경**: `.claude-plugin/plugin.json`·`package.json` `version` `0.2.1`→`0.2.2`.
 - **포함 내용**: F8 "말투"·"화면 이해" 답변 2건(위 항목 참고). 이걸로 F8 2번 섹션의 3개 선택지 전부가 릴리스에 반영됨.
+
+### 2026-08-21 — 차용 오픈소스 라이선스 실사 확인 + `THIRD_PARTY_NOTICES.md` 신규 생성
+
+> 배경: `.PRD/08_LICENSE_LEGAL.md`에 2개월째 "[보류]"로 남아있던 항목 — `06_RESEARCH_UPGRADES.md`가 "직수입"·"복붙"이라 명시한 4개 참고 저장소(anthropics/skills·wshobson/agents·OpenHarness·claude-code-harness)의 실제 라이선스가 한 번도 실측 확인된 적 없었음.
+
+- **실사 방법**: `gh` CLI로 4개 저장소의 실제 라이선스 메타데이터를 직접 조회(추측·추정 아님).
+- **결과**: wshobson/agents·OpenHarness·claude-code-harness = **MIT**(GPL/AGPL 0건 확정, `08_LICENSE_LEGAL.md` §11 MUST "GPL 차용 0" 충족). anthropics/skills = **LICENSE 파일 자체 없음**(저장소 루트 파일 목록 직접 확인, `gh api .../license` → 404).
+- **추가**: 루트에 `THIRD_PARTY_NOTICES.md` 신규 생성 — MIT 3곳의 원문 저작권 고지 전문 수록, anthropics/skills는 "형식만 참고·라이선스 파일 없음"으로 별도 정직 고지.
+- **연동 수정**: `README.md`/`README.en.md` §15-6에 출처 문서 링크 추가 + 문서 목록 표 갱신. `.PRD/08_LICENSE_LEGAL.md` §4·§12의 "[보류]" 항목을 실측 근거로 해결 처리(단 "형식 참고의 저작권 경계"라는 법 해석 영역은 [법무 검토 필요]로 정직하게 좁혀 유지 — 완전 종결 과장 안 함).
+- **범위**: 코드·기능·데이터 흐름 변경 0(문서 전용). `_selftest.mjs`·`validate.mjs` 불변 확인.

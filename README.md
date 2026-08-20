@@ -357,7 +357,7 @@
 | AI 공유 지침 | `AGENTS.md`(Claude Code·Codex 공용), `CLAUDE.md`(포인터) |
 | 6형제 협업 문서 | `docs/family-synergy.md` |
 | 실사용 테스트 절차서 | `LIVE_TEST_GUIDE.md` |
-| 법률 문서 | `LICENSE`(Apache-2.0 전문), `NOTICE`(저작권 고지) |
+| 법률 문서 | `LICENSE`(Apache-2.0 전문), `NOTICE`(저작권 고지), `THIRD_PARTY_NOTICES.md`(참고 오픈소스 출처 고지) |
 | 변경 이력(원본) | `CHANGELOG.md` |
 | **안전 기록 파일(내 컴퓨터, F6)** | `~/.sodamagentic/safety-log.jsonl` (Windows에서는 `C:\Users\<사용자>\.sodamagentic\safety-log.jsonl`) — **현재 확인된 실제 사용 위치**입니다. 공식 영구 데이터 경로(`${CLAUDE_PLUGIN_DATA}`, 문서상 위치는 `~/.claude/plugins/data/sodam-agentic/safety-log.jsonl`)로 옮기는 작업이 코드에는 들어가 있지만, **실제로 그 경로가 적용됐는지는 아직 라이브로 확정되지 않았습니다** — `/sodam-agentic:log` 명령은 이 두 위치를 모두 확인합니다 |
 | **Codex 훅 등록 파일** | 내 프로젝트의 `.codex/hooks.json` (설치 시 자동 생성·병합) |
@@ -581,7 +581,7 @@ A. F1 온보딩을 한 번 읽었는데도 여전히 "이게 다 무슨 소리�
 
 ### 15-6. 무단 포함 금지
 
-타인의 저작물·상표·로고·개인정보·고객사 정보·비밀정보는 이 저장소에 포함되어 있지 않습니다. GPL/AGPL 등 강한 카피레프트 라이선스 코드는 의도적으로 차용하지 않았습니다(상업·납품 시 소스 공개 의무가 전파될 위험이 있기 때문).
+타인의 저작물·상표·로고·개인정보·고객사 정보·비밀정보는 이 저장소에 포함되어 있지 않습니다. GPL/AGPL 등 강한 카피레프트 라이선스 코드는 의도적으로 차용하지 않았습니다(상업·납품 시 소스 공개 의무가 전파될 위험이 있기 때문) — `gh` CLI로 참고 저장소 4곳의 실제 라이선스를 직접 확인했으며(GPL/AGPL 0건), 그 출처 고지는 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)에 별도 정리했습니다.
 
 ### 15-7. AI 지원 개발 고지 (투명성)
 
