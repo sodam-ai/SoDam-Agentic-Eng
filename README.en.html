@@ -112,21 +112,25 @@ content, identical order)</p>
 <blockquote>
 <p>⚠️ <strong>Current status (honestly stated):</strong> Phase 1 (MVP,
 F1–F5) and Phase 2 (F6 safety log, F7 Codex safety parity) are
-code-complete. <strong>F8 (Easy Mode)</strong>, the first Phase 3
-feature, has also started as a minimal v1 — but its originally-planned
-starting condition (a live confirmation of the F2/F3 on-screen banners,
-Gate 1) hasn't finished yet. <strong>The developer explicitly approved
-starting it anyway</strong>, so this was started ahead of that gate, not
-after it closed (we state this honestly so it isn't mistaken for the
-gate being satisfied). A few other items are still "code and automated
-tests pass, only a human's live on-screen confirmation remains." We do
-not overstate this — see the most recent entry in <a
-href="#changelog">§8 Update Summary</a> for the honest, current state.
-⚠️ <strong>This GitHub repository is PUBLIC.</strong> That said, it is
-still a personal tool the developer built for their own use, and it is
-not offered as a formally supported release for the general public. The
-license terms below (Apache-2.0) reflect this public status as it
-actually stands.</p>
+code-complete. All three Phase 3 entry gates (items that require a
+human's real, live confirmation) have now passed as of 2026-08-20 — Gate
+1 was initially <strong>started ahead of formal closure</strong>, with
+the developer explicitly approving F8's start before the gate closed (we
+keep this history exactly as it happened, below), but it has since
+closed for real once the F2/F3 on-screen banners were actually confirmed
+live. <strong>F8 (Easy Mode)</strong> has been built out to the scope
+the developer specified, and further expansion has been
+<strong>deliberately paused</strong> since then (as of
+<code>v0.2.2</code>) — continuing without real usage evidence was judged
+as over-engineering. We're now waiting on real-world usage feedback. A
+few other items are still "code and automated tests pass, only a human's
+live on-screen confirmation remains." We do not overstate this — see the
+most recent entry in <a href="#changelog">§8 Update Summary</a> for the
+honest, current state. ⚠️ <strong>This GitHub repository is
+PUBLIC.</strong> That said, it is still a personal tool the developer
+built for their own use, and it is not offered as a formally supported
+release for the general public. The license terms below (Apache-2.0)
+reflect this public status as it actually stands.</p>
 </blockquote>
 <hr />
 <p><a id="toc"></a></p>
@@ -151,7 +155,8 @@ Download</a></li>
 Use</a></li>
 <li><a href="#uninstall">Uninstall</a></li>
 <li><a href="#contribute">Contributing / Contact</a></li>
-<li><a href="#recommended-mcp">Recommended MCPs (Optional, Reference)</a></li>
+<li><a href="#recommended-mcp">Recommended MCPs (Optional,
+Reference)</a></li>
 </ol>
 <hr />
 <p><a id="intro"></a></p>
@@ -438,6 +443,40 @@ commands.</p>
 <code>CHANGELOG.md</code> (newest first). Click each entry to expand
 it.</p>
 </blockquote>
+<details>
+<summary><b>📄 2026-08-21 — Remaining F8 answers · third-party license audit · safety-warning gap fixed (v0.2.1–v0.2.4)</b></summary>
+
+<ul>
+<li><strong>Closed the last internal gaps in F8 (Easy Mode)</strong>:
+Section 2 offers the user 3 choices ("I don't know how to phrase it," "I
+don't understand what's on screen," "I'm scared of breaking something")
+— the remaining ones without answers were filled in. Afterward, we
+deliberately decided to stop expanding F8 ("stop here instead of adding
+more") — expanding without concrete evidence was judged as
+over-engineering.</li>
+<li><strong>Audited the licenses of borrowed open-source
+references</strong>: Internal research notes had marked 4 reference
+repositories (anthropics/skills, wshobson/agents, OpenHarness,
+claude-code-harness) as "directly imported" / "copy-pasted." We looked
+up their actual licenses directly via the <code>gh</code> CLI. 3 are MIT
+(zero GPL/AGPL contamination confirmed); anthropics/skills has no
+LICENSE file at all. Added a new <a
+href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>
+with the original copyright notices for the 3 MIT repos.</li>
+<li><strong>Found and fixed a missing safety warning in
+<code>commands/start.md</code></strong>:
+<code>skills/start/SKILL.md</code> (the natural-language auto-trigger
+path) had a warning paragraph about auto-accept/bypass mode silently
+passing safety confirmations — but the paragraph was missing from the
+direct <code>/sodam-agentic:start</code> command path
+(<code>commands/start.md</code>). Added it.</li>
+<li><strong>Verification</strong>: after every change, re-confirmed 126
+PASS/0 FAIL on the automated test suite and PASS 14/WARN 1/FAIL 0 on the
+structure validator, and only kept a change once no regression was
+found.</li>
+</ul>
+</details>
+
 <details>
 <summary><b>🆕 2026-08-13~15 — Redefined Gate 1, corrected the "primary user" record, and started F8 (Easy Mode) v1</b></summary>
 
@@ -881,7 +920,8 @@ detection)</td>
 <tr>
 <td>Legal documents</td>
 <td><code>LICENSE</code> (Apache-2.0 full text), <code>NOTICE</code>
-(copyright notice)</td>
+(copyright notice), <code>THIRD_PARTY_NOTICES.md</code> (attribution for
+referenced open-source repos)</td>
 </tr>
 <tr>
 <td>Change history (source)</td>
@@ -1550,7 +1590,11 @@ inclusion</h3>
 trademarks, logos, personal information, client information, or
 confidential information. Strong copyleft licenses like GPL/AGPL were
 deliberately not borrowed from (because they risk propagating a
-source-disclosure obligation when delivered/sold commercially).</p>
+source-disclosure obligation when delivered/sold commercially) — we
+directly verified the actual licenses of the 4 reference repositories
+via the <code>gh</code> CLI (0 GPL/AGPL found), and their attribution
+notices are listed separately in <a
+href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>.</p>
 <h3 id="15-7-ai-assisted-development-disclosure-transparency">15-7.
 AI-assisted development disclosure (transparency)</h3>
 <p>A significant portion of this project's code and documentation was
@@ -1598,8 +1642,8 @@ reports as a GitHub issue.</p>
 <p><strong>MCP</strong> (Model Context Protocol) lets AI connect to
 external tools/services. The 4 below are reference candidates SoDam
 Agentic reviewed against its own trust criteria (official repo? source
-public and directly reviewed? maintained by a well-known org/person?
-any known issue history? — needs 2+ of 4).</p>
+public and directly reviewed? maintained by a well-known org/person? any
+known issue history? — needs 2+ of 4).</p>
 <blockquote>
 <p>⚠️ <strong>Honest note</strong>: This list is <strong>reference
 only</strong>. SoDam Agentic does not auto-install or enable any of
@@ -1624,12 +1668,13 @@ screen).</p>
 <tr>
 <td><strong>Playwright MCP</strong> (Microsoft)</td>
 <td>Lets AI open, click, and inspect web pages directly</td>
-<td>Prompt-injection risk (a page's hidden content tricking the AI) is
-a general limitation of this class of tool</td>
+<td>Prompt-injection risk (a page's hidden content tricking the AI) is a
+general limitation of this class of tool</td>
 </tr>
 <tr>
 <td><strong>Chrome DevTools MCP</strong> (Google)</td>
-<td>Lets AI open and inspect a running web app's screen/console/performance</td>
+<td>Lets AI open and inspect a running web app's
+screen/console/performance</td>
 <td><strong>Use version 1.1.0 or later</strong> (a security issue
 disclosed 2026-08-17 affected earlier versions and was fixed in
 1.1.0)</td>
@@ -1646,9 +1691,9 @@ reference-only</td>
 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code> (developer reference,
 not included in this repo).</p>
 <hr />
-<p><em>Document version as of: 2026-08-20 · This document was written
-based on "code actually implemented and verified so far" — anything not
-directly executed and confirmed is honestly flagged in <a
-href="#changelog">§8</a>.</em></p>
+<p><em>Document version as of: 2026-08-21 (plugin version v0.2.4) · This
+document was written based on "code actually implemented and verified so
+far" — anything not directly executed and confirmed is honestly flagged
+in <a href="#changelog">§8</a>.</em></p>
 </body>
 </html>

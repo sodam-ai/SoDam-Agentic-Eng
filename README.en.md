@@ -6,7 +6,7 @@
 >
 > 🇰🇷 한국어 버전: [README.md](./README.md) (identical content, identical order)
 
-> ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) and Phase 2 (F6 safety log, F7 Codex safety parity) are code-complete. **F8 (Easy Mode)**, the first Phase 3 feature, has also started as a minimal v1 — but its originally-planned starting condition (a live confirmation of the F2/F3 on-screen banners, Gate 1) hasn't finished yet. **The developer explicitly approved starting it anyway**, so this was started ahead of that gate, not after it closed (we state this honestly so it isn't mistaken for the gate being satisfied). A few other items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
+> ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) and Phase 2 (F6 safety log, F7 Codex safety parity) are code-complete. All three Phase 3 entry gates (items that require a human's real, live confirmation) have now passed as of 2026-08-20 — Gate 1 was initially **started ahead of formal closure**, with the developer explicitly approving F8's start before the gate closed (we keep this history exactly as it happened, below), but it has since closed for real once the F2/F3 on-screen banners were actually confirmed live. **F8 (Easy Mode)** has been built out to the scope the developer specified, and further expansion has been **deliberately paused** since then (as of `v0.2.2`) — continuing without real usage evidence was judged as over-engineering. We're now waiting on real-world usage feedback. A few other items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
 > ⚠️ **This GitHub repository is PUBLIC.** That said, it is still a personal tool the developer built for their own use, and it is not offered as a formally supported release for the general public. The license terms below (Apache-2.0) reflect this public status as it actually stands.
 
 ---
@@ -174,6 +174,16 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 ## 8. Update Summary
 
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
+
+<details>
+<summary><b>📄 2026-08-21 — Remaining F8 answers · third-party license audit · safety-warning gap fixed (v0.2.1–v0.2.4)</b></summary>
+
+- **Closed the last internal gaps in F8 (Easy Mode)**: Section 2 offers the user 3 choices ("I don't know how to phrase it," "I don't understand what's on screen," "I'm scared of breaking something") — the remaining ones without answers were filled in. Afterward, we deliberately decided to stop expanding F8 ("stop here instead of adding more") — expanding without concrete evidence was judged as over-engineering.
+- **Audited the licenses of borrowed open-source references**: Internal research notes had marked 4 reference repositories (anthropics/skills, wshobson/agents, OpenHarness, claude-code-harness) as "directly imported" / "copy-pasted." We looked up their actual licenses directly via the `gh` CLI. 3 are MIT (zero GPL/AGPL contamination confirmed); anthropics/skills has no LICENSE file at all. Added a new [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) with the original copyright notices for the 3 MIT repos.
+- **Found and fixed a missing safety warning in `commands/start.md`**: `skills/start/SKILL.md` (the natural-language auto-trigger path) had a warning paragraph about auto-accept/bypass mode silently passing safety confirmations — but the paragraph was missing from the direct `/sodam-agentic:start` command path (`commands/start.md`). Added it.
+- **Verification**: after every change, re-confirmed 126 PASS/0 FAIL on the automated test suite and PASS 14/WARN 1/FAIL 0 on the structure validator, and only kept a change once no regression was found.
+
+</details>
 
 <details>
 <summary><b>🆕 2026-08-13~15 — Redefined Gate 1, corrected the "primary user" record, and started F8 (Easy Mode) v1</b></summary>
@@ -628,4 +638,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-08-20 · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-08-21 (plugin version v0.2.4) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
