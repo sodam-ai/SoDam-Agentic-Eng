@@ -388,3 +388,10 @@
 - **발견**: `skills/f8-easy/SKILL.md`의 트리거 목록만 넓히고, 같은 내용을 사용자에게 설명하는 `commands/f8-easy.md`의 안내 문단은 예전 2개 예시 문구만 남아있어 실제보다 좁게 안내되는 상태였음.
 - **수정**: `commands/f8-easy.md`에 새 예시 1개 추가 + "전체 목록은 SKILL.md 참고"로 정정. `node scripts/validate.mjs` PASS 14/WARN 0/FAIL 1(기존과 동일, 벤치마크 무변화) 재확인.
 - **범위**: 이 파일 1개만 변경, 비밀정보 스캔 클린. 커밋(`1f8810b`)·push 완료.
+
+### 2026-08-20 — `commands/plan.md` 동일 패턴 drift 정정 (전수 대조로 발견)
+
+> 배경: 위 f8-easy drift와 같은 종류의 문제가 다른 명령어 파일에도 있는지 `plan`·`review`·`start` 3쌍을 전수 대조.
+
+- **발견**: `skills/plan/SKILL.md`의 실제 트리거 동사 5개(만들어줘·추가해줘·고쳐줘·구현해줘·바꿔줘) 중 `commands/plan.md`는 2개만 안내 중이었음(이번 세션에서 생긴 게 아니라 원래부터 있던 축약 표기). `review.md`·`start.md`는 대조 결과 문제없음(전자는 문구 나열 구조가 아님, 후자는 애초에 문구를 인용하지 않는 구조).
+- **수정**: `commands/plan.md`에 나머지 3개 동사 반영. F2(계획 먼저) 척추 기능이라 정확도 우선. `validate.mjs` PASS 14/WARN 0/FAIL 1 불변, 이 파일 1개만 변경, 비밀정보 스캔 클린. 커밋(`2b0b951`)·push 완료.
