@@ -143,5 +143,20 @@ if (process.platform !== "win32") {
   }
 } catch (e) { WARN("캐시 비교 중 오류(무시 가능, 수동 확인 권장): " + e.message); }
 
+// 6) .agents/ 로컬 자기설치 사본 드리프트 (codex/install.mjs 셀프테스트 잔여물, gitignored)
+// 2026-08-23 발견(CHECKPOINT.md §5-B): 이 사본이 codex/install.mjs 재실행 없이 방치되면
+// hooks/guard.mjs(활성본)에 들어간 안전 수정이 반영 안 된 채 낡아간다. 배포 대상은 아니지만
+// 이 폴더에서 직접 Codex CLI를 켜면 그 낡은 사본이 그대로 로드될 수 있어 자동 감지한다.
+console.log("\n[.agents/ 자기설치 사본]");
+const localAgentsGuard = path.join(ROOT, ".agents", "hooks", "guard.mjs");
+if (!existsSync(localAgentsGuard)) {
+  OK("없음 — 이 프로젝트 루트에서 codex/install.mjs를 자기설치 테스트한 적 없음(정상)");
+} else try {
+  const srcGuard = readFileSync(path.join(ROOT, "hooks", "guard.mjs"), "utf8");
+  const localGuard = readFileSync(localAgentsGuard, "utf8");
+  if (srcGuard === localGuard) OK(".agents/hooks/guard.mjs가 hooks/guard.mjs와 동일함(드리프트 없음)");
+  else WARN(".agents/hooks/guard.mjs가 hooks/guard.mjs와 다름(낡은 자기설치 사본) — `node codex/install.mjs`로 재생성하세요.");
+} catch (e) { WARN(".agents/ 사본 비교 중 오류(무시 가능): " + e.message); }
+
 console.log("\n결과: PASS " + pass + " / WARN " + warn + " / FAIL " + fail);
 process.exit(fail ? 1 : 0);
