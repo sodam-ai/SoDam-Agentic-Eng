@@ -81,6 +81,25 @@ if (level === "catastrophic") { decide("deny", "..."); return; } // ⓓ 치명: 
 if (harness) passThrough();                               // 그 외 겹치는 안전: Harness 있으면 위임
 ```
 
+#### 위임 참여 현황 (2026-09-01 추가 — 실제 코드 전수 대조 결과)
+
+위 규약은 "각 형제가 위임 패턴을 쓴다"고 전제하지만, **실제로 이 패턴을 구현한 건 SoDamAgentic뿐**이다.
+Agentic의 `.PRD/CHECKPOINT.md`(2026-08-23, 7형제 가드 전수 조사)가 확인한 실측:
+
+| 프로젝트 | 가드 파일 | Harness 위임 여부 |
+|---|---|---|
+| SoDamHarness | `hooks/guard.mjs` | (위임 대상 자신) |
+| **SoDamAgentic** | `hooks/guard.mjs` | ✅ 위임함(`isHarnessAlive()` 폴백) |
+| SoDamLoop | `hooks/safety-gate.mjs` | ❌ 위임 없음 — 항상 독립 deny |
+| SoDamReverse | `hooks/re-deny-guard.mjs` | ❌ 위임 없음 — 항상 독립 deny |
+| SoDamContext | `lib/prevent-write.mjs` | (쓰기 전용, 위임 개념 해당 없음) |
+
+즉 **deny 가능한 PreToolUse 가드가 최대 5개(Harness·Agentic·Loop·Reverse + 개별 자기보호) 동시에
+활성화될 수 있고, 그중 위임으로 중복을 줄이는 건 Agentic 하나뿐**이다. Loop·Reverse는 각자
+독립적으로 판정하므로, 이 문서의 규약 D만 보고 "위임하면 중복 확인창이 사라진다"고 기대하면
+Loop·Reverse가 관련된 상황에서는 틀린다. (근거: 코드가 아니라 이번에 대조한 사실 — 새 형제가
+추가되거나 Loop·Reverse가 위임 패턴을 나중에 채택하면 이 표는 그때 다시 갱신할 것.)
+
 ---
 
 ## 4. 공유 인터페이스 (미래 계약)
