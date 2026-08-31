@@ -540,6 +540,21 @@ function main() {
         ? "risky"
         : "safe";
 
+    // ① 치명(catastrophic) 명령 — Harness 유무 무관 항상 deny (ⓓ 방어심층), 아래 경로 검사보다
+    //   반드시 먼저 판정한다.
+    //   근거(2026-09-01 발견·수정, 라이브 QA 중 재현): 이 검사가 원래 경로 검사 뒤에 있으면
+    //   "rm -rf ~"처럼 치명 명령의 대상이 동시에 "작업폴더 밖"에도 해당하는 경우, 아래 경로 검사
+    //   루프의 isOutsideWorkdir(harness 무관 항상 실행, 더 약한 ask 판정)가 먼저 return돼 이 deny
+    //   판정 자체가 실행되지 못했다. 특히 이 기기처럼 실제 Harness가 설치돼 있으면 isSensitive()의
+    //   deny 분기(harness 없을 때만 실행)까지 건너뛰어 우연히 가려지던 결함이라 더 위험했다
+    //   (hooks/_selftest.mjs "치명 명령(rm -rf ~, 경로 추출됨)..." 케이스로 재현·고정).
+    //   isHarnessAlive()는 guard.mjs 파일 존재만 확인 → 껍데기/깨진 Harness면 위임 후 무방비.
+    //   되돌릴 수 없는 명령은 어떤 경우에도 막는다(fail-closed). 이중 deny는 프롬프트 없어 무해.
+    if (level === "catastrophic") {
+      decide("deny", "되돌릴 수 없는 위험한 명령이라 막았어요. 정말 필요하면 더 작은 단위로 나눠서 해보세요.", cmd);
+      return;
+    }
+
     // ② .env 로컬 읽기 등 모호한 키 접근 → ask (safe로 분류돼도 확인)
     if (level === "safe" && anyMatch(KEY_ASK, cmd)) {
       decide("ask", "비밀값이 들어 있을 수 있는 파일(.env 등)을 여는 작업이에요. 키가 화면·기록에 남지 않게 주의하세요. 정말 진행할까요?", cmd);
@@ -594,14 +609,8 @@ function main() {
 
     if (level === "safe") { passThrough(); return; }
 
-    // ① 치명(catastrophic) 명령 — Harness 유무 무관 항상 deny (ⓓ 방어심층)
-    //   근거: isHarnessAlive()는 guard.mjs 파일 존재만 확인 → 껍데기/깨진 Harness면 위임 후 무방비.
-    //   되돌릴 수 없는 명령은 어떤 경우에도 막는다(fail-closed). 이중 deny는 프롬프트 없어 무해.
-    if (level === "catastrophic") {
-      decide("deny", "되돌릴 수 없는 위험한 명령이라 막았어요. 정말 필요하면 더 작은 단위로 나눠서 해보세요.", cmd);
-      return;
-    }
     // ① 그 외 위험(재귀/단일 삭제) — Harness가 살아있으면 위임(중복 차단/프롬프트 방지)
+    // (치명(catastrophic) 판정은 이제 위쪽 level 계산 직후에서 먼저 처리됨 — 2026-09-01 이동)
     if (harness) { passThrough(); return; }
     // ① 폴더(재귀) 삭제 → deny (백업·되돌리기 어려움)
     if (anyMatch(RECURSIVE_DELETE, cmd)) {
