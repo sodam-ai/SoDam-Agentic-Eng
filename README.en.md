@@ -12,6 +12,8 @@
 
 ---
 
+> 🌸 One of the seven siblings of [SoDam Family](https://github.com/sodam-ai/SoDam-Family).
+
 <a id="toc"></a>
 ## Table of Contents
 
