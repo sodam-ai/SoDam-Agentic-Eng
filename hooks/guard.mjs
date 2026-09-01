@@ -269,9 +269,11 @@ function writeTargets(ti) {
 }
 
 // ── 파일 쓰기 도구의 '내용'(키 노출 검사용) ──
+// ⚠️ 2026-09-01 후속 QA에서 발견: NotebookEdit의 실제 셀 내용 필드는 "new_source"(Claude Code 공식
+// 도구 스키마 확인, "new_string"이 아님) — 빠져 있으면 이 경로만 키 노출 검사가 완전히 무방비.
 function writeContents(ti) {
   const out = [];
-  for (const key of ["content", "new_string", "new_str"]) {
+  for (const key of ["content", "new_string", "new_str", "new_source"]) {
     if (typeof ti[key] === "string" && ti[key]) out.push(ti[key]);
   }
   if (Array.isArray(ti.edits)) {
