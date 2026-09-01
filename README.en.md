@@ -7,6 +7,7 @@
 > 🇰🇷 한국어 버전: [README.md](./README.md) (identical content, identical order)
 
 > ⚠️ **Current status (honestly stated):** Phase 1 (MVP, F1–F5) and Phase 2 (F6 safety log, F7 Codex safety parity) are code-complete. All three Phase 3 entry gates (items that require a human's real, live confirmation) have now passed as of 2026-08-20 — Gate 1 was initially **started ahead of formal closure**, with the developer explicitly approving F8's start before the gate closed (we keep this history exactly as it happened, below), but it has since closed for real once the F2/F3 on-screen banners were actually confirmed live. **F8 (Easy Mode)** has been built out to the scope the developer specified, and further expansion has been **deliberately paused** since then (as of `v0.2.2`) — continuing without real usage evidence was judged as over-engineering. We're now waiting on real-world usage feedback. A few other items are still "code and automated tests pass, only a human's live on-screen confirmation remains." We do not overstate this — see the most recent entry in [§8 Update Summary](#changelog) for the honest, current state.
+> 🔧 2026-09-01 safety review round (v0.2.5–v0.2.8): During live testing, we found and fixed 4 new defects in the safety hook itself — one of them (key-exposure scanning was completely missing for Jupyter notebook edits) was the most severe found so far. All were reproduced, fixed, and re-verified with automated tests before being committed. See the latest entry in [§8 Update Summary](#changelog) for details.
 > ⚠️ **This GitHub repository is PUBLIC.** That said, it is still a personal tool the developer built for their own use, and it is not offered as a formally supported release for the general public. The license terms below (Apache-2.0) reflect this public status as it actually stands.
 
 ---
@@ -174,6 +175,19 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 ## 8. Update Summary
 
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
+
+<details open>
+<summary><b>🔴 2026-09-01 — 4 safety-hook defects found and fixed during live testing (v0.2.5–v0.2.8)</b></summary>
+
+While repeatedly testing whether the implemented features actually work correctly from several angles, we found and fixed 4 new defects in the safety hook itself. None of them were "not blocked at all" from the start — each was "missed only in a specific situation" — and each was handled in order: reproduce → root-cause → fix → re-verify with automated tests.
+
+- **v0.2.5 — Catastrophic-command ordering defect**: An irreversible command like `rm -rf ~` would get downgraded to a weaker confirmation (ask) step whenever its target also happened to be "outside the working folder." Found and fixed.
+- **v0.2.6 — Windows destructive-command ordering defect**: Windows commands that wipe an entire folder or drive (`Remove-Item`, `del`, `erase`, `rd`) were missed whenever written in a common real-world order (flags placed after the path). Found and fixed.
+- **v0.2.7 — Two defects: key exposure and symlink creation**: The rule blocking secret keys from being printed to the screen missed the most common way developers actually write that code; the rule blocking symbolic-link creation missed a combined short flag (force + symbolic together). Both found and fixed.
+- **v0.2.8 — Key-exposure check completely missing for Jupyter notebooks (most severe)**: The 3 defects above were cases of "protection getting weaker." This one was different — **the protection didn't run at all.** Writing an API key directly into a Jupyter notebook (.ipynb) cell edit went through completely unfiltered. We pinpointed the exact cause (a mismatched field name for the cell content) by cross-checking Claude Code's own official tool schema, and fixed it.
+- **Verification**: All 4 were reproduced before the fix, then confirmed fixed with automated tests after (138 tests, all passing, 0 failures at the end), and we re-checked that unrelated features weren't affected.
+
+</details>
 
 <details>
 <summary><b>📄 2026-08-21 — Remaining F8 answers · third-party license audit · safety-warning gap fixed (v0.2.1–v0.2.4)</b></summary>
@@ -638,4 +652,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-08-21 (plugin version v0.2.4) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-09-01 (plugin version v0.2.8) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
