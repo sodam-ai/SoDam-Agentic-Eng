@@ -24,7 +24,8 @@
     "ANTHROPIC_BASE_URL\\s*=",
     "\\becho\\b[^|;&]*\\$\\{?[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)",
     "echo\\b[^|;&]*%[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)%",
-    "process\\.env\\.[A-Za-z0-9_]*(KEY|TOKEN|SECRET|PASSWORD)[\\s\\S]*console\\.(log|error|info|warn)"
+    "process\\.env\\.[A-Za-z0-9_]*(KEY|TOKEN|SECRET|PASSWORD)[\\s\\S]*console\\.(log|error|info|warn)",
+    "console\\.(log|error|info|warn)[\\s\\S]*process\\.env\\.[A-Za-z0-9_]*(KEY|TOKEN|SECRET|PASSWORD)"
   ],
   "key_exposure_ask": [
     "\\b(cat|type|more|less|Get-Content)\\b[^|;&]*\\.env(\\b|$)"
@@ -33,7 +34,7 @@
   "extra_denied": [
     "\\bmklink\\b",
     "New-Item\\b[^|;&]*-ItemType\\s+(SymbolicLink|Junction|HardLink)",
-    "\\bln\\s+-s\\b"
+    "\\bln\\s+-(?!-)[a-zA-Z]*s[a-zA-Z]*(?=\\s|$)"
   ],
   "extra_protected_paths": [],
 

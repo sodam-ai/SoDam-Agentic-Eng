@@ -386,9 +386,15 @@ function pathTraversesSymlink(absTarget, cwd) {
 // ── ① 위험 등급 (패턴 초안 — §8.8 한계) ── (Harness 검증 로직 복사)
 const CATASTROPHIC = [
   /\brm\s+-[a-zA-Z]*\s*(~|\/|\$\{?HOME\}?|%USERPROFILE%)\s*(\/\*)?\s*($|[;&|])/i,
-  /\bremove-item\b[^|;&]*-recurse[^|;&]*(~|\$HOME|%USERPROFILE%|[A-Za-z]:\\?\s*$)/i,
-  /\b(del|erase)\s+\/s\b[^|;&]*[A-Za-z]:\\?\s*$/i,
-  /\b(rmdir|rd)\s+\/s\b[^|;&]*[A-Za-z]:\\?\s*$/i,
+  // ⚠️ 2026-09-01 후속 QA에서 발견: 아래 3개(remove-item/del·erase/rd·rmdir)는 원래 "플래그가
+  // 경로보다 먼저 온다"는 순서를 전제한 정규식이었다("-Recurse -Force C:\" 순서만 인식하고
+  // "C:\ -Recurse -Force"처럼 흔한 반대 순서는 놓쳐 catastrophic 판정 자체가 안 되고 risky로
+  // 격하됐음, 라이브 재현 확인). 플래그 존재 확인은 앞쪽 lookahead로 옮겨 순서와 무관하게 만들고,
+  // 대상(드라이브 루트)은 "그 뒤에 공백/문장끝/구분자가 온다"는 경계 조건만 유지해 하위 경로
+  // 삭제(예: C:\temp\build)는 여전히 과잉차단하지 않는다(회귀 없음, _selftest.mjs로 확인).
+  /\bremove-item\b(?=[^|;&]*-recurse)[^|;&]*?(~|\$HOME|%USERPROFILE%|[A-Za-z]:\\?(?=\s|$|[;&|]))/i,
+  /\b(del|erase)\b(?=[^|;&]*\/s\b)[^|;&]*?[A-Za-z]:\\?(?=\s|$|[;&|])/i,
+  /\b(rmdir|rd)\b(?=[^|;&]*\/s\b)[^|;&]*?[A-Za-z]:\\?(?=\s|$|[;&|])/i,
   /\bformat\s+[A-Za-z]:/i,
   /\bmkfs\b/i,
   /:\(\)\s*\{[^}]*\}\s*;\s*:/,
