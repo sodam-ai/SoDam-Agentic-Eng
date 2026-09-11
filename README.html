@@ -417,6 +417,32 @@ href="#architecture">§11 아키텍처</a>의 "판정 흐름" 참고). 이건 �
 것입니다(최신순). 각 항목을 클릭하면 펼쳐집니다.</p>
 </blockquote>
 <details open>
+<summary><b>📝 2026-09-11~12 — 문서 점검·정리: PRD-코드 정합성 확인 + 안내문 정확도 개선</b></summary>
+
+<p>지금까지 만든 안전장치가 설계 문서(PRD)가 약속한 그대로 실제로 구현돼
+있는지 문서와 코드를 한 줄씩 대조하는 점검을 했습니다. 안전장치
+자체(코드)는 전부 이미 잘 구현돼 있음을 확인했고, 아래처럼 <strong>안내
+문서</strong>만 더 정확하게 고쳤습니다(안전장치의 실제 동작은 바뀌지
+않았습니다 — 버전 번호도 v0.2.8 그대로입니다).</p>
+<ul>
+<li><strong>자동 실행 허용 모드 안내 보강</strong>: Claude Code의 "자동
+실행 허용(bypass permissions)" 모드에서는 안전장치 자체가 원천적으로
+작동할 수 없다는 사실(이 모드에서는 안전장치를 실행시키는 절차 자체가
+건너뛰어집니다)을 문서에 정직하게 명시했습니다 — 이 모드를 쓸 땐
+사용자가 화면 안내를 직접 보고 판단해야 합니다.</li>
+<li><strong>경로 우회 방지 테스트 보강</strong>: "다른 폴더로 몰래
+빠져나가는 파일 경로(<code>../../</code> 같은 상대경로)"를 실제로 막는지
+확인하는 자동 테스트를 새로 추가해, 이미 있던 보호 기능이 실제로
+작동함을 다시 한번 확인했습니다.</li>
+<li><strong>개발 안내 문서의 낡은 숫자 정정</strong>: 자동 테스트 통과
+개수 안내가 실제 값과 달라져 있던 걸 바로잡았습니다.</li>
+<li><strong>진행 기록 정리</strong>: 다음에 이어서 작업할 때 참고할 내부
+진행 기록을 최신 상태로 정리했습니다.</li>
+<li><strong>검증</strong>: 자동 테스트 139개 전부 통과(0건 실패), 구조
+검증 16개 전부 통과.</li>
+</ul>
+</details>
+<details>
 <summary><b>🔴 2026-09-01 — 실사용 테스트 중 안전장치 결함 4건 발견·수정 (v0.2.5~v0.2.8)</b></summary>
 
 <p>지금까지 구현된 기능이 실제로 잘 작동하는지 여러 각도로 반복
@@ -904,6 +930,14 @@ href="https://github.com/sodam-ai/SoDam-Agentic-Eng">https://github.com/sodam-ai
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p><strong>환경 변수</strong>: 사용자가 직접 설정해야 하는 환경 변수는
+<strong>없습니다.</strong> 코드 안에서 참조하는 값은 운영체제가 이미
+자동으로 제공하는 표준 변수(Windows의 <code>APPDATA</code>)와, 자동
+테스트 실행 시에만 쓰이는 내부 전용
+변수(<code>SODAM_AGENTIC_TEST_FORCE_NO_HARNESS</code> 등, 일반 사용과
+무관)뿐입니다. <code>.env</code> 파일도 필요 없습니다.</p>
+</blockquote>
 <hr />
 <p><a id="workflow"></a></p>
 <h2 id="10-워크플로우">10. 워크플로우</h2>
@@ -1576,7 +1610,7 @@ href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>에
 <p>근거·검토 과정은 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code>에
 자세히 남겨뒀습니다(개발자 참고용, 이 저장소엔 포함 안 됨).</p>
 <hr />
-<p><em>문서 버전 기준일: 2026-09-01 (플러그인 버전 v0.2.8) · 이 문서는
+<p><em>문서 버전 기준일: 2026-09-11 (플러그인 버전 v0.2.8) · 이 문서는
 "지금까지 실제로 구현·검증된 코드" 기준으로 작성되었습니다(직접 실행해
 확인하지 않은 내용은 <a href="#changelog">§8</a>에 정직하게
 표시했습니다).</em></p>

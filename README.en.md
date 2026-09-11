@@ -179,6 +179,19 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
 
 <details open>
+<summary><b>📝 2026-09-11~12 — Documentation review: verified PRD-vs-code conformance + improved accuracy of guidance text</b></summary>
+
+We checked, line by line, whether the safety hooks we built actually implement what the design document (PRD) promises. The safety-hook code itself was confirmed to already be correctly implemented — only the **guidance documents** below were made more accurate (the actual behavior of the safety hooks did not change, and the version number stays at v0.2.8).
+
+- **Improved guidance on "bypass permissions" mode**: We documented, honestly, that the safety hooks cannot run at all while Claude Code is in "bypass permissions" (auto-accept) mode — the step that runs the hooks is skipped entirely in that mode. If you use that mode, you must rely on reading the on-screen warning yourself.
+- **Added a path-traversal protection test**: We added an automated test confirming that a file path trying to "sneak out" into another folder (a relative path like `../../`) is actually blocked — reconfirming that this existing protection genuinely works.
+- **Fixed stale numbers in the developer guidance doc**: Corrected the automated-test pass count, which no longer matched the actual result.
+- **Tidied up progress notes**: Updated the internal progress log used to pick up work in a future session.
+- **Verification**: All 139 automated tests passed (0 failures), all 16 structure checks passed.
+
+</details>
+
+<details>
 <summary><b>🔴 2026-09-01 — 4 safety-hook defects found and fixed during live testing (v0.2.5–v0.2.8)</b></summary>
 
 While repeatedly testing whether the implemented features actually work correctly from several angles, we found and fixed 4 new defects in the safety hook itself. None of them were "not blocked at all" from the start — each was "missed only in a specific situation" — and each was handled in order: reproduce → root-cause → fix → re-verify with automated tests.
@@ -388,6 +401,8 @@ The local self-test suite grew from 67 to 85 tests, all passing.
 | **Safety log file (on your computer, F6)** | `~/.sodamagentic/safety-log.jsonl` (on Windows: `C:\Users\<you>\.sodamagentic\safety-log.jsonl`) — this is the **currently confirmed, actually-used location**. Code that moves this to the official permanent data path (`${CLAUDE_PLUGIN_DATA}`, documented as `~/.claude/plugins/data/sodam-agentic/safety-log.jsonl`) is already in place, but **whether that path is actually active has not been confirmed live yet** — `/sodam-agentic:log` checks both locations |
 | **Codex hook registration file** | `.codex/hooks.json` inside your project (auto-created/merged during install) |
 | Where Claude Code stores the installed plugin | `C:\Users\<you>\AppData\Roaming\claude-code\plugins\` |
+
+> **Environment variables**: There are **none** you need to set yourself. The code only reads a standard OS-provided variable (Windows' `APPDATA`) and internal-only variables used solely during automated testing (e.g. `SODAM_AGENTIC_TEST_FORCE_NO_HARNESS`, irrelevant to normal use). No `.env` file is needed.
 
 ---
 
@@ -654,4 +669,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-09-01 (plugin version v0.2.8) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-09-11 (plugin version v0.2.8) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*

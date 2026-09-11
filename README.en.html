@@ -451,6 +451,35 @@ commands.</p>
 it.</p>
 </blockquote>
 <details open>
+<summary><b>📝 2026-09-11~12 — Documentation review: verified PRD-vs-code conformance + improved accuracy of guidance text</b></summary>
+
+<p>We checked, line by line, whether the safety hooks we built actually
+implement what the design document (PRD) promises. The safety-hook code
+itself was confirmed to already be correctly implemented — only the
+<strong>guidance documents</strong> below were made more accurate (the
+actual behavior of the safety hooks did not change, and the version
+number stays at v0.2.8).</p>
+<ul>
+<li><strong>Improved guidance on "bypass permissions" mode</strong>: We
+documented, honestly, that the safety hooks cannot run at all while
+Claude Code is in "bypass permissions" (auto-accept) mode — the step
+that runs the hooks is skipped entirely in that mode. If you use that
+mode, you must rely on reading the on-screen warning yourself.</li>
+<li><strong>Added a path-traversal protection test</strong>: We added an
+automated test confirming that a file path trying to "sneak out" into
+another folder (a relative path like <code>../../</code>) is actually
+blocked — reconfirming that this existing protection genuinely
+works.</li>
+<li><strong>Fixed stale numbers in the developer guidance doc</strong>:
+Corrected the automated-test pass count, which no longer matched the
+actual result.</li>
+<li><strong>Tidied up progress notes</strong>: Updated the internal
+progress log used to pick up work in a future session.</li>
+<li><strong>Verification</strong>: All 139 automated tests passed (0
+failures), all 16 structure checks passed.</li>
+</ul>
+</details>
+<details>
 <summary><b>🔴 2026-09-01 — 4 safety-hook defects found and fixed during live testing (v0.2.5–v0.2.8)</b></summary>
 
 <p>While repeatedly testing whether the implemented features actually
@@ -996,6 +1025,14 @@ checks both locations</td>
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p><strong>Environment variables</strong>: There are
+<strong>none</strong> you need to set yourself. The code only reads a
+standard OS-provided variable (Windows' <code>APPDATA</code>) and
+internal-only variables used solely during automated testing (e.g.
+<code>SODAM_AGENTIC_TEST_FORCE_NO_HARNESS</code>, irrelevant to normal
+use). No <code>.env</code> file is needed.</p>
+</blockquote>
 <hr />
 <p><a id="workflow"></a></p>
 <h2 id="10-workflow">10. Workflow</h2>
@@ -1737,7 +1774,7 @@ reference-only</td>
 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code> (developer reference,
 not included in this repo).</p>
 <hr />
-<p><em>Document version as of: 2026-09-01 (plugin version v0.2.8) · This
+<p><em>Document version as of: 2026-09-11 (plugin version v0.2.8) · This
 document was written based on "code actually implemented and verified so
 far" — anything not directly executed and confirmed is honestly flagged
 in <a href="#changelog">§8</a>.</em></p>
