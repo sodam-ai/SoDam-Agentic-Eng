@@ -6,8 +6,8 @@
 
 | 항목 | 내용 |
 |------|------|
-| 구조 검증 | `node scripts/validate.mjs` (PASS 8/0 기대) |
-| 안전 훅 자가 테스트 | `node hooks/_selftest.mjs` (22 PASS 기대) |
+| 구조 검증 | `node scripts/validate.mjs` (PASS 16/0 기대, 2026-09-11 실측 갱신) |
+| 안전 훅 자가 테스트 | `node hooks/_selftest.mjs` (139 PASS 기대, 2026-09-11 실측 갱신 — traversal 테스트 1건 추가분 포함) |
 | Codex 설치 | `node codex/install.mjs` |
 
 ## 절대 원칙
