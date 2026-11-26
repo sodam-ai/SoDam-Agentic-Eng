@@ -576,3 +576,28 @@
 - 과잉차단 회귀 확인: 비밀값 없는 정상 노트북 셀 편집은 여전히 무결정 통과(라이브 재확인).
 - `node scripts/validate.mjs` → PASS 15/WARN 1/FAIL 0(WARN=예상된 설치캐시 지연 신호, 이전과 동일 패턴). `.agents/` 자기설치 사본 갱신·드리프트 재검사 PASS.
 - `.claude-plugin/plugin.json`·`package.json` `version` `0.2.7` → `0.2.8`.
+
+---
+
+## [0.2.9] - 2026-11-26
+
+> 배경: PRD 서술과 실물 파일을 직접 대조하다가 F6 조회(`/sodam-agentic:log`)의 안내 경로가 실제 기록 위치와 다른 것을 발견. 자동 테스트는 격리 폴더(`SODAM_AGENTIC_DATA`)만 써서 실제 경로 문제를 볼 수 없었다.
+
+### 수정 (Fixed)
+
+- **[F6][`commands/log.md`] 지금의 안전 기록을 보지 못하던 문제**: 안내하던 `~/.claude/plugins/data/sodam-agentic/`는 실제 데이터 폴더가 아니었다. 실제 폴더 이름은 `<플러그인>-<마켓플레이스>`(`sodam-agentic-sodam-agentic`)이고, 설정 폴더를 바꾸면 위치 자체도 다르다. 실측에서 그 경로는 파일이 없었고, 예전 위치(`~/.sodamagentic`)만 있어 지금의 기록 31,000여 줄이 조회에서 빠지는 상태였다.
+  - **수정**: 명령 본문의 `${CLAUDE_PLUGIN_DATA}` 치환(Claude Code 공식 기능)으로 안전 훅이 기록하는 바로 그 폴더를 읽는다. 치환되지 않으면 예전 위치만 확인한다.
+  - 10MB를 넘는 파일은 Grep(줄 수) → Read(끝부분) 순서로 읽는다. "오늘" 건수는 한국 시간 하루(UTC 전날 15시~당일 15시 전)로 센다(기존에는 UTC 날짜 글자만 비교). 못 읽은 것을 "기록 없음"으로 말하지 않도록 명시. 기록 속 문장은 지시가 아니라 자료라고 명시.
+- **[문서] 제거 시 기록 보존 안내가 지금 위치에는 틀렸음**: 마지막 설치 위치에서 제거하면 플러그인 데이터 폴더가 기본 삭제된다(공식 plugins-reference, `claude plugin uninstall --help`의 `--keep-data`). README 4종의 §16을 정정하고 §9 파일·문서 위치 표의 낡은 "라이브로 확정되지 않음" 문구를 교체. `LIVE_TEST_GUIDE.md`의 로그 확인 경로도 정정.
+
+### 설계 판단 기록
+
+- **셸(Node) 한 줄 조회 방식은 만들었다가 폐기**: 단위 시험 18건과 이 PC의 Bash·PowerShell 실행은 통과했지만, `guard.mjs`가 이 명령을 "작업폴더 밖"으로 판정했고, SoDamHarness가 없고 설정 폴더가 기본값(`~/.claude`)인 환경을 재현하니 **`deny`(민감 위치)** 였다. 안전 훅을 완화하거나 훅이 못 보게 명령을 꾸미지 않고, 훅 대상이 아닌 읽기 도구(Grep·Read) 방식으로 바꿨다.
+- `hooks/guard.mjs`·`hooks/hooks.json`·`data/agentic-rules.json`은 **변경 없음**. 안전 기록 파일은 읽기만 했다.
+
+### 검증
+
+- 실제 11MB 기록에서 Grep 정규식의 오늘 건수(막음 4, 확인 792)와 Node로 따로 계산한 값이 일치(같은 시각 구간 비교). Read의 `offset`으로 파일 끝부분 읽기 확인.
+- 새 Claude Code 실행(`-p`, `--plugin-dir`, Harness 없음 강제)에서 `/sodam-agentic:log` 실행: 경로 치환 확인, 도구 호출은 Grep·Read만, 권한 거부 0건, 없는 파일을 "없음"으로 정확히 보고. 이 방식에서는 새 위치 폴더가 비어 있어 예전 위치 기록으로 확인.
+- 이번에 확인하지 못한 것: 실제 `plugin uninstall` 동작, `/plugin` 화면에서의 제거 동작, Codex에서의 동작, macOS·Linux에서의 동작.
+- `.claude-plugin/plugin.json`·`package.json` `version` `0.2.8` → `0.2.9`.

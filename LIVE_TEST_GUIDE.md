@@ -270,9 +270,10 @@ D:\Test_Dev\test3 밖에 있는 D:\Test_Dev\test4 폴더에 outside-test.txt 라
 **직접 파일로도 확인하고 싶다면** (선택 사항, 컴퓨터에 익숙하면):
 탐색기 주소창에 아래를 그대로 붙여넣고 Enter:
 ```
-%USERPROFILE%\.sodamagentic
+%USERPROFILE%\.claude\plugins\data
 ```
-→ `safety-log.jsonl` 파일이 있고, 메모장으로 열어보면 방금 테스트한 시각(오늘 날짜)의 기록이 맨 아래에 있으면 성공입니다.
+(Claude Code 설정 폴더를 따로 지정했다면 `<그 폴더>\plugins\data`를 여세요.)
+→ 그 안의 `sodam-agentic-sodam-agentic` 폴더(이름은 `플러그인이름-마켓플레이스이름`)에 `safety-log.jsonl` 파일이 있고, 메모장으로 열어보면 방금 테스트한 시각의 기록이 맨 아래에 있으면 성공입니다. 기록의 시각은 세계 표준시(UTC)라서 한국 시간보다 9시간 이르게 적혀 있습니다. (Codex와 예전 기록은 `%USERPROFILE%\.sodamagentic`에 있습니다.)
 
 ---
 
