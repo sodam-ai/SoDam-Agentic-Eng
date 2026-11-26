@@ -179,6 +179,17 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
 
 <details open>
+<summary><b>🛠 2026-11-26 — v0.2.9: fixed <code>/sodam-agentic:log</code> not seeing the current safety log</b></summary>
+
+- **Problem**: The folder the log command pointed to was not the folder where records were actually being written. It could therefore read only old records and answer without any of the current ones.
+- **Fix**: The command now reads the real data folder that Claude Code provides. Even when the log grows past 10MB it reads only the end of the file, and "today" is counted in Korea time. A file that cannot be read is no longer reported as "no records".
+- **Guidance correction (important)**: The statement that the log survives uninstalling was not true for the current location. See "Data that stays behind" in [§16 Uninstall](#uninstall).
+- **What did not change**: The safety-hook code that blocks risky actions was not changed.
+- **Verification**: All 139 automated tests passed, and the structure check had 0 failures. In a fresh Claude Code run, the updated command worked using read-only tools. Behavior in Codex was not tested this time.
+
+</details>
+
+<details>
 <summary><b>📝 2026-09-11~12 — Documentation review: verified PRD-vs-code conformance + improved accuracy of guidance text</b></summary>
 
 We checked, line by line, whether the safety hooks we built actually implement what the design document (PRD) promises. The safety-hook code itself was confirmed to already be correctly implemented — only the **guidance documents** below were made more accurate (the actual behavior of the safety hooks did not change, and the version number stays at v0.2.8).
@@ -398,7 +409,7 @@ The local self-test suite grew from 67 to 85 tests, all passing.
 | Live-test procedure guide | `LIVE_TEST_GUIDE.md` |
 | Legal documents | `LICENSE` (Apache-2.0 full text), `NOTICE` (copyright notice), `THIRD_PARTY_NOTICES.md` (attribution for referenced open-source repos) |
 | Change history (source) | `CHANGELOG.md` |
-| **Safety log file (on your computer, F6)** | `~/.sodamagentic/safety-log.jsonl` (on Windows: `C:\Users\<you>\.sodamagentic\safety-log.jsonl`) — this is the **currently confirmed, actually-used location**. Code that moves this to the official permanent data path (`${CLAUDE_PLUGIN_DATA}`, documented as `~/.claude/plugins/data/sodam-agentic/safety-log.jsonl`) is already in place, but **whether that path is actually active has not been confirmed live yet** — `/sodam-agentic:log` checks both locations |
+| **Safety log file (on your computer, F6)** | **Claude Code:** `<config folder>/plugins/data/sodam-agentic-sodam-agentic/safety-log.jsonl` — the config folder is `~/.claude` by default, or the folder you set instead. `sodam-agentic-sodam-agentic` is `pluginname-marketplacename`, so it can differ depending on how you installed it. **Codex and older records:** `~/.sodamagentic/safety-log.jsonl`. `/sodam-agentic:log` checks both locations |
 | **Codex hook registration file** | `.codex/hooks.json` inside your project (auto-created/merged during install) |
 | Where Claude Code stores the installed plugin | `C:\Users\<you>\AppData\Roaming\claude-code\plugins\` |
 
@@ -640,7 +651,10 @@ A significant portion of this project's code and documentation was **written wit
 **Codex:**
 - Since installation works by copying files, just delete the `.agents/skills/`, `.agents/hooks/`, and `.agents/data/` folders in your project directly. To also remove the `PreToolUse` entry registered in `.codex/hooks.json`, edit that JSON file directly and delete that entry.
 
-**Data that stays behind (important):** removing the plugin does **not** automatically delete the safety log file (`~/.sodamagentic/safety-log.jsonl`), because it's stored outside the plugin folder, in your user home folder. If you want it completely gone, delete that file yourself.
+**Data that stays behind (important — read this before removing):**
+
+- ⚠️ **In Claude Code, uninstalling the plugin from the last place it is installed also deletes the plugin's data folder by default.** The current safety log lives in that folder, so **the log is deleted too.** To keep it, copy `safety-log.jsonl` somewhere else first, or uninstall from a terminal with `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data`. (This is based on the official Claude Code docs and the CLI help text; we did not run a real uninstall test. We also did not check what removing it from the `/plugin` screen does, so copy the file first if the log matters to you.)
+- Records in the old location (`~/.sodamagentic/safety-log.jsonl`, including Codex) are in your user home folder, so they **stay after removal.** If you want them completely gone, delete that file yourself.
 
 ---
 
@@ -669,4 +683,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-09-11 (plugin version v0.2.8) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-11-26 (plugin version v0.2.9) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*

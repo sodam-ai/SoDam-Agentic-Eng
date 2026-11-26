@@ -451,6 +451,30 @@ commands.</p>
 it.</p>
 </blockquote>
 <details open>
+<summary><b>🛠 2026-11-26 — v0.2.9: fixed <code>/sodam-agentic:log</code> not seeing the current safety log</b></summary>
+
+<ul>
+<li><strong>Problem</strong>: The folder the log command pointed to was not
+the folder where records were actually being written. It could therefore
+read only old records and answer without any of the current ones.</li>
+<li><strong>Fix</strong>: The command now reads the real data folder that
+Claude Code provides. Even when the log grows past 10MB it reads only the
+end of the file, and "today" is counted in Korea time. A file that cannot
+be read is no longer reported as "no records".</li>
+<li><strong>Guidance correction (important)</strong>: The statement that
+the log survives uninstalling was not true for the current location. See
+"Data that stays behind" in <a href="#uninstall">§16 Uninstall</a>.</li>
+<li><strong>What did not change</strong>: The safety-hook code that blocks
+risky actions was not changed.</li>
+<li><strong>Verification</strong>: All 139 automated tests passed, and the
+structure check had 0 failures. In a fresh Claude Code run, the updated
+command worked using read-only tools. Behavior in Codex was not tested
+this time.</li>
+</ul>
+
+</details>
+
+<details>
 <summary><b>📝 2026-09-11~12 — Documentation review: verified PRD-vs-code conformance + improved accuracy of guidance text</b></summary>
 
 <p>We checked, line by line, whether the safety hooks we built actually
@@ -1004,15 +1028,14 @@ referenced open-source repos)</td>
 </tr>
 <tr>
 <td><strong>Safety log file (on your computer, F6)</strong></td>
-<td><code>~/.sodamagentic/safety-log.jsonl</code> (on Windows:
-<code>C:\Users\&lt;you&gt;\.sodamagentic\safety-log.jsonl</code>) — this
-is the <strong>currently confirmed, actually-used location</strong>.
-Code that moves this to the official permanent data path
-(<code>${CLAUDE_PLUGIN_DATA}</code>, documented as
-<code>~/.claude/plugins/data/sodam-agentic/safety-log.jsonl</code>) is
-already in place, but <strong>whether that path is actually active has
-not been confirmed live yet</strong> — <code>/sodam-agentic:log</code>
-checks both locations</td>
+<td><strong>Claude Code:</strong>
+<code>&lt;config folder&gt;/plugins/data/sodam-agentic-sodam-agentic/safety-log.jsonl</code>
+— the config folder is <code>~/.claude</code> by default, or the folder
+you set instead. <code>sodam-agentic-sodam-agentic</code> is
+<code>pluginname-marketplacename</code>, so it can differ depending on how
+you installed it. <strong>Codex and older records:</strong>
+<code>~/.sodamagentic/safety-log.jsonl</code>.
+<code>/sodam-agentic:log</code> checks both locations</td>
 </tr>
 <tr>
 <td><strong>Codex hook registration file</strong></td>
@@ -1706,11 +1729,25 @@ remove the <code>PreToolUse</code> entry registered in
 <code>.codex/hooks.json</code>, edit that JSON file directly and delete
 that entry.</li>
 </ul>
-<p><strong>Data that stays behind (important):</strong> removing the
-plugin does <strong>not</strong> automatically delete the safety log
-file (<code>~/.sodamagentic/safety-log.jsonl</code>), because it's
-stored outside the plugin folder, in your user home folder. If you want
-it completely gone, delete that file yourself.</p>
+<p><strong>Data that stays behind (important — read this before
+removing):</strong></p>
+<ul>
+<li>⚠️ <strong>In Claude Code, uninstalling the plugin from the last place
+it is installed also deletes the plugin's data folder by
+default.</strong> The current safety log lives in that folder, so
+<strong>the log is deleted too.</strong> To keep it, copy
+<code>safety-log.jsonl</code> somewhere else first, or uninstall from a
+terminal with
+<code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code>.
+(This is based on the official Claude Code docs and the CLI help text; we
+did not run a real uninstall test. We also did not check what removing it
+from the <code>/plugin</code> screen does, so copy the file first if the
+log matters to you.)</li>
+<li>Records in the old location
+(<code>~/.sodamagentic/safety-log.jsonl</code>, including Codex) are in
+your user home folder, so they <strong>stay after removal.</strong> If you
+want them completely gone, delete that file yourself.</li>
+</ul>
 <hr />
 <p><a id="contribute"></a></p>
 <h2 id="17-contributing--contact">17. Contributing / Contact</h2>
@@ -1774,7 +1811,7 @@ reference-only</td>
 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code> (developer reference,
 not included in this repo).</p>
 <hr />
-<p><em>Document version as of: 2026-09-11 (plugin version v0.2.8) · This
+<p><em>Document version as of: 2026-11-26 (plugin version v0.2.9) · This
 document was written based on "code actually implemented and verified so
 far" — anything not directly executed and confirmed is honestly flagged
 in <a href="#changelog">§8</a>.</em></p>
