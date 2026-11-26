@@ -797,7 +797,9 @@ A. 현재 Phase 0 (기술 검증) 단계입니다. 출시 예정일은 미정입
 GitHub 저장소를 팔로우하면 업데이트 알림을 받을 수 있습니다.
 
 **Q. 플러그인을 제거하고 싶으면 어떻게 하나요?**  
-A. Claude Code에서:
+> ⚠️ **먼저 읽으세요: 제거하면 그 플러그인의 기록이 함께 삭제될 수 있습니다.** 마지막 설치 위치에서 제거하면 데이터 폴더가 지워질 수 있습니다. 소담 에이전틱의 안전 기록을 남기려면 아래 형태를 쓰지 말고 터미널에서 `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data`를 쓰세요.
+
+A. Claude Code에서(예: SoDam Harness):
 ```
 /plugin uninstall sodam-harness
 ```

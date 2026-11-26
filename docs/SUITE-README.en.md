@@ -793,7 +793,9 @@ A. It is currently in Phase 0 (technical validation). The release date is TBD.
 Follow the GitHub repository to receive update notifications.
 
 **Q. How do I remove a plugin?**  
-A. In Claude Code:
+> ⚠️ **Read this first: removing a plugin can also delete its records.** Uninstalling from the last place it is installed can delete its data folder. To keep SoDam Agentic's safety log, do not use the format below; run `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data` in a terminal.
+
+A. In Claude Code (example: SoDam Harness):
 ```
 /plugin uninstall sodam-harness
 ```
