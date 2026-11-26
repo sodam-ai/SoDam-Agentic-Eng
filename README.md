@@ -288,6 +288,7 @@
 - 안전 기록(`safety-log.jsonl`)의 저장 위치를 기존 `~/.sodamagentic`에서, Claude Code 플러그인 공식 데이터 경로(`${CLAUDE_PLUGIN_DATA}`)로 옮기는 작업을 했습니다. 이 경로를 쓰면 업데이트·재설치에도 데이터가 살아남고, 플러그인을 완전히 제거하면 자동으로 함께 정리되는 장점이 있습니다.
 - **회귀 위험 없이 설계**했습니다: 새 경로가 실제로 전달되면 그걸 쓰고, 전달이 안 되거나 이상하면(Codex 등) 예전처럼 `~/.sodamagentic`을 그대로 씁니다. 즉 최악의 경우에도 지금까지와 동일하게 동작합니다.
 - ⚠️ **정직한 한계:** 이 새 경로가 실제 설치 환경에서 문자열 그대로 잘 전달되는지는 이 패치 시점까지 라이브로 확인되지 않았습니다. 최근 확인 결과 여전히 예전 위치(`~/.sodamagentic`)에 기록되고 있는 것으로 보이며, 어느 위치가 실제로 쓰이는지는 재설치 후 다시 확인이 필요합니다.
+- 🛑 **2026-11-26 정정(위 항목은 당시 기록입니다):** "재설치에도 데이터가 살아남는다"를 그대로 믿지 마세요. 마지막 설치 위치에서 `--keep-data` 없이 제거하면 현재 위치의 안전 기록이 삭제될 수 있습니다. 재설치 전에는 [§16 제거 방법](#uninstall)을 먼저 읽으세요.
 
 </details>
 
@@ -551,7 +552,7 @@ Claude Code가 도구(Bash·PowerShell·Write·Edit 등)를 실행하려는 순�
 | 계획 없이 바로 코드부터 짬 | 다른 스킬에 밀림(F2는 "부탁"이라 강제 아님) | 정상적으로 일어날 수 있음 — 그 자리에서 "계획 먼저 보여줘"라고 직접 요청 |
 | 위험 명령이 안 막힘 | 안전 훅 미작동 또는 자동승인 모드 | 자동 승인(auto-accept/bypass) 모드인지 먼저 확인([§12](#security-data-flow)), 아니면 캡처해서 문의 |
 | 확인창이 너무 자주 뜸 | 여러 안전장치(형제 플러그인 포함)가 겹침 | 정말 위험한 것만 뜨도록 `data/agentic-rules.json`으로 조정 가능 |
-| 명령어가 옛 이름으로 보임 / 방금 고친 게 반영 안 됨 | 설치본(캐시)이 최신이 아님 | 터미널에서 `claude plugin marketplace update sodam-agentic` → `claude plugin update sodam-agentic@sodam-agentic` → Claude Code 다시 시작. 그래도 반영이 안 돼 재설치할 때는 **반드시** `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data` → `claude plugin install sodam-agentic@sodam-agentic` (`--keep-data` 없이 제거하면 **안전 기록이 삭제됩니다**) |
+| 명령어가 옛 이름으로 보임 / 방금 고친 게 반영 안 됨 | 설치본(캐시)이 최신이 아님 | 터미널에서 `claude plugin marketplace update sodam-agentic` → `claude plugin update sodam-agentic@sodam-agentic` → Claude Code 다시 시작. 그래도 반영이 안 돼 재설치할 때는 **반드시** `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data` → `claude plugin install sodam-agentic@sodam-agentic` (마지막 설치 위치에서 `--keep-data` 없이 제거하면 현재 위치의 **안전 기록이 삭제됩니다**) |
 | 비밀번호·API 키를 넣어도 되나요? | — | **절대 넣지 마세요.** 본인 환경(`.env` 등)에만 보관하고, 훅이 감지하면 즉시 차단합니다 |
 | 지우고 싶어요 / 업데이트 후 이상해요 | 제거·업데이트 | [§16 제거 방법](#uninstall) 참고 |
 | 지난번에 뭐가 막혔는지 기억이 안 남 | — | `/sodam-agentic:log` 명령으로 조회(막힘·확인만 기록되고, 안전하게 통과한 작업은 기록 안 됨) |

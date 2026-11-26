@@ -738,6 +738,11 @@ environment had not been confirmed live as of this patch. Recent checks
 suggest it's still writing to the old location
 (<code>~/.sodamagentic</code>), and which location is actually in use
 needs to be re-checked after a reinstall.</li>
+<li>🛑 <strong>Correction, 2026-11-26 (the items above are a record of
+that time):</strong> do not rely on "data survives reinstalls".
+Uninstalling from the last place it is installed without
+<code>--keep-data</code> can delete the safety log in its current location.
+Read <a href="#uninstall">§16 Uninstall</a> before reinstalling.</li>
 </ul>
 </details>
 
@@ -1488,7 +1493,8 @@ Claude Code. If the change still doesn't show and you reinstall, you
 <strong>must</strong> use
 <code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code> →
 <code>claude plugin install sodam-agentic@sodam-agentic</code> (removing
-without <code>--keep-data</code> <strong>deletes the safety log</strong>)</td>
+from the last place it is installed without <code>--keep-data</code>
+<strong>deletes the safety log</strong> in its current location)</td>
 </tr>
 <tr>
 <td>Is it okay to type in a password or API key?</td>

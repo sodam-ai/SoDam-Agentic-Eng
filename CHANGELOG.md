@@ -610,11 +610,12 @@
 
 ### 수정 (Fixed)
 
-- **[문서][중요] "제거 후 재설치" 안내가 안전 기록을 삭제할 수 있었음**: README 4종의 문제 해결 표와 `LIVE_TEST_GUIDE.md` "방법 B"가 백업·`--keep-data` 없이 제거를 안내했다. v0.2.9에서는 §16 제거 방법만 고치고 이 우회 안내를 빠뜨렸다. → `claude plugin marketplace update` + `claude plugin update`를 먼저 쓰고, 재설치는 `--keep-data`를 필수로. 확인되지 않은 `/plugin` 메뉴 제거 절차는 삭제. §16 1단계와 제품군 안내서(`docs/SUITE-README` 한·영) 제거 FAQ에는 경고를 명령보다 앞에 둠.
+- **[문서][중요] "제거 후 재설치" 안내가 안전 기록을 삭제할 수 있었음**: README 4종의 문제 해결 표와 `LIVE_TEST_GUIDE.md` "방법 B"가 백업·`--keep-data` 없이 제거를 안내했다. v0.2.9에서는 §16 제거 방법만 고치고 이 우회 안내를 빠뜨렸다. → `claude plugin marketplace update` + `claude plugin update`를 먼저 쓰고, 재설치는 `--keep-data`를 필수로. 확인되지 않은 `/plugin` 메뉴 제거 절차는 삭제. §16 1단계와 제품군 안내서(`docs/SUITE-README` 한·영) 제거 FAQ에는 경고를 명령보다 앞에 둠. 2026-08-02 업데이트 이력의 "재설치에도 데이터가 살아남음" 문장에는 원문을 두고 정정 주석을 덧붙임.
 
 ### 검증
 
 - 제거 동작 시험(Claude Code 2.1.332, Windows, `CLAUDE_CONFIG_DIR`를 분리한 설정 + 플러그인 복사본 + 가짜 기록): `claude plugin uninstall`은 데이터 파일을 삭제, `--keep-data`는 유지. 실제 설치 항목과 실제 안전 기록은 전후 동일. `/plugin` 화면에서의 제거는 시험하지 않음.
+- 업데이트 시 기록 유지: 공식 문서 기준. 이 개발 PC의 0.2.8 → 0.2.9 업데이트 전후에 안전 기록 앞부분의 해시가 같음을 확인.
 - v0.2.9 배포 후 설치 상태의 새 실행(`-p`)에서 지금 위치의 기록을 읽는 것을 확인: 오늘 막음 10건이 따로 계산한 값과 일치.
 - `commands/`·`skills/`·`hooks/`·`data/` 변경 없음.
 - `.claude-plugin/plugin.json`·`package.json` `version` `0.2.9` → `0.2.10`.
