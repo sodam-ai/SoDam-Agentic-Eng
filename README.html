@@ -417,6 +417,19 @@ href="#architecture">§11 아키텍처</a>의 "판정 흐름" 참고). 이건 �
 것입니다(최신순). 각 항목을 클릭하면 펼쳐집니다.</p>
 </blockquote>
 <details open>
+<summary><b>🛠 2026-11-26 — v0.2.10: 안전 기록이 지워질 수 있던 안내 정정 (문서만)</b></summary>
+
+<ul>
+<li><strong>가장 중요</strong>: 업데이트가 안 될 때 "제거 후 재설치"하라고 하던 안내(문제 해결 표, 실사용 테스트 가이드)는 <strong>안전 기록을 삭제할 수 있었습니다.</strong> 업데이트 명령을 먼저 쓰고, 재설치할 때는 <code>--keep-data</code>를 붙이도록 바꿨습니다. 제거 방법 절과 제품군 안내서의 제거 질문에도 경고를 앞에 넣었습니다.</li>
+<li><strong>확인한 것</strong>: Claude Code 2.1.332(Windows)에서 분리된 설정 폴더와 가짜 기록으로 시험했습니다: 터미널 명령으로 제거하면 기록 파일이 삭제됐고, <code>--keep-data</code>를 붙이면 남았습니다. <code>/plugin</code> 화면에서의 제거는 시험하지 않았습니다.</li>
+<li><strong>이전 설명 보충</strong>: v0.2.9 설명의 "못 읽은 것을 기록 없음이라 말하지 않음"은 지시문을 넣었다는 뜻이며, 오류 상황을 시험한 것은 아닙니다. 설치본에서 지금 위치의 기록을 읽는 것은 v0.2.9 배포 후에 확인했습니다.</li>
+<li><strong>알려진 한계</strong>: <code>/sodam-agentic:log</code>는 조회하는 동안 기록이 늘어나거나 기록 파일에 빈 줄·깨진 줄이 많으면 최신 기록을 빠뜨릴 수 있습니다. 이번에는 이 부분을 바꾸지 않았습니다.</li>
+<li><strong>바뀌지 않은 것</strong>: 명령, 스킬, 안전 훅 코드는 이번에 바꾸지 않았습니다.</li>
+</ul>
+
+</details>
+
+<details>
 <summary><b>🛠 2026-11-26 — v0.2.9: <code>/sodam-agentic:log</code>가 지금의 안전 기록을 보지 못하던 문제 수정</b></summary>
 
 <ul>
@@ -1331,10 +1344,13 @@ href="#security-data-flow">§12</a>), 아니면 캡처해서 문의</td>
 <tr>
 <td>명령어가 옛 이름으로 보임 / 방금 고친 게 반영 안 됨</td>
 <td>설치본(캐시)이 최신이 아님</td>
-<td><code>/plugin uninstall sodam-agentic@sodam-agentic</code> →
-<code>/plugin install sodam-agentic@sodam-agentic</code> →
-<code>/reload-plugins</code> (반드시 이 순서로,
-<code>marketplace update</code>만으로는 부족합니다)</td>
+<td>터미널에서 <code>claude plugin marketplace update sodam-agentic</code> →
+<code>claude plugin update sodam-agentic@sodam-agentic</code> → Claude Code
+다시 시작. 그래도 반영이 안 돼 재설치할 때는 <strong>반드시</strong>
+<code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code> →
+<code>claude plugin install sodam-agentic@sodam-agentic</code>
+(<code>--keep-data</code> 없이 제거하면 <strong>안전 기록이
+삭제됩니다</strong>)</td>
 </tr>
 <tr>
 <td>비밀번호·API 키를 넣어도 되나요?</td>
@@ -1557,8 +1573,11 @@ href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>에
 <h2 id="16-제거-방법">16. 제거 방법</h2>
 <p><strong>Claude Code:</strong></p>
 <ol type="1">
-<li>입력칸에 <code>/plugin uninstall sodam-agentic</code> (또는
-마켓플레이스 화면에서 제거 선택).</li>
+<li><strong>먼저 아래 "남는 데이터"를 읽으세요.</strong> 안전 기록을
+남기려면 터미널에서
+<code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code>,
+기록까지 지워도 되면 입력칸에 <code>/plugin uninstall sodam-agentic</code>
+(또는 마켓플레이스 화면에서 제거 선택).</li>
 <li>확인: <code>/sodam-agentic</code>를 쳐도 명령이 더는 안 뜨면 제거
 완료.</li>
 </ol>
@@ -1578,9 +1597,11 @@ href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>에
 사라집니다.</strong> 남기려면 제거 전에 <code>safety-log.jsonl</code>을
 다른 곳에 복사해 두거나, 터미널에서
 <code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code>로
-제거하세요. (Claude Code 공식 문서와 CLI 도움말 기준이며, 실제 제거
-시험은 하지 않았습니다. <code>/plugin</code> 화면에서 제거할 때의
-동작은 확인하지 못했으니, 기록이 중요하면 먼저 복사해 두세요.)</li>
+제거하세요. (Claude Code 2.1.332, Windows에서 분리된 설정 폴더와 가짜
+기록으로 시험했습니다: 터미널 명령으로 제거하면 기록 파일이 삭제됐고,
+<code>--keep-data</code>를 붙이면 남았습니다. <code>/plugin</code>
+화면에서 제거할 때의 동작은 시험하지 않았으니, 기록이 중요하면 먼저
+복사해 두세요.)</li>
 <li>예전 위치의 기록(<code>~/.sodamagentic/safety-log.jsonl</code>, Codex
 포함)은 사용자 홈 폴더에 있어 <strong>제거해도 남습니다.</strong>
 완전히 지우고 싶으면 이 파일을 직접 삭제하세요.</li>
@@ -1644,7 +1665,7 @@ href="./THIRD_PARTY_NOTICES.md"><code>THIRD_PARTY_NOTICES.md</code></a>에
 <p>근거·검토 과정은 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code>에
 자세히 남겨뒀습니다(개발자 참고용, 이 저장소엔 포함 안 됨).</p>
 <hr />
-<p><em>문서 버전 기준일: 2026-11-26 (플러그인 버전 v0.2.9) · 이 문서는
+<p><em>문서 버전 기준일: 2026-11-26 (플러그인 버전 v0.2.10) · 이 문서는
 "지금까지 실제로 구현·검증된 코드" 기준으로 작성되었습니다(직접 실행해
 확인하지 않은 내용은 <a href="#changelog">§8</a>에 정직하게
 표시했습니다).</em></p>

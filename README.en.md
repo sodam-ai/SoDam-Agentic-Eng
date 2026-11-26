@@ -179,6 +179,17 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
 
 <details open>
+<summary><b>🛠 2026-11-26 — v0.2.10: fixed guidance that could delete the safety log (docs only)</b></summary>
+
+- **Most important**: The guidance that said to "remove and reinstall" when an update didn't show (troubleshooting table, live test guide) **could delete the safety log.** It now uses the update command first, and requires `--keep-data` when reinstalling. A warning was also placed first in the uninstall section and in the removal question of the suite guide.
+- **What was checked**: Tested with Claude Code 2.1.332 on Windows, using a separate config folder and a fake log: removing with the terminal command deleted the log file, and adding `--keep-data` kept it. Removal from the `/plugin` screen was not tested.
+- **Note on the earlier entry**: In the v0.2.9 entry, "a file that cannot be read is no longer reported as no records" means an instruction was added; the error case itself was not tested. Reading the current log from the installed plugin was confirmed after the v0.2.9 release.
+- **Known limitation**: `/sodam-agentic:log` can miss the newest records if records are added while it is reading, or if the log file has many blank or broken lines. That was not changed this time.
+- **What did not change**: Commands, skills and the safety-hook code were not changed this time.
+
+</details>
+
+<details>
 <summary><b>🛠 2026-11-26 — v0.2.9: fixed <code>/sodam-agentic:log</code> not seeing the current safety log</b></summary>
 
 - **Problem**: The folder the log command pointed to was not the folder where records were actually being written. It could therefore read only old records and answer without any of the current ones.
@@ -540,7 +551,7 @@ As the code comments in this repository state plainly, **"the dangerous-pattern 
 | Code gets written without a plan first | Another skill took priority (F2 is a "request," not a hard enforcement) | This can happen normally — just ask directly, "show me the plan first" |
 | A dangerous command wasn't blocked | The safety hook isn't running, or auto-approve mode is on | Check whether auto-approve/bypass mode is on first ([§12](#security-data-flow)); otherwise, screenshot and ask for help |
 | Confirmation prompts appear too often | Multiple safety layers (including a sibling plugin) overlap | Can be tuned so only truly risky things prompt, via `data/agentic-rules.json` |
-| Commands still show old names / a recent fix isn't showing up | The installed copy (cache) isn't up to date | `/plugin uninstall sodam-agentic@sodam-agentic` → `/plugin install sodam-agentic@sodam-agentic` → `/reload-plugins` (in exactly this order — `marketplace update` alone is not enough) |
+| Commands still show old names / a recent fix isn't showing up | The installed copy (cache) isn't up to date | In a terminal: `claude plugin marketplace update sodam-agentic` → `claude plugin update sodam-agentic@sodam-agentic` → restart Claude Code. If the change still doesn't show and you reinstall, you **must** use `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data` → `claude plugin install sodam-agentic@sodam-agentic` (removing without `--keep-data` **deletes the safety log**) |
 | Is it okay to type in a password or API key? | — | **Never do this.** Keep it only in your own environment (e.g. `.env`) — the hook will block it immediately if detected |
 | I want to remove it / something looks off after an update | Uninstall / update | See [§16 Uninstall](#uninstall) |
 | I can't remember what got blocked last time | — | Use `/sodam-agentic:log` (only blocked/confirmed items are logged — safely passed-through work is not) |
@@ -645,7 +656,7 @@ A significant portion of this project's code and documentation was **written wit
 ## 16. Uninstall
 
 **Claude Code:**
-1. Type `/plugin uninstall sodam-agentic` in the input box (or choose "remove" from the marketplace screen).
+1. **First read "Data that stays behind" below.** To keep the safety log, run `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data` in a terminal. If it is fine to delete the log too, type `/plugin uninstall sodam-agentic` in the input box (or choose "remove" from the marketplace screen).
 2. Verify: if typing `/sodam-agentic` no longer shows any commands, removal is complete.
 
 **Codex:**
@@ -653,7 +664,7 @@ A significant portion of this project's code and documentation was **written wit
 
 **Data that stays behind (important — read this before removing):**
 
-- ⚠️ **In Claude Code, uninstalling the plugin from the last place it is installed also deletes the plugin's data folder by default.** The current safety log lives in that folder, so **the log is deleted too.** To keep it, copy `safety-log.jsonl` somewhere else first, or uninstall from a terminal with `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data`. (This is based on the official Claude Code docs and the CLI help text; we did not run a real uninstall test. We also did not check what removing it from the `/plugin` screen does, so copy the file first if the log matters to you.)
+- ⚠️ **In Claude Code, uninstalling the plugin from the last place it is installed also deletes the plugin's data folder by default.** The current safety log lives in that folder, so **the log is deleted too.** To keep it, copy `safety-log.jsonl` somewhere else first, or uninstall from a terminal with `claude plugin uninstall sodam-agentic@sodam-agentic --keep-data`. (Tested with Claude Code 2.1.332 on Windows, using a separate config folder and a fake log: removing with the terminal command deleted the log file, and adding `--keep-data` kept it. We did not test removal from the `/plugin` screen, so copy the file first if the log matters to you.)
 - Records in the old location (`~/.sodamagentic/safety-log.jsonl`, including Codex) are in your user home folder, so they **stay after removal.** If you want them completely gone, delete that file yourself.
 
 ---
@@ -683,4 +694,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-11-26 (plugin version v0.2.9) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-11-26 (plugin version v0.2.10) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*

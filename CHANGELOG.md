@@ -601,3 +601,24 @@
 - 새 Claude Code 실행(`-p`, `--plugin-dir`, Harness 없음 강제)에서 `/sodam-agentic:log` 실행: 경로 치환 확인, 도구 호출은 Grep·Read만, 권한 거부 0건, 없는 파일을 "없음"으로 정확히 보고. 이 방식에서는 새 위치 폴더가 비어 있어 예전 위치 기록으로 확인.
 - 이번에 확인하지 못한 것: 실제 `plugin uninstall` 동작, `/plugin` 화면에서의 제거 동작, Codex에서의 동작, macOS·Linux에서의 동작.
 - `.claude-plugin/plugin.json`·`package.json` `version` `0.2.8` → `0.2.9`.
+
+---
+
+## [0.2.10] - 2026-11-26
+
+> 배경: v0.2.9 배포 후, 검증 전용으로 분리한 두 번째 AI 도구(Codex CLI)에게 "틀린 점을 찾으라"고 맡겨 나온 지적을 대조·재현해 반영. **문서만 변경.**
+
+### 수정 (Fixed)
+
+- **[문서][중요] "제거 후 재설치" 안내가 안전 기록을 삭제할 수 있었음**: README 4종의 문제 해결 표와 `LIVE_TEST_GUIDE.md` "방법 B"가 백업·`--keep-data` 없이 제거를 안내했다. v0.2.9에서는 §16 제거 방법만 고치고 이 우회 안내를 빠뜨렸다. → `claude plugin marketplace update` + `claude plugin update`를 먼저 쓰고, 재설치는 `--keep-data`를 필수로. 확인되지 않은 `/plugin` 메뉴 제거 절차는 삭제. §16 1단계와 제품군 안내서(`docs/SUITE-README` 한·영) 제거 FAQ에는 경고를 명령보다 앞에 둠.
+
+### 검증
+
+- 제거 동작 시험(Claude Code 2.1.332, Windows, `CLAUDE_CONFIG_DIR`를 분리한 설정 + 플러그인 복사본 + 가짜 기록): `claude plugin uninstall`은 데이터 파일을 삭제, `--keep-data`는 유지. 실제 설치 항목과 실제 안전 기록은 전후 동일. `/plugin` 화면에서의 제거는 시험하지 않음.
+- v0.2.9 배포 후 설치 상태의 새 실행(`-p`)에서 지금 위치의 기록을 읽는 것을 확인: 오늘 막음 10건이 따로 계산한 값과 일치.
+- `commands/`·`skills/`·`hooks/`·`data/` 변경 없음.
+- `.claude-plugin/plugin.json`·`package.json` `version` `0.2.9` → `0.2.10`.
+
+### 알려진 한계 (이번에 바꾸지 않음)
+
+- `/sodam-agentic:log`는 조회 중 기록이 늘어나거나 빈 줄·깨진 줄이 많은 파일에서 최신 기록을 빠뜨릴 수 있다.

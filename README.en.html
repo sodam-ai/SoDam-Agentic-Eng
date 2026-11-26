@@ -451,6 +451,19 @@ commands.</p>
 it.</p>
 </blockquote>
 <details open>
+<summary><b>🛠 2026-11-26 — v0.2.10: fixed guidance that could delete the safety log (docs only)</b></summary>
+
+<ul>
+<li><strong>Most important</strong>: The guidance that said to "remove and reinstall" when an update didn't show (troubleshooting table, live test guide) <strong>could delete the safety log.</strong> It now uses the update command first, and requires <code>--keep-data</code> when reinstalling. A warning was also placed first in the uninstall section and in the removal question of the suite guide.</li>
+<li><strong>What was checked</strong>: Tested with Claude Code 2.1.332 on Windows, using a separate config folder and a fake log: removing with the terminal command deleted the log file, and adding <code>--keep-data</code> kept it. Removal from the <code>/plugin</code> screen was not tested.</li>
+<li><strong>Note on the earlier entry</strong>: In the v0.2.9 entry, "a file that cannot be read is no longer reported as no records" means an instruction was added; the error case itself was not tested. Reading the current log from the installed plugin was confirmed after the v0.2.9 release.</li>
+<li><strong>Known limitation</strong>: <code>/sodam-agentic:log</code> can miss the newest records if records are added while it is reading, or if the log file has many blank or broken lines. That was not changed this time.</li>
+<li><strong>What did not change</strong>: Commands, skills and the safety-hook code were not changed this time.</li>
+</ul>
+
+</details>
+
+<details>
 <summary><b>🛠 2026-11-26 — v0.2.9: fixed <code>/sodam-agentic:log</code> not seeing the current safety log</b></summary>
 
 <ul>
@@ -1468,10 +1481,14 @@ help</td>
 <tr>
 <td>Commands still show old names / a recent fix isn't showing up</td>
 <td>The installed copy (cache) isn't up to date</td>
-<td><code>/plugin uninstall sodam-agentic@sodam-agentic</code> →
-<code>/plugin install sodam-agentic@sodam-agentic</code> →
-<code>/reload-plugins</code> (in exactly this order —
-<code>marketplace update</code> alone is not enough)</td>
+<td>In a terminal:
+<code>claude plugin marketplace update sodam-agentic</code> →
+<code>claude plugin update sodam-agentic@sodam-agentic</code> → restart
+Claude Code. If the change still doesn't show and you reinstall, you
+<strong>must</strong> use
+<code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code> →
+<code>claude plugin install sodam-agentic@sodam-agentic</code> (removing
+without <code>--keep-data</code> <strong>deletes the safety log</strong>)</td>
 </tr>
 <tr>
 <td>Is it okay to type in a password or API key?</td>
@@ -1715,8 +1732,12 @@ commercial environment.</p>
 <h2 id="16-uninstall">16. Uninstall</h2>
 <p><strong>Claude Code:</strong></p>
 <ol type="1">
-<li>Type <code>/plugin uninstall sodam-agentic</code> in the input box
-(or choose "remove" from the marketplace screen).</li>
+<li><strong>First read "Data that stays behind" below.</strong> To keep
+the safety log, run
+<code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code>
+in a terminal. If it is fine to delete the log too, type
+<code>/plugin uninstall sodam-agentic</code> in the input box (or choose
+"remove" from the marketplace screen).</li>
 <li>Verify: if typing <code>/sodam-agentic</code> no longer shows any
 commands, removal is complete.</li>
 </ol>
@@ -1739,10 +1760,11 @@ default.</strong> The current safety log lives in that folder, so
 <code>safety-log.jsonl</code> somewhere else first, or uninstall from a
 terminal with
 <code>claude plugin uninstall sodam-agentic@sodam-agentic --keep-data</code>.
-(This is based on the official Claude Code docs and the CLI help text; we
-did not run a real uninstall test. We also did not check what removing it
-from the <code>/plugin</code> screen does, so copy the file first if the
-log matters to you.)</li>
+(Tested with Claude Code 2.1.332 on Windows, using a separate config
+folder and a fake log: removing with the terminal command deleted the log
+file, and adding <code>--keep-data</code> kept it. We did not test removal
+from the <code>/plugin</code> screen, so copy the file first if the log
+matters to you.)</li>
 <li>Records in the old location
 (<code>~/.sodamagentic/safety-log.jsonl</code>, including Codex) are in
 your user home folder, so they <strong>stay after removal.</strong> If you
@@ -1811,7 +1833,7 @@ reference-only</td>
 <code>.PRD/12_PHASE3_GATE3_MCP_CURATION.md</code> (developer reference,
 not included in this repo).</p>
 <hr />
-<p><em>Document version as of: 2026-11-26 (plugin version v0.2.9) · This
+<p><em>Document version as of: 2026-11-26 (plugin version v0.2.10) · This
 document was written based on "code actually implemented and verified so
 far" — anything not directly executed and confirmed is honestly flagged
 in <a href="#changelog">§8</a>.</em></p>
