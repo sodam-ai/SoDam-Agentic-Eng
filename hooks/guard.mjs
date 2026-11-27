@@ -91,6 +91,9 @@ function loadRules() {
     key_exposure_deny: [
       "sk-ant-[A-Za-z0-9_\\-]{12,}",
       "sk-[A-Za-z0-9]{20,}",
+      "(?<![A-Za-z0-9])sk-(?:proj|svcacct|admin)-(?![xX*]{8})(?=[A-Za-z0-9_\\-]{0,80}?[0-9])[A-Za-z0-9_\\-]{40,}",
+      "(?<![A-Za-z0-9])gh[pousr]_(?![xX]{8})[A-Za-z0-9]{36,}",
+      "(?<![A-Za-z0-9])github_pat_(?![xX]{8})[A-Za-z0-9]{20,}_[A-Za-z0-9]{50,}",
       "\\b(curl|wget|scp|Invoke-WebRequest|Invoke-RestMethod)\\b[^|;&]*\\.env\\b",
       "ANTHROPIC_BASE_URL\\s*=",
       "\\becho\\b[^|;&]*\\$\\{?[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)",
@@ -132,10 +135,24 @@ function readStdin() {
 }
 
 // ── F6: 안전 기록 — 키/토큰 패턴 마스킹 후 저장(02_DATA_MODEL "키 값 로그 저장 금지" 준수) ──
+// 아래 키 토큰 형태는 한 줄에 여러 개여도 모두 가린다(이전에는 형태마다 첫 일치만 가려졌다).
+// 순서가 중요하다: 이전 버전의 가리기를 그대로 먼저 하고, 그 결과에서 키 토큰을 '추가로' 가린다. 먼저 가리면
+// 뒤쪽 조건을 찾는 기존 규칙이 실패해, 전에는 가려지던 글이 남거나 긴 글을 거듭 훑게 된다.
+// 전역 적용을 이 형태들로 한정하는 이유도 같다(확인 범위가 정해져 있거나 맞은 키를 그대로 소비한다).
+const TOKEN_MASK = [
+  /sk-ant-[A-Za-z0-9_\-]{12,}/gi,
+  /sk-[A-Za-z0-9]{20,}/gi,
+  /(?<![A-Za-z0-9])sk-(?:proj|svcacct|admin)-(?![xX*]{8})(?=[A-Za-z0-9_\-]{0,80}?[0-9])[A-Za-z0-9_\-]{40,}/gi,
+  /(?<![A-Za-z0-9])gh[pousr]_(?![xX]{8})[A-Za-z0-9]{36,}/gi,
+  /(?<![A-Za-z0-9])github_pat_(?![xX]{8})[A-Za-z0-9]{20,}_[A-Za-z0-9]{50,}/gi,
+];
+// 이번에 차단 목록에 새로 넣은 형태(뒤의 3개)는 첫 단계에서 빼고 TOKEN_MASK 에서만 가린다.
+const LATE_ONLY = new Set(TOKEN_MASK.slice(2).map((re) => re.source));
 function maskSecrets(s) {
   let out = String(s);
-  for (const re of KEY_DENY) out = out.replace(re, "[REDACTED]");
+  for (const re of KEY_DENY) if (!LATE_ONLY.has(re.source)) out = out.replace(re, "[REDACTED]");
   for (const re of KEY_ASK) out = out.replace(re, "[REDACTED]");
+  for (const re of TOKEN_MASK) out = out.replace(re, "[REDACTED]");
   return out;
 }
 // target: 차단/확인 대상(경로 또는 명령 원문). 로그 실패가 안전 판정을 절대 막지 않도록 best-effort.

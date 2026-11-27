@@ -179,6 +179,16 @@ Think of it this way: **the AI is a machine in a factory, and you are the person
 > The following is a date-by-date summary of the actual history in `CHANGELOG.md` (newest first). Click each entry to expand it.
 
 <details open>
+<summary><b>🔐 2026-11-27 — v0.2.11: safety-hook hardening (blocking newer key formats)</b></summary>
+
+- **Key exposure**: Writing an OpenAI project or service-account style key, or a GitHub token style value, into a file or command is now blocked. Tests confirm that placeholders (such as examples filled with `x`) are not blocked. A fake value that looks real can still be blocked.
+- **Key masking in the safety log**: Keys in the Anthropic (`sk-ant-`), OpenAI (`sk-`, `sk-proj-`, `sk-svcacct-`, `sk-admin-`) and GitHub token formats are all masked in the safety log, even when a line has several, as long as they are separated by spaces or quotes. Earlier, a second key of the same format could remain in plain text. When keys are glued together or overlap the range of another masking rule, part of one can remain. What the earlier version hid is meant to stay hidden. **Records already saved are not changed.** If in doubt, check them and revoke and reissue the key.
+- **Values that can remain in the log (important)**: **Secrets that are not in the formats above can remain in the safety log in plain text.** This applies especially to passwords and tokens written as `name=value`. Check the contents before you send a safety log file to anyone.
+- **Limits (important)**: Only known formats are detected. It cannot catch every key or secret or every risky way of running something, and in Codex some tool inputs may not be checked. Do not put keys into chats, code or commands in the first place.
+
+</details>
+
+<details>
 <summary><b>🛠 2026-11-26 — v0.2.10: fixed guidance that could delete the safety log (docs only)</b></summary>
 
 - **Most important**: The guidance that said to "remove and reinstall" when an update didn't show (troubleshooting table, live test guide) **could delete the safety log.** It now uses the update command first, and requires `--keep-data` when reinstalling. A warning was also placed first in the uninstall section and in the removal question of the suite guide.
@@ -695,4 +705,4 @@ Full research/rationale is kept in `.PRD/12_PHASE3_GATE3_MCP_CURATION.md` (devel
 
 ---
 
-*Document version as of: 2026-11-26 (plugin version v0.2.10) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
+*Document version as of: 2026-11-27 (plugin version v0.2.11) · This document was written based on "code actually implemented and verified so far" — anything not directly executed and confirmed is honestly flagged in [§8](#changelog).*
