@@ -91,6 +91,9 @@ function loadRules() {
     key_exposure_deny: [
       "sk-ant-[A-Za-z0-9_\\-]{12,}",
       "sk-[A-Za-z0-9]{20,}",
+      "(?<![A-Za-z0-9])sk-(?:proj|svcacct|admin)-(?![xX*]{8})(?=[A-Za-z0-9_\\-]{0,80}?[0-9])[A-Za-z0-9_\\-]{40,}",
+      "(?<![A-Za-z0-9])gh[pousr]_(?![xX]{8})[A-Za-z0-9]{36,}",
+      "(?<![A-Za-z0-9])github_pat_(?![xX]{8})[A-Za-z0-9_]{50,}",
       "\\b(curl|wget|scp|Invoke-WebRequest|Invoke-RestMethod)\\b[^|;&]*\\.env\\b",
       "ANTHROPIC_BASE_URL\\s*=",
       "\\becho\\b[^|;&]*\\$\\{?[A-Za-z_][A-Za-z0-9_]*(KEY|TOKEN|SECRET)",
@@ -132,8 +135,19 @@ function readStdin() {
 }
 
 // ── F6: 안전 기록 — 키/토큰 패턴 마스킹 후 저장(02_DATA_MODEL "키 값 로그 저장 금지" 준수) ──
+// 아래 키 토큰 형태는 한 줄에 여러 개여도 모두 가린다(이전에는 형태마다 첫 일치만 가려졌다).
+// 전부 적용하지 않는 이유: 다른 규칙은 뒤쪽 조건을 찾느라 남은 글을 거듭 훑어, 긴 명령에서 훅이 크게 느려진다.
+// 여기 있는 것은 확인 범위가 정해져 있거나 맞은 키를 그대로 소비한다. 규칙 파일의 순서에 기대지 않고 따로 적는다.
+const TOKEN_MASK = [
+  /sk-ant-[A-Za-z0-9_\-]{12,}/gi,
+  /sk-[A-Za-z0-9]{20,}/gi,
+  /(?<![A-Za-z0-9])sk-(?:proj|svcacct|admin)-(?![xX*]{8})(?=[A-Za-z0-9_\-]{0,80}?[0-9])[A-Za-z0-9_\-]{40,}/gi,
+  /(?<![A-Za-z0-9])gh[pousr]_(?![xX]{8})[A-Za-z0-9]{36,}/gi,
+  /(?<![A-Za-z0-9])github_pat_(?![xX]{8})[A-Za-z0-9_]{50,}/gi,
+];
 function maskSecrets(s) {
   let out = String(s);
+  for (const re of TOKEN_MASK) out = out.replace(re, "[REDACTED]");
   for (const re of KEY_DENY) out = out.replace(re, "[REDACTED]");
   for (const re of KEY_ASK) out = out.replace(re, "[REDACTED]");
   return out;
